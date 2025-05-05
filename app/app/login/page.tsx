@@ -133,7 +133,7 @@ function EnhancedLoginComponent() {
               width={80}
               height={56}
               className="object-contain rounded-lg"
-              priority
+              //   priority
             />
           </div>
         </header>
