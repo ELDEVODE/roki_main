@@ -11,14 +11,14 @@ export function middleware(request: NextRequest) {
   // In production, extract domain from hostname
   if (isProduction) {
     // Remove port if present and get the base domain
-    const domain = hostname.split(':')[0].split('.').slice(-2).join('.');
+    const domain = hostname.split(":")[0].split(".").slice(-2).join(".");
     console.log("Extracted base domain:", domain);
     const appDomain = `app.${domain}`;
     console.log("App domain:", appDomain);
 
     // Check if we're already on the app subdomain
-    const isAppDomain = hostname.startsWith('app.');
-    
+    const isAppDomain = hostname.startsWith("app.");
+
     // Only redirect /login path from root domain to app subdomain
     if (!isAppDomain) {
       if (url.pathname === "/login") {
