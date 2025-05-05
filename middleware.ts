@@ -6,14 +6,21 @@ export function middleware(request: NextRequest) {
   const hostname = request.headers.get("host") || "";
   const isProduction = process.env.NODE_ENV === "production";
 
+  console.log("Current hostname:", hostname);
+
   // In production, extract domain from hostname
   if (isProduction) {
     // Remove port if present and get the base domain
     const domain = hostname.split(':')[0].split('.').slice(-2).join('.');
+    console.log("Extracted base domain:", domain);
     const appDomain = `app.${domain}`;
+    console.log("App domain:", appDomain);
 
+    // Check if we're already on the app subdomain
+    const isAppDomain = hostname.startsWith('app.');
+    
     // Only redirect /login path from root domain to app subdomain
-    if (hostname === domain) {
+    if (!isAppDomain) {
       if (url.pathname === "/login") {
         return NextResponse.redirect(new URL("/login", `https://${appDomain}`));
       }
@@ -21,7 +28,7 @@ export function middleware(request: NextRequest) {
     }
 
     // Handle subdomain routing for app subdomain
-    if (hostname === appDomain) {
+    if (isAppDomain) {
       return NextResponse.rewrite(new URL(`/app${url.pathname}`, request.url));
     }
   } else {
