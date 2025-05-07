@@ -2,26 +2,46 @@
 import { useLogin, usePrivy } from "@privy-io/react-auth";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const { ready, authenticated } = usePrivy();
-  const { login } = useLogin();
-
-  // disable login when privy is not ready and the user is already authenticated
-  const disableLogin = !ready || (ready && authenticated);
+  const router = useRouter();
+  const { login } = useLogin({
+    onComplete: (params) => {
+      console.log("Login completed", params);
+      // Navigate to dashboard on successful login
+      if (params.user && !params.wasAlreadyAuthenticated) {
+        router.push("/app");
+      }
+    },
+    onError: (error) => {
+      console.error("Login failed", error);
+    },
+  });
 
   return (
     <div>
-      <EnhancedLoginComponent />
+      <EnhancedLoginComponent
+        onLogin={login}
+        ready={ready}
+        authenticated={authenticated}
+      />
     </div>
   );
 }
 
-function EnhancedLoginComponent() {
-  const { login, ready, authenticated } = usePrivy();
-  const disableLogin = !ready || (ready && authenticated);
+function EnhancedLoginComponent({
+  onLogin,
+  ready,
+  authenticated,
+}: {
+  onLogin: () => void;
+  ready: boolean;
+  authenticated: boolean;
+}) {
   const [loaded, setLoaded] = useState(false);
-  const [activeTab, setActiveTab] = useState("email");
+  const disableLogin = !ready || (ready && authenticated);
 
   useEffect(() => {
     setLoaded(true);
@@ -69,7 +89,7 @@ function EnhancedLoginComponent() {
           }`}
         >
           <div className="flex items-center space-x-2">
-            <div className="w-20 h-14 rounded-lg flex items-center justify-center logo-glow">
+            <div className="w-20 h-14 rounded-lg flex items-center justify-center logo-glowx">
               <Image
                 src="/roki-gradient.png"
                 alt="Roki Logo"
@@ -154,7 +174,7 @@ function EnhancedLoginComponent() {
 
             {/* Login button with hover effects */}
             <button
-              onClick={login}
+              onClick={onLogin}
               disabled={disableLogin}
               className="w-full group relative flex items-center justify-center px-6 py-5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-medium transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
             >
