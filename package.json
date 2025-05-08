@@ -7,13 +7,20 @@
     "dev:https": "bun run dev & local-ssl-proxy --source 3001 --target 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prisma:seed": "tsx prisma/seed.ts",
+    "supabase:seed": "tsx scripts/seedSupabaseRoles.ts"
   },
   "dependencies": {
+    "@prisma/client": "^6.7.0",
+    "@prisma/extension-accelerate": "^1.3.0",
     "@privy-io/react-auth": "^2.13.0",
+    "@supabase/supabase-js": "^2.49.4",
     "next": "15.3.1",
+    "prisma": "^6.7.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "tsx": "^4.19.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -23,5 +30,8 @@
     "local-ssl-proxy": "^2.0.5",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   }
 }

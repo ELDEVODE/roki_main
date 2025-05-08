@@ -1,0 +1,233 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// Permission types for channel roles
+enum PermissionType {
+  SEND_MESSAGES            // Can send messages in channels
+  MANAGE_MESSAGES          // Can edit/delete messages
+  MANAGE_CHANNELS          // Can create/edit/delete channels
+  MANAGE_ROLES             // Can create/edit/delete roles
+  KICK_MEMBERS             // Can remove members from channel
+  BAN_MEMBERS              // Can ban members from channel
+  INVITE_MEMBERS           // Can invite new members to channel
+  PIN_MESSAGES             // Can pin messages in channel
+  MANAGE_WEBHOOKS          // Can manage webhooks
+  ADD_REACTIONS            // Can add reactions to messages
+  ATTACH_FILES             // Can upload files
+  EMBED_LINKS              // Can embed links in messages
+  MENTION_EVERYONE         // Can use @everyone mention
+  CHANGE_NICKNAME          // Can change own nickname
+  MANAGE_NICKNAMES         // Can change other members' nicknames
+  VIEW_CHANNELS            // Can view channels (basic access)
+  CONNECT_VOICE            // Can connect to voice channels
+  SPEAK_VOICE              // Can speak in voice channels
+  STREAM_VIDEO             // Can stream video in channels
+  PRIORITY_SPEAKER         // Has priority when speaking
+  VIEW_AUDIT_LOG           // Can view audit logs
+  MODERATE_MEMBERS         // Can timeout or otherwise moderate
+  MANAGE_EMOJIS            // Can manage custom emojis
+  ADMINISTRATOR            // Has all permissions
+}
+
+// Role template types
+enum RoleTemplateType {
+  OWNER                    // Creator of channel, full permissions
+  ADMIN                    // Admin role, most permissions
+  MODERATOR                // Moderate users and content
+  MEMBER                   // Regular member, basic permissions
+  GUEST                    // Limited permissions
+  CUSTOM                   // Custom defined role
+}
+        
+model User {
+  id          String   @id @default(cuid())
+  privyId     String   @unique // Store Privy user ID
+  email       String?
+  name        String?
+  username    String?  @unique
+  profileImage String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  online      Boolean  @default(false)
+  lastSeen    DateTime?
+
+  // Relations
+  walletAddresses WalletAddress[] // References to Privy wallet addresses
+  createdChannels Channel[]       @relation("ChannelCreator")
+  contents        Content[]
+  reactions       Reaction[]
+  memberships     Member[]
+  userRoles       UserRole[]
+
+  @@index([privyId])
+}
+
+// Store reference to Privy wallets
+model WalletAddress {
+  id        String   @id @default(cuid())
+  address   String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  isDefault Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Note: Balance is managed by Privy, not stored here
+}
+
+model Channel {
+  id            String    @id @default(cuid())
+  title         String
+  icon          String?
+  type          String
+  parentId      String?
+  maxRoles      Int       @default(10) // Maximum number of custom roles allowed
+  subchannels   SubChannel[] @relation("ChannelHierarchy")
+  creator       User?     @relation("ChannelCreator", fields: [creatorId], references: [id], onDelete: SetNull)
+  creatorId     String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  contents  Content[]
+  members   Member[]
+  channelRoles ChannelRole[] // Roles specific to this channel
+}
+
+model SubChannel {
+  id            String    @id @default(cuid())
+  title         String
+  icon          String?
+  type          String
+  parentId      String?
+  parent        Channel?  @relation("ChannelHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+  creatorId     String?
+  sentTime      DateTime?
+  deliveryStatus String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+
+
+model Content {
+  id        String   @id @default(cuid())
+  message   String
+  channel   Channel  @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  channelId String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  reactions    Reaction[]
+  contentTags  ContentTag[]
+}
+
+model Reaction {
+  id        String   @id @default(cuid())
+  emoji     String
+  content   Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  contentId String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  createdAt DateTime @default(now())
+
+  @@unique([contentId, userId, emoji])
+}
+
+model Role {
+  id           String          @id @default(cuid())
+  name         String
+  description  String?
+  permissions  PermissionType[] // Uses the PermissionType enum
+  templateType RoleTemplateType @default(CUSTOM)
+  isDefault    Boolean         @default(false)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  // Relations
+  userRoles    UserRole[]
+  channelRoles ChannelRole[]
+}
+
+model ChannelRole {
+  id          String   @id @default(cuid())
+  channel     Channel  @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  channelId   String
+  role        Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Channel-member roles
+  memberRoles MemberRole[]
+
+  @@unique([channelId, roleId])
+}
+
+model UserRole {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  role      Role     @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  roleId    String
+  createdAt DateTime @default(now())
+
+  @@unique([userId, roleId])
+}
+
+model Member {
+  id        String   @id @default(cuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  channel   Channel  @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  channelId String
+  image     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  memberRoles MemberRole[]
+
+  @@unique([userId, channelId])
+}
+
+model MemberRole {
+  id            String      @id @default(cuid())
+  member        Member      @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  memberId      String
+  channelRole   ChannelRole @relation(fields: [channelRoleId], references: [id], onDelete: Cascade)
+  channelRoleId String
+  createdAt     DateTime    @default(now())
+
+  @@unique([memberId, channelRoleId])
+}
+
+model Tag {
+  id           String       @id @default(cuid())
+  name         String       @unique
+  createdAt    DateTime     @default(now())
+  
+  // Relations
+  contentTags  ContentTag[]
+}
+
+model ContentTag {
+  content    Content  @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  contentId  String
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId      String
+
+  @@id([contentId, tagId])
+}
