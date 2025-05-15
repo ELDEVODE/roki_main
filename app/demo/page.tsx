@@ -4,6 +4,7 @@ import { usePrivy } from "@privy-io/react-auth";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "../components/Header";
 import SolanaWalletButton from '../components/SolanaWalletButton';
+import Link from "next/link";
 
 function DemoContent() {
   const { login, authenticated, user } = usePrivy();
@@ -272,164 +273,324 @@ function DemoContent() {
   
   // Rest of your component implementation
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-900 to-black">
       <Header />
       
-      <main className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-2xl font-bold">ZK Token-Gated Chat Demo</h1>
-            
-            {/* Wallet Connection */}
-            <div>
-              {!authenticated ? (
-                <button
-                  onClick={() => login()}
-                  className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
-                >
-                  Connect Wallet
-                </button>
-              ) : (
-                <SolanaWalletButton />
-              )}
+      <main className="flex-grow container mx-auto pt-24 pb-10 px-4">
+        {!authenticated ? (
+          <div className="flex flex-col items-center justify-center h-[80vh] text-center">
+            <div className="mb-8">
+              <h1 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-indigo-500 text-transparent bg-clip-text">
+                Token-Gated Chat Demo
+              </h1>
+              <p className="text-gray-300 max-w-2xl mx-auto">
+                Connect your wallet to experience token-gated messaging with zero-knowledge proofs.
+              </p>
             </div>
+            <button
+              onClick={() => login()}
+              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 px-6 py-3 rounded-lg text-white font-medium shadow-lg shadow-blue-500/20 flex items-center gap-2"
+              disabled={loading}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v-1l1-1 1-1-.257-.257A6 6 0 1118 8zm-6-4a1 1 0 100 2h5a1 1 0 100-2h-5z" clipRule="evenodd" />
+              </svg>
+              Connect Wallet
+            </button>
           </div>
-          
-          {error && (
-            <div className="bg-red-800 text-white p-3 rounded mb-4">
-              {error}
-            </div>
-          )}
-          
-          {/* Channel Creation */}
-          {authenticated && !channelId && (
-            <div className="bg-gray-800 p-6 rounded-lg mb-6">
-              <h2 className="text-xl font-semibold mb-4">Create a New Channel</h2>
-              <button
-                onClick={createChannel}
-                disabled={loading || !userId}
-                className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded disabled:opacity-50"
-              >
-                {loading ? "Creating..." : "Create Channel"}
-              </button>
-            </div>
-          )}
-          
-          {/* Channel UI */}
-          {channelId && channel && (
-            <div className="bg-gray-800 rounded-lg overflow-hidden">
-              <div className="p-4 bg-gray-700 flex justify-between items-center">
-                <div>
-                  <h2 className="text-xl font-semibold">{channel.name}</h2>
-                  <p className="text-sm text-gray-300">
-                    {channel.isTokenGated 
-                      ? "🔒 Token-gated channel" 
-                      : "🔓 Public channel"}
-                  </p>
-                </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Left sidebar for actions */}
+            <div className="lg:col-span-1">
+              <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl border border-gray-700 shadow-xl p-6">
+                <h2 className="text-xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-indigo-500 text-transparent bg-clip-text">
+                  Channel Controls
+                </h2>
                 
-                <div className="flex space-x-2">
-                  {!channel.isTokenGated && (
+                {error && (
+                  <div className="mb-6 p-4 bg-red-900/30 border border-red-700 rounded-lg text-red-200">
+                    {error}
+                  </div>
+                )}
+                
+                <div className="space-y-4">
+                  {!channelId ? (
                     <button
-                      onClick={tokenGateChannel}
+                      onClick={createChannel}
+                      className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 
+                               px-4 py-3 rounded-lg text-white font-medium shadow-lg 
+                               flex items-center justify-center gap-2"
                       disabled={loading}
-                      className="bg-yellow-600 hover:bg-yellow-700 text-white py-1 px-3 rounded text-sm"
                     >
-                      Enable Token Gate
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
+                      </svg>
+                      Create Channel
                     </button>
-                  )}
-                  
-                  <button
-                    onClick={shareChannel}
-                    className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded text-sm"
-                  >
-                    Share Link
-                  </button>
-                </div>
-              </div>
-              
-              {/* Token Access Warning */}
-              {channel.isTokenGated && !hasTokenAccess && (
-                <div className="bg-red-800 p-4">
-                  <p className="font-semibold">
-                    This channel requires token ownership to participate.
-                  </p>
-                  <p className="text-sm mt-1">
-                    You need to own the required token to join and chat.
-                  </p>
-                </div>
-              )}
-              
-              {/* Join Button */}
-              {!isUserMember() && (
-                <div className="p-4 bg-gray-700 border-t border-gray-600">
-                  <button
-                    onClick={joinChannel}
-                    disabled={loading || (channel.isTokenGated && !hasTokenAccess)}
-                    className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded w-full disabled:opacity-50"
-                  >
-                    {loading ? "Joining..." : "Join Channel"}
-                  </button>
-                </div>
-              )}
-              
-              {/* Messages Area */}
-              <div className="h-96 overflow-y-auto p-4 bg-gray-850">
-                {messages.length > 0 ? (
-                  <div className="space-y-3">
-                    {messages.map((msg) => (
-                      <div 
-                        key={msg.id} 
-                        className={`flex ${msg.userId === userId ? 'justify-end' : 'justify-start'}`}
-                      >
-                        <div 
-                          className={`max-w-3/4 rounded-lg p-3 ${
-                            msg.userId === userId 
-                              ? 'bg-blue-700 text-white' 
-                              : 'bg-gray-700 text-white'
-                          }`}
-                        >
-                          <div className="text-xs text-gray-300 mb-1">
-                            {msg.user?.name || 'Unknown user'}
-                          </div>
-                          <div>{msg.content}</div>
+                  ) : (
+                    <>
+                      <div className="bg-gray-700/30 rounded-lg p-4 border border-gray-600">
+                        <div className="flex justify-between items-center mb-2">
+                          <h3 className="font-medium text-lg">{channel?.name || 'Chat Channel'}</h3>
+                          {channel?.isTokenGated && (
+                            <span className="bg-indigo-900/50 text-indigo-300 text-xs px-2 py-1 rounded-full border border-indigo-700 flex items-center gap-1">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                              </svg>
+                              Token Gated
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-gray-400 mb-4">
+                          Created by {channel?.creator?.name || 'Unknown'}
+                        </p>
+                        
+                        <div className="flex flex-wrap gap-2 mb-2">
+                          <button
+                            onClick={shareChannel}
+                            className="flex-1 bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-lg text-sm font-medium 
+                                    text-gray-300 flex items-center justify-center gap-1 transition-colors"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                              <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
+                            </svg>
+                            Share
+                          </button>
+                          
+                          <Link href="/demo/channels" className="flex-1 bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-lg text-sm font-medium 
+                                     text-gray-300 flex items-center justify-center gap-1 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                              <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
+                            </svg>
+                            Channels
+                          </Link>
                         </div>
                       </div>
-                    ))}
-                    <div ref={messagesEndRef} />
+                      
+                      {!channel?.isTokenGated && (
+                        <button
+                          onClick={tokenGateChannel}
+                          className="w-full bg-indigo-800 hover:bg-indigo-700 px-4 py-3 rounded-lg text-white font-medium 
+                                   flex items-center justify-center gap-2 transition-colors border border-indigo-600"
+                          disabled={loading}
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                          </svg>
+                          Token-Gate Channel
+                        </button>
+                      )}
+                      
+                      {!isUserMember() && channel && (
+                        <button
+                          onClick={joinChannel}
+                          className="w-full bg-blue-800 hover:bg-blue-700 px-4 py-3 rounded-lg text-white font-medium 
+                                   flex items-center justify-center gap-2 transition-colors border border-blue-600"
+                          disabled={loading}
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+                          </svg>
+                          Join Channel
+                        </button>
+                      )}
+                    </>
+                  )}
+                </div>
+                
+                {loading && (
+                  <div className="flex justify-center py-4">
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
                   </div>
-                ) : (
-                  <div className="text-gray-400 text-center py-4">
-                    No messages yet. Start the conversation!
+                )}
+                
+                {channel?.isTokenGated && (
+                  <div className={`mt-6 p-4 rounded-lg border ${hasTokenAccess ? 'bg-green-900/30 border-green-700 text-green-200' : 'bg-yellow-900/30 border-yellow-700 text-yellow-200'}`}>
+                    <div className="flex items-start gap-3">
+                      <div className="mt-1">
+                        {hasTokenAccess ? (
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                          </svg>
+                        ) : (
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                          </svg>
+                        )}
+                      </div>
+                      <div>
+                        <h4 className="font-medium mb-1">{hasTokenAccess ? 'Access Granted' : 'Access Required'}</h4>
+                        <p className="text-xs">
+                          {hasTokenAccess 
+                            ? 'You have the required token to access this channel.' 
+                            : 'This channel requires token ownership for access. For the demo, access is automatically granted.'}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
-              
-              {/* Message Input */}
-              {isUserMember() && (
-                <div className="p-4 bg-gray-700 border-t border-gray-600">
-                  <div className="flex space-x-2">
-                    <input
-                      type="text"
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                      placeholder="Type your message..."
-                      className="flex-1 bg-gray-800 text-white p-2 rounded border border-gray-600 focus:outline-none focus:border-blue-500"
-                    />
-                    <button
-                      onClick={sendMessage}
-                      disabled={!message.trim()}
-                      className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded disabled:opacity-50"
-                    >
-                      Send
-                    </button>
-                  </div>
-                </div>
-              )}
             </div>
-          )}
-        </div>
+            
+            {/* Main chat area */}
+            <div className="lg:col-span-2">
+              <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl border border-gray-700 shadow-xl flex flex-col h-[75vh]">
+                {channelId ? (
+                  <>
+                    {/* Chat header */}
+                    <div className="p-4 border-b border-gray-700 flex items-center justify-between">
+                      <div>
+                        <h2 className="text-lg font-bold">{channel?.name || 'Chat Channel'}</h2>
+                        <p className="text-xs text-gray-400">
+                          {channel?.members?.length || 0} member{channel?.members?.length !== 1 ? 's' : ''}
+                        </p>
+                      </div>
+                      
+                      {channel?.isTokenGated && (
+                        <span className="bg-indigo-900/50 text-indigo-300 text-xs px-2 py-1 rounded-full border border-indigo-700 flex items-center gap-1">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                          </svg>
+                          Token Gated
+                        </span>
+                      )}
+                    </div>
+                    
+                    {/* Messages area */}
+                    <div className="flex-grow overflow-y-auto p-4 space-y-4">
+                      {messages.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center h-full text-center">
+                          <div className="bg-gray-800/60 rounded-full p-4 mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                              <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z" />
+                              <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z" />
+                            </svg>
+                          </div>
+                          <h3 className="text-lg font-medium text-gray-300 mb-2">No messages yet</h3>
+                          <p className="text-sm text-gray-400 max-w-md">
+                            Start the conversation by sending the first message in this channel.
+                          </p>
+                        </div>
+                      ) : (
+                        messages.map((msg) => (
+                          <div 
+                            key={msg.id} 
+                            className={`flex ${msg.userId === userId ? 'justify-end' : 'justify-start'}`}
+                          >
+                            <div 
+                              className={`max-w-[80%] rounded-xl p-3 ${
+                                msg.userId === userId 
+                                  ? 'bg-blue-800/50 border border-blue-700 rounded-tr-none' 
+                                  : 'bg-gray-700/40 border border-gray-600 rounded-tl-none'
+                              }`}
+                            >
+                              <div className="text-xs text-gray-300 mb-1 flex items-center gap-1">
+                                {msg.userId === userId ? (
+                                  <>
+                                    <span>You</span>
+                                    <span className="text-gray-400">•</span>
+                                    <span className="text-gray-400 text-[10px]">
+                                      {new Date(msg.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                                    </span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <span className="mr-1">{msg.user?.name || user?.email?.address || 'Unknown user'}</span>
+                                    <span className="text-gray-400">•</span>
+                                    <span className="text-gray-400 text-[10px]">
+                                      {new Date(msg.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                                    </span>
+                                  </>
+                                )}
+                              </div>
+                              <div className="break-words">{msg.content}</div>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                      <div ref={messagesEndRef}></div>
+                    </div>
+                    
+                    {/* Message input */}
+                    {isUserMember() && hasTokenAccess ? (
+                      <div className="p-4 border-t border-gray-700">
+                        <form 
+                          onSubmit={(e) => {
+                            e.preventDefault();
+                            sendMessage();
+                          }}
+                          className="flex items-center gap-2"
+                        >
+                          <input
+                            type="text"
+                            placeholder="Type your message..."
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            className="flex-grow bg-gray-700/50 border border-gray-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          />
+                          <button
+                            type="submit"
+                            disabled={!message.trim()}
+                            className="bg-blue-600 hover:bg-blue-500 disabled:bg-gray-700 disabled:text-gray-400 p-2.5 rounded-lg transition-colors"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                              <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+                            </svg>
+                          </button>
+                        </form>
+                      </div>
+                    ) : (
+                      <div className="p-4 border-t border-gray-700">
+                        <div className="bg-gray-800/80 rounded-lg p-3 text-center">
+                          {!isUserMember() ? (
+                            <div className="text-sm text-gray-300">Join this channel to start sending messages</div>
+                          ) : (
+                            <div className="text-sm text-gray-300">You need the required token to send messages</div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+                    <div className="bg-gray-800/60 rounded-full p-5 mb-6">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-100 mb-3">No Channel Selected</h3>
+                    <p className="text-gray-400 max-w-md mb-6">
+                      Create a new channel or go to "My Channels" to select an existing one.
+                    </p>
+                    <div className="flex gap-4">
+                      <button
+                        onClick={createChannel}
+                        className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 
+                                  px-4 py-2.5 rounded-lg text-white font-medium shadow-lg 
+                                  flex items-center gap-2"
+                        disabled={loading}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
+                        </svg>
+                        Create Channel
+                      </button>
+                      
+                      <Link href="/demo/channels" className="bg-gray-700 hover:bg-gray-600 
+                                 px-4 py-2.5 rounded-lg text-white font-medium
+                                 flex items-center gap-2 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
+                        </svg>
+                        My Channels
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
