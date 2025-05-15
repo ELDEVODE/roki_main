@@ -54,27 +54,29 @@ export function SolanaWalletConnector() {
       <button
         onClick={() => setWalletMenuOpen(!walletMenuOpen)}
         className="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700 
-                  text-sm font-medium px-4 py-2.5 rounded-lg shadow-lg transition-all flex items-center gap-2"
+                  text-sm font-medium px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg shadow-lg transition-all flex items-center gap-1 sm:gap-2"
       >
         {wallet ? (
           <>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
               <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
               <path fillRule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clipRule="evenodd" />
             </svg>
-            <span>{formatAddress(wallet.address)}</span>
+            <span className="hidden xs:inline">{formatAddress(wallet.address)}</span>
+            <span className="xs:hidden">Wallet</span>
           </>
         ) : (
           <>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
               <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
               <path fillRule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clipRule="evenodd" />
             </svg>
-            <span>Connect Wallet</span>
+            <span className="hidden xs:inline">Connect Wallet</span>
+            <span className="xs:hidden">Wallet</span>
           </>
         )}
         <svg 
-          className="w-4 h-4" 
+          className="w-4 h-4 flex-shrink-0" 
           fill="none" 
           stroke="currentColor" 
           viewBox="0 0 24 24"
@@ -158,24 +160,26 @@ export default function Header() {
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         <div className="flex items-center space-x-2">
           <Link href="/demo">
-            <div className="w-10 h-10 relative rounded-lg overflow-hidden flex items-center justify-center bg-gradient-to-br from-blue-500 to-indigo-600">
+            <div className="w-12 h-12 relative rounded-lg overflow-hidden flex items-center justify-center ">
               <img
                 src="/roki-gradient.png"
                 alt="Roki Logo"
                 title="Roki Logo"
-                className="h-8 w-8 object-contain"
+                className="h-10 w-10 object-contain"
               />
             </div>
           </Link>
-          <span className="font-bold text-xl bg-gradient-to-r from-blue-400 to-indigo-500 text-transparent bg-clip-text">
+          {/* <span className="font-bold text-xl bg-gradient-to-r from-blue-400 to-indigo-500 text-transparent bg-clip-text">
             Roki
-          </span>
+          </span> */}
         </div>
 
         {/* Mobile menu button */}
         <button 
-          className="md:hidden text-gray-300 hover:text-white"
+          className="md:hidden text-gray-300 hover:text-white focus:outline-none"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label="Toggle mobile menu"
+          aria-expanded={isMenuOpen}
         >
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
@@ -194,17 +198,46 @@ export default function Header() {
 
         {/* Mobile navigation dropdown */}
         {isMenuOpen && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-gray-900/95 backdrop-blur-md border-t border-b border-gray-800 md:hidden z-50">
-            <div className="py-2 px-4 space-y-3">
-              <Link href="/demo" className="block py-2 text-gray-300 hover:text-white">
-                Chat Demo
+          <div className="absolute top-full left-0 right-0 mt-2 bg-gray-900/95 backdrop-blur-lg border-t border-b border-gray-800 md:hidden z-50 shadow-xl transition-all duration-300 ease-in-out">
+            <div className="py-4 px-6 space-y-4 max-h-[80vh] overflow-y-auto">
+              <Link href="/demo" className="block py-3 px-4 text-gray-300 hover:text-white hover:bg-gray-800/50 rounded-lg transition-all">
+                <div className="flex items-center gap-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z" />
+                    <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z" />
+                  </svg>
+                  <span className="font-medium">Chat Demo</span>
+                </div>
               </Link>
-              <Link href="/demo/channels" className="block py-2 text-gray-300 hover:text-white">
-                My Channels
+              <Link href="/demo/channels" className="block py-3 px-4 text-gray-300 hover:text-white hover:bg-gray-800/50 rounded-lg transition-all">
+                <div className="flex items-center gap-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z" />
+                  </svg>
+                  <span className="font-medium">My Channels</span>
+                </div>
               </Link>
-              <Link href="#" className="block py-2 text-gray-300 hover:text-white">
-                Features
+              <Link href="#" className="block py-3 px-4 text-gray-300 hover:text-white hover:bg-gray-800/50 rounded-lg transition-all">
+                <div className="flex items-center gap-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-medium">Features</span>
+                </div>
               </Link>
+              {authenticated && (
+                <button 
+                  onClick={() => logout()} 
+                  className="w-full block py-3 px-4 text-gray-300 hover:text-white hover:bg-gray-800/50 rounded-lg transition-all text-left"
+                >
+                  <div className="flex items-center gap-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V7.414l-5-5H3zm7 2a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1zm1 8a1 1 0 100 2h.01a1 1 0 100-2H11z" clipRule="evenodd" />
+                    </svg>
+                    <span className="font-medium">Sign Out</span>
+                  </div>
+                </button>
+              )}
             </div>
           </div>
         )}

@@ -36,16 +36,16 @@ export default function HomePage() {
       <Header />
 
       {/* Hero Section - Modern with 3D elements */}
-      <section className="relative pt-32 pb-24 md:pt-40 md:pb-32 px-6 overflow-hidden">
+      <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 px-4 sm:px-6 overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-center">
-            <div className="md:w-1/2 text-left md:pr-12">
-              <div className="inline-flex items-center px-3 py-1 mb-6 rounded-full bg-purple-900/30 border border-purple-700/30 text-purple-400 text-xs font-medium">
+            <div className="w-full md:w-1/2 text-center md:text-left md:pr-6 lg:pr-12">
+              <div className="inline-flex items-center px-3 py-1 mb-4 md:mb-6 rounded-full bg-purple-900/30 border border-purple-700/30 text-purple-400 text-xs font-medium">
                 <span className="w-2 h-2 rounded-full bg-green-400 mr-2"></span>
                 Now in Public Beta
               </div>
 
-              <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 md:mb-6 leading-tight">
                 Reimagine
                 <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-indigo-400">
                   {" "}
@@ -54,13 +54,13 @@ export default function HomePage() {
                 Ownership
               </h1>
 
-              <p className="text-lg text-gray-400 max-w-lg mb-8">
+              <p className="text-base sm:text-lg text-gray-400 max-w-lg mx-auto md:mx-0 mb-6 md:mb-8">
                 The next-generation platform where tokens unlock experiences,
                 and communities thrive without intermediaries.
               </p>
 
-              <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
-                <button className="px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 rounded-lg font-medium transition shadow-lg shadow-purple-500/20 flex items-center justify-center">
+              <div className="flex flex-col sm:flex-row justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4 mb-8">
+                <button className="px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 rounded-lg font-medium transition shadow-lg shadow-purple-500/20 flex items-center justify-center">
                   <span>Start Building</span>
                   <svg
                     className="w-5 h-5 ml-2"
@@ -77,7 +77,7 @@ export default function HomePage() {
                     ></path>
                   </svg>
                 </button>
-                <button className="px-8 py-4 bg-white/5 hover:bg-white/10 border border-gray-700 hover:border-purple-500 rounded-lg font-medium transition flex items-center justify-center">
+                <button className="px-6 sm:px-8 py-3 sm:py-4 bg-white/5 hover:bg-white/10 border border-gray-700 hover:border-purple-500 rounded-lg font-medium transition flex items-center justify-center">
                   <svg
                     className="w-5 h-5 mr-2"
                     fill="none"
@@ -102,7 +102,7 @@ export default function HomePage() {
                 </button>
               </div>
 
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center justify-center md:justify-start space-x-4">
                 <div className="flex -space-x-2">
                   {[...Array(4)].map((_, i) => (
                     <div
@@ -118,7 +118,7 @@ export default function HomePage() {
               </div>
             </div>
 
-            <div className="md:w-1/2 mt-12 md:mt-0 relative">
+            <div className="w-full md:w-1/2 mt-12 md:mt-0 relative">
               <div className="relative z-10 bg-gradient-to-br from-purple-900/30 to-indigo-900/30 border border-white/10 rounded-2xl p-2 shadow-2xl backdrop-blur-md">
                 <div className="aspect-[5/3] rounded-lg overflow-hidden bg-gray-900 relative">
                   {/* Dashboard mockup image would go here */}
@@ -173,22 +173,22 @@ export default function HomePage() {
       </section> */}
 
       {/* Features Section */}
-      <section className="py-24 px-6 relative">
+      <section className="py-16 md:py-24 px-4 sm:px-6 relative">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12 md:mb-16">
             <div className="inline-flex items-center px-3 py-1 mb-4 rounded-full bg-purple-900/30 border border-purple-700/30 text-purple-400 text-xs font-medium">
               FEATURES
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
               Designed for{" "}
               <span className="text-purple-400">Web3 Communities</span>
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+            <p className="text-gray-400 max-w-2xl mx-auto text-base sm:text-lg">
               Everything you need to grow, engage, and monetize your community
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
             {[
               {
                 icon: "🔐",
