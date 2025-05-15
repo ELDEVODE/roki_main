@@ -1144,11 +1144,13 @@ export namespace Prisma {
   export type DemoUserCountOutputType = {
     memberships: number
     messages: number
+    createdChannels: number
   }
 
   export type DemoUserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     memberships?: boolean | DemoUserCountOutputTypeCountMembershipsArgs
     messages?: boolean | DemoUserCountOutputTypeCountMessagesArgs
+    createdChannels?: boolean | DemoUserCountOutputTypeCountCreatedChannelsArgs
   }
 
   // Custom InputTypes
@@ -1174,6 +1176,13 @@ export namespace Prisma {
    */
   export type DemoUserCountOutputTypeCountMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DemoMessageWhereInput
+  }
+
+  /**
+   * DemoUserCountOutputType without action
+   */
+  export type DemoUserCountOutputTypeCountCreatedChannelsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DemoChannelWhereInput
   }
 
 
@@ -1379,6 +1388,7 @@ export namespace Prisma {
     createdAt?: boolean
     memberships?: boolean | DemoUser$membershipsArgs<ExtArgs>
     messages?: boolean | DemoUser$messagesArgs<ExtArgs>
+    createdChannels?: boolean | DemoUser$createdChannelsArgs<ExtArgs>
     _count?: boolean | DemoUserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["demoUser"]>
 
@@ -1407,6 +1417,7 @@ export namespace Prisma {
   export type DemoUserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     memberships?: boolean | DemoUser$membershipsArgs<ExtArgs>
     messages?: boolean | DemoUser$messagesArgs<ExtArgs>
+    createdChannels?: boolean | DemoUser$createdChannelsArgs<ExtArgs>
     _count?: boolean | DemoUserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DemoUserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1417,6 +1428,7 @@ export namespace Prisma {
     objects: {
       memberships: Prisma.$DemoMembershipPayload<ExtArgs>[]
       messages: Prisma.$DemoMessagePayload<ExtArgs>[]
+      createdChannels: Prisma.$DemoChannelPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -1819,6 +1831,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     memberships<T extends DemoUser$membershipsArgs<ExtArgs> = {}>(args?: Subset<T, DemoUser$membershipsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemoMembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     messages<T extends DemoUser$messagesArgs<ExtArgs> = {}>(args?: Subset<T, DemoUser$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemoMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    createdChannels<T extends DemoUser$createdChannelsArgs<ExtArgs> = {}>(args?: Subset<T, DemoUser$createdChannelsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemoChannelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2288,6 +2301,30 @@ export namespace Prisma {
   }
 
   /**
+   * DemoUser.createdChannels
+   */
+  export type DemoUser$createdChannelsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoChannel
+     */
+    select?: DemoChannelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoChannel
+     */
+    omit?: DemoChannelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoChannelInclude<ExtArgs> | null
+    where?: DemoChannelWhereInput
+    orderBy?: DemoChannelOrderByWithRelationInput | DemoChannelOrderByWithRelationInput[]
+    cursor?: DemoChannelWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DemoChannelScalarFieldEnum | DemoChannelScalarFieldEnum[]
+  }
+
+  /**
    * DemoUser without action
    */
   export type DemoUserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2478,6 +2515,7 @@ export namespace Prisma {
     isTokenGated?: boolean
     tokenAddress?: boolean
     createdAt?: boolean
+    creator?: boolean | DemoUserDefaultArgs<ExtArgs>
     members?: boolean | DemoChannel$membersArgs<ExtArgs>
     messages?: boolean | DemoChannel$messagesArgs<ExtArgs>
     _count?: boolean | DemoChannelCountOutputTypeDefaultArgs<ExtArgs>
@@ -2490,6 +2528,7 @@ export namespace Prisma {
     isTokenGated?: boolean
     tokenAddress?: boolean
     createdAt?: boolean
+    creator?: boolean | DemoUserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["demoChannel"]>
 
   export type DemoChannelSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2499,6 +2538,7 @@ export namespace Prisma {
     isTokenGated?: boolean
     tokenAddress?: boolean
     createdAt?: boolean
+    creator?: boolean | DemoUserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["demoChannel"]>
 
   export type DemoChannelSelectScalar = {
@@ -2512,16 +2552,22 @@ export namespace Prisma {
 
   export type DemoChannelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "creatorId" | "isTokenGated" | "tokenAddress" | "createdAt", ExtArgs["result"]["demoChannel"]>
   export type DemoChannelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creator?: boolean | DemoUserDefaultArgs<ExtArgs>
     members?: boolean | DemoChannel$membersArgs<ExtArgs>
     messages?: boolean | DemoChannel$messagesArgs<ExtArgs>
     _count?: boolean | DemoChannelCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type DemoChannelIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type DemoChannelIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type DemoChannelIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creator?: boolean | DemoUserDefaultArgs<ExtArgs>
+  }
+  export type DemoChannelIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    creator?: boolean | DemoUserDefaultArgs<ExtArgs>
+  }
 
   export type $DemoChannelPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "DemoChannel"
     objects: {
+      creator: Prisma.$DemoUserPayload<ExtArgs>
       members: Prisma.$DemoMembershipPayload<ExtArgs>[]
       messages: Prisma.$DemoMessagePayload<ExtArgs>[]
     }
@@ -2926,6 +2972,7 @@ export namespace Prisma {
    */
   export interface Prisma__DemoChannelClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    creator<T extends DemoUserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DemoUserDefaultArgs<ExtArgs>>): Prisma__DemoUserClient<$Result.GetResult<Prisma.$DemoUserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     members<T extends DemoChannel$membersArgs<ExtArgs> = {}>(args?: Subset<T, DemoChannel$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemoMembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     messages<T extends DemoChannel$messagesArgs<ExtArgs> = {}>(args?: Subset<T, DemoChannel$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemoMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -3212,6 +3259,10 @@ export namespace Prisma {
      */
     data: DemoChannelCreateManyInput | DemoChannelCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoChannelIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -3282,6 +3333,10 @@ export namespace Prisma {
      * Limit how many DemoChannels to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoChannelIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -5698,6 +5753,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"DemoUser"> | Date | string
     memberships?: DemoMembershipListRelationFilter
     messages?: DemoMessageListRelationFilter
+    createdChannels?: DemoChannelListRelationFilter
   }
 
   export type DemoUserOrderByWithRelationInput = {
@@ -5707,6 +5763,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     memberships?: DemoMembershipOrderByRelationAggregateInput
     messages?: DemoMessageOrderByRelationAggregateInput
+    createdChannels?: DemoChannelOrderByRelationAggregateInput
   }
 
   export type DemoUserWhereUniqueInput = Prisma.AtLeast<{
@@ -5719,6 +5776,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"DemoUser"> | Date | string
     memberships?: DemoMembershipListRelationFilter
     messages?: DemoMessageListRelationFilter
+    createdChannels?: DemoChannelListRelationFilter
   }, "id" | "walletAddress">
 
   export type DemoUserOrderByWithAggregationInput = {
@@ -5751,6 +5809,7 @@ export namespace Prisma {
     isTokenGated?: BoolFilter<"DemoChannel"> | boolean
     tokenAddress?: StringNullableFilter<"DemoChannel"> | string | null
     createdAt?: DateTimeFilter<"DemoChannel"> | Date | string
+    creator?: XOR<DemoUserScalarRelationFilter, DemoUserWhereInput>
     members?: DemoMembershipListRelationFilter
     messages?: DemoMessageListRelationFilter
   }
@@ -5762,6 +5821,7 @@ export namespace Prisma {
     isTokenGated?: SortOrder
     tokenAddress?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    creator?: DemoUserOrderByWithRelationInput
     members?: DemoMembershipOrderByRelationAggregateInput
     messages?: DemoMessageOrderByRelationAggregateInput
   }
@@ -5776,6 +5836,7 @@ export namespace Prisma {
     isTokenGated?: BoolFilter<"DemoChannel"> | boolean
     tokenAddress?: StringNullableFilter<"DemoChannel"> | string | null
     createdAt?: DateTimeFilter<"DemoChannel"> | Date | string
+    creator?: XOR<DemoUserScalarRelationFilter, DemoUserWhereInput>
     members?: DemoMembershipListRelationFilter
     messages?: DemoMessageListRelationFilter
   }, "id">
@@ -5928,6 +5989,7 @@ export namespace Prisma {
     createdAt?: Date | string
     memberships?: DemoMembershipCreateNestedManyWithoutUserInput
     messages?: DemoMessageCreateNestedManyWithoutUserInput
+    createdChannels?: DemoChannelCreateNestedManyWithoutCreatorInput
   }
 
   export type DemoUserUncheckedCreateInput = {
@@ -5937,6 +5999,7 @@ export namespace Prisma {
     createdAt?: Date | string
     memberships?: DemoMembershipUncheckedCreateNestedManyWithoutUserInput
     messages?: DemoMessageUncheckedCreateNestedManyWithoutUserInput
+    createdChannels?: DemoChannelUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type DemoUserUpdateInput = {
@@ -5946,6 +6009,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     memberships?: DemoMembershipUpdateManyWithoutUserNestedInput
     messages?: DemoMessageUpdateManyWithoutUserNestedInput
+    createdChannels?: DemoChannelUpdateManyWithoutCreatorNestedInput
   }
 
   export type DemoUserUncheckedUpdateInput = {
@@ -5955,6 +6019,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     memberships?: DemoMembershipUncheckedUpdateManyWithoutUserNestedInput
     messages?: DemoMessageUncheckedUpdateManyWithoutUserNestedInput
+    createdChannels?: DemoChannelUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type DemoUserCreateManyInput = {
@@ -5981,10 +6046,10 @@ export namespace Prisma {
   export type DemoChannelCreateInput = {
     id?: string
     name: string
-    creatorId: string
     isTokenGated?: boolean
     tokenAddress?: string | null
     createdAt?: Date | string
+    creator: DemoUserCreateNestedOneWithoutCreatedChannelsInput
     members?: DemoMembershipCreateNestedManyWithoutChannelInput
     messages?: DemoMessageCreateNestedManyWithoutChannelInput
   }
@@ -6003,10 +6068,10 @@ export namespace Prisma {
   export type DemoChannelUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    creatorId?: StringFieldUpdateOperationsInput | string
     isTokenGated?: BoolFieldUpdateOperationsInput | boolean
     tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: DemoUserUpdateOneRequiredWithoutCreatedChannelsNestedInput
     members?: DemoMembershipUpdateManyWithoutChannelNestedInput
     messages?: DemoMessageUpdateManyWithoutChannelNestedInput
   }
@@ -6034,7 +6099,6 @@ export namespace Prisma {
   export type DemoChannelUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    creatorId?: StringFieldUpdateOperationsInput | string
     isTokenGated?: BoolFieldUpdateOperationsInput | boolean
     tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -6210,6 +6274,12 @@ export namespace Prisma {
     none?: DemoMessageWhereInput
   }
 
+  export type DemoChannelListRelationFilter = {
+    every?: DemoChannelWhereInput
+    some?: DemoChannelWhereInput
+    none?: DemoChannelWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -6220,6 +6290,10 @@ export namespace Prisma {
   }
 
   export type DemoMessageOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DemoChannelOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -6299,6 +6373,11 @@ export namespace Prisma {
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type DemoUserScalarRelationFilter = {
+    is?: DemoUserWhereInput
+    isNot?: DemoUserWhereInput
+  }
+
   export type DemoChannelCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
@@ -6332,11 +6411,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
-  }
-
-  export type DemoUserScalarRelationFilter = {
-    is?: DemoUserWhereInput
-    isNot?: DemoUserWhereInput
   }
 
   export type DemoChannelScalarRelationFilter = {
@@ -6411,6 +6485,13 @@ export namespace Prisma {
     connect?: DemoMessageWhereUniqueInput | DemoMessageWhereUniqueInput[]
   }
 
+  export type DemoChannelCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<DemoChannelCreateWithoutCreatorInput, DemoChannelUncheckedCreateWithoutCreatorInput> | DemoChannelCreateWithoutCreatorInput[] | DemoChannelUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: DemoChannelCreateOrConnectWithoutCreatorInput | DemoChannelCreateOrConnectWithoutCreatorInput[]
+    createMany?: DemoChannelCreateManyCreatorInputEnvelope
+    connect?: DemoChannelWhereUniqueInput | DemoChannelWhereUniqueInput[]
+  }
+
   export type DemoMembershipUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<DemoMembershipCreateWithoutUserInput, DemoMembershipUncheckedCreateWithoutUserInput> | DemoMembershipCreateWithoutUserInput[] | DemoMembershipUncheckedCreateWithoutUserInput[]
     connectOrCreate?: DemoMembershipCreateOrConnectWithoutUserInput | DemoMembershipCreateOrConnectWithoutUserInput[]
@@ -6423,6 +6504,13 @@ export namespace Prisma {
     connectOrCreate?: DemoMessageCreateOrConnectWithoutUserInput | DemoMessageCreateOrConnectWithoutUserInput[]
     createMany?: DemoMessageCreateManyUserInputEnvelope
     connect?: DemoMessageWhereUniqueInput | DemoMessageWhereUniqueInput[]
+  }
+
+  export type DemoChannelUncheckedCreateNestedManyWithoutCreatorInput = {
+    create?: XOR<DemoChannelCreateWithoutCreatorInput, DemoChannelUncheckedCreateWithoutCreatorInput> | DemoChannelCreateWithoutCreatorInput[] | DemoChannelUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: DemoChannelCreateOrConnectWithoutCreatorInput | DemoChannelCreateOrConnectWithoutCreatorInput[]
+    createMany?: DemoChannelCreateManyCreatorInputEnvelope
+    connect?: DemoChannelWhereUniqueInput | DemoChannelWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -6465,6 +6553,20 @@ export namespace Prisma {
     deleteMany?: DemoMessageScalarWhereInput | DemoMessageScalarWhereInput[]
   }
 
+  export type DemoChannelUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<DemoChannelCreateWithoutCreatorInput, DemoChannelUncheckedCreateWithoutCreatorInput> | DemoChannelCreateWithoutCreatorInput[] | DemoChannelUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: DemoChannelCreateOrConnectWithoutCreatorInput | DemoChannelCreateOrConnectWithoutCreatorInput[]
+    upsert?: DemoChannelUpsertWithWhereUniqueWithoutCreatorInput | DemoChannelUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: DemoChannelCreateManyCreatorInputEnvelope
+    set?: DemoChannelWhereUniqueInput | DemoChannelWhereUniqueInput[]
+    disconnect?: DemoChannelWhereUniqueInput | DemoChannelWhereUniqueInput[]
+    delete?: DemoChannelWhereUniqueInput | DemoChannelWhereUniqueInput[]
+    connect?: DemoChannelWhereUniqueInput | DemoChannelWhereUniqueInput[]
+    update?: DemoChannelUpdateWithWhereUniqueWithoutCreatorInput | DemoChannelUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: DemoChannelUpdateManyWithWhereWithoutCreatorInput | DemoChannelUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: DemoChannelScalarWhereInput | DemoChannelScalarWhereInput[]
+  }
+
   export type DemoMembershipUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<DemoMembershipCreateWithoutUserInput, DemoMembershipUncheckedCreateWithoutUserInput> | DemoMembershipCreateWithoutUserInput[] | DemoMembershipUncheckedCreateWithoutUserInput[]
     connectOrCreate?: DemoMembershipCreateOrConnectWithoutUserInput | DemoMembershipCreateOrConnectWithoutUserInput[]
@@ -6491,6 +6593,26 @@ export namespace Prisma {
     update?: DemoMessageUpdateWithWhereUniqueWithoutUserInput | DemoMessageUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: DemoMessageUpdateManyWithWhereWithoutUserInput | DemoMessageUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: DemoMessageScalarWhereInput | DemoMessageScalarWhereInput[]
+  }
+
+  export type DemoChannelUncheckedUpdateManyWithoutCreatorNestedInput = {
+    create?: XOR<DemoChannelCreateWithoutCreatorInput, DemoChannelUncheckedCreateWithoutCreatorInput> | DemoChannelCreateWithoutCreatorInput[] | DemoChannelUncheckedCreateWithoutCreatorInput[]
+    connectOrCreate?: DemoChannelCreateOrConnectWithoutCreatorInput | DemoChannelCreateOrConnectWithoutCreatorInput[]
+    upsert?: DemoChannelUpsertWithWhereUniqueWithoutCreatorInput | DemoChannelUpsertWithWhereUniqueWithoutCreatorInput[]
+    createMany?: DemoChannelCreateManyCreatorInputEnvelope
+    set?: DemoChannelWhereUniqueInput | DemoChannelWhereUniqueInput[]
+    disconnect?: DemoChannelWhereUniqueInput | DemoChannelWhereUniqueInput[]
+    delete?: DemoChannelWhereUniqueInput | DemoChannelWhereUniqueInput[]
+    connect?: DemoChannelWhereUniqueInput | DemoChannelWhereUniqueInput[]
+    update?: DemoChannelUpdateWithWhereUniqueWithoutCreatorInput | DemoChannelUpdateWithWhereUniqueWithoutCreatorInput[]
+    updateMany?: DemoChannelUpdateManyWithWhereWithoutCreatorInput | DemoChannelUpdateManyWithWhereWithoutCreatorInput[]
+    deleteMany?: DemoChannelScalarWhereInput | DemoChannelScalarWhereInput[]
+  }
+
+  export type DemoUserCreateNestedOneWithoutCreatedChannelsInput = {
+    create?: XOR<DemoUserCreateWithoutCreatedChannelsInput, DemoUserUncheckedCreateWithoutCreatedChannelsInput>
+    connectOrCreate?: DemoUserCreateOrConnectWithoutCreatedChannelsInput
+    connect?: DemoUserWhereUniqueInput
   }
 
   export type DemoMembershipCreateNestedManyWithoutChannelInput = {
@@ -6523,6 +6645,14 @@ export namespace Prisma {
 
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
+  }
+
+  export type DemoUserUpdateOneRequiredWithoutCreatedChannelsNestedInput = {
+    create?: XOR<DemoUserCreateWithoutCreatedChannelsInput, DemoUserUncheckedCreateWithoutCreatedChannelsInput>
+    connectOrCreate?: DemoUserCreateOrConnectWithoutCreatedChannelsInput
+    upsert?: DemoUserUpsertWithoutCreatedChannelsInput
+    connect?: DemoUserWhereUniqueInput
+    update?: XOR<XOR<DemoUserUpdateToOneWithWhereWithoutCreatedChannelsInput, DemoUserUpdateWithoutCreatedChannelsInput>, DemoUserUncheckedUpdateWithoutCreatedChannelsInput>
   }
 
   export type DemoMembershipUpdateManyWithoutChannelNestedInput = {
@@ -6807,6 +6937,36 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DemoChannelCreateWithoutCreatorInput = {
+    id?: string
+    name: string
+    isTokenGated?: boolean
+    tokenAddress?: string | null
+    createdAt?: Date | string
+    members?: DemoMembershipCreateNestedManyWithoutChannelInput
+    messages?: DemoMessageCreateNestedManyWithoutChannelInput
+  }
+
+  export type DemoChannelUncheckedCreateWithoutCreatorInput = {
+    id?: string
+    name: string
+    isTokenGated?: boolean
+    tokenAddress?: string | null
+    createdAt?: Date | string
+    members?: DemoMembershipUncheckedCreateNestedManyWithoutChannelInput
+    messages?: DemoMessageUncheckedCreateNestedManyWithoutChannelInput
+  }
+
+  export type DemoChannelCreateOrConnectWithoutCreatorInput = {
+    where: DemoChannelWhereUniqueInput
+    create: XOR<DemoChannelCreateWithoutCreatorInput, DemoChannelUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type DemoChannelCreateManyCreatorInputEnvelope = {
+    data: DemoChannelCreateManyCreatorInput | DemoChannelCreateManyCreatorInput[]
+    skipDuplicates?: boolean
+  }
+
   export type DemoMembershipUpsertWithWhereUniqueWithoutUserInput = {
     where: DemoMembershipWhereUniqueInput
     update: XOR<DemoMembershipUpdateWithoutUserInput, DemoMembershipUncheckedUpdateWithoutUserInput>
@@ -6861,6 +7021,57 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"DemoMessage"> | Date | string
   }
 
+  export type DemoChannelUpsertWithWhereUniqueWithoutCreatorInput = {
+    where: DemoChannelWhereUniqueInput
+    update: XOR<DemoChannelUpdateWithoutCreatorInput, DemoChannelUncheckedUpdateWithoutCreatorInput>
+    create: XOR<DemoChannelCreateWithoutCreatorInput, DemoChannelUncheckedCreateWithoutCreatorInput>
+  }
+
+  export type DemoChannelUpdateWithWhereUniqueWithoutCreatorInput = {
+    where: DemoChannelWhereUniqueInput
+    data: XOR<DemoChannelUpdateWithoutCreatorInput, DemoChannelUncheckedUpdateWithoutCreatorInput>
+  }
+
+  export type DemoChannelUpdateManyWithWhereWithoutCreatorInput = {
+    where: DemoChannelScalarWhereInput
+    data: XOR<DemoChannelUpdateManyMutationInput, DemoChannelUncheckedUpdateManyWithoutCreatorInput>
+  }
+
+  export type DemoChannelScalarWhereInput = {
+    AND?: DemoChannelScalarWhereInput | DemoChannelScalarWhereInput[]
+    OR?: DemoChannelScalarWhereInput[]
+    NOT?: DemoChannelScalarWhereInput | DemoChannelScalarWhereInput[]
+    id?: StringFilter<"DemoChannel"> | string
+    name?: StringFilter<"DemoChannel"> | string
+    creatorId?: StringFilter<"DemoChannel"> | string
+    isTokenGated?: BoolFilter<"DemoChannel"> | boolean
+    tokenAddress?: StringNullableFilter<"DemoChannel"> | string | null
+    createdAt?: DateTimeFilter<"DemoChannel"> | Date | string
+  }
+
+  export type DemoUserCreateWithoutCreatedChannelsInput = {
+    id?: string
+    walletAddress: string
+    name?: string | null
+    createdAt?: Date | string
+    memberships?: DemoMembershipCreateNestedManyWithoutUserInput
+    messages?: DemoMessageCreateNestedManyWithoutUserInput
+  }
+
+  export type DemoUserUncheckedCreateWithoutCreatedChannelsInput = {
+    id?: string
+    walletAddress: string
+    name?: string | null
+    createdAt?: Date | string
+    memberships?: DemoMembershipUncheckedCreateNestedManyWithoutUserInput
+    messages?: DemoMessageUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type DemoUserCreateOrConnectWithoutCreatedChannelsInput = {
+    where: DemoUserWhereUniqueInput
+    create: XOR<DemoUserCreateWithoutCreatedChannelsInput, DemoUserUncheckedCreateWithoutCreatedChannelsInput>
+  }
+
   export type DemoMembershipCreateWithoutChannelInput = {
     id?: string
     role?: string
@@ -6909,6 +7120,35 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type DemoUserUpsertWithoutCreatedChannelsInput = {
+    update: XOR<DemoUserUpdateWithoutCreatedChannelsInput, DemoUserUncheckedUpdateWithoutCreatedChannelsInput>
+    create: XOR<DemoUserCreateWithoutCreatedChannelsInput, DemoUserUncheckedCreateWithoutCreatedChannelsInput>
+    where?: DemoUserWhereInput
+  }
+
+  export type DemoUserUpdateToOneWithWhereWithoutCreatedChannelsInput = {
+    where?: DemoUserWhereInput
+    data: XOR<DemoUserUpdateWithoutCreatedChannelsInput, DemoUserUncheckedUpdateWithoutCreatedChannelsInput>
+  }
+
+  export type DemoUserUpdateWithoutCreatedChannelsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    walletAddress?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    memberships?: DemoMembershipUpdateManyWithoutUserNestedInput
+    messages?: DemoMessageUpdateManyWithoutUserNestedInput
+  }
+
+  export type DemoUserUncheckedUpdateWithoutCreatedChannelsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    walletAddress?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    memberships?: DemoMembershipUncheckedUpdateManyWithoutUserNestedInput
+    messages?: DemoMessageUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type DemoMembershipUpsertWithWhereUniqueWithoutChannelInput = {
     where: DemoMembershipWhereUniqueInput
     update: XOR<DemoMembershipUpdateWithoutChannelInput, DemoMembershipUncheckedUpdateWithoutChannelInput>
@@ -6947,6 +7187,7 @@ export namespace Prisma {
     name?: string | null
     createdAt?: Date | string
     messages?: DemoMessageCreateNestedManyWithoutUserInput
+    createdChannels?: DemoChannelCreateNestedManyWithoutCreatorInput
   }
 
   export type DemoUserUncheckedCreateWithoutMembershipsInput = {
@@ -6955,6 +7196,7 @@ export namespace Prisma {
     name?: string | null
     createdAt?: Date | string
     messages?: DemoMessageUncheckedCreateNestedManyWithoutUserInput
+    createdChannels?: DemoChannelUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type DemoUserCreateOrConnectWithoutMembershipsInput = {
@@ -6965,10 +7207,10 @@ export namespace Prisma {
   export type DemoChannelCreateWithoutMembersInput = {
     id?: string
     name: string
-    creatorId: string
     isTokenGated?: boolean
     tokenAddress?: string | null
     createdAt?: Date | string
+    creator: DemoUserCreateNestedOneWithoutCreatedChannelsInput
     messages?: DemoMessageCreateNestedManyWithoutChannelInput
   }
 
@@ -7004,6 +7246,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     messages?: DemoMessageUpdateManyWithoutUserNestedInput
+    createdChannels?: DemoChannelUpdateManyWithoutCreatorNestedInput
   }
 
   export type DemoUserUncheckedUpdateWithoutMembershipsInput = {
@@ -7012,6 +7255,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     messages?: DemoMessageUncheckedUpdateManyWithoutUserNestedInput
+    createdChannels?: DemoChannelUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type DemoChannelUpsertWithoutMembersInput = {
@@ -7028,10 +7272,10 @@ export namespace Prisma {
   export type DemoChannelUpdateWithoutMembersInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    creatorId?: StringFieldUpdateOperationsInput | string
     isTokenGated?: BoolFieldUpdateOperationsInput | boolean
     tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: DemoUserUpdateOneRequiredWithoutCreatedChannelsNestedInput
     messages?: DemoMessageUpdateManyWithoutChannelNestedInput
   }
 
@@ -7051,6 +7295,7 @@ export namespace Prisma {
     name?: string | null
     createdAt?: Date | string
     memberships?: DemoMembershipCreateNestedManyWithoutUserInput
+    createdChannels?: DemoChannelCreateNestedManyWithoutCreatorInput
   }
 
   export type DemoUserUncheckedCreateWithoutMessagesInput = {
@@ -7059,6 +7304,7 @@ export namespace Prisma {
     name?: string | null
     createdAt?: Date | string
     memberships?: DemoMembershipUncheckedCreateNestedManyWithoutUserInput
+    createdChannels?: DemoChannelUncheckedCreateNestedManyWithoutCreatorInput
   }
 
   export type DemoUserCreateOrConnectWithoutMessagesInput = {
@@ -7069,10 +7315,10 @@ export namespace Prisma {
   export type DemoChannelCreateWithoutMessagesInput = {
     id?: string
     name: string
-    creatorId: string
     isTokenGated?: boolean
     tokenAddress?: string | null
     createdAt?: Date | string
+    creator: DemoUserCreateNestedOneWithoutCreatedChannelsInput
     members?: DemoMembershipCreateNestedManyWithoutChannelInput
   }
 
@@ -7108,6 +7354,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     memberships?: DemoMembershipUpdateManyWithoutUserNestedInput
+    createdChannels?: DemoChannelUpdateManyWithoutCreatorNestedInput
   }
 
   export type DemoUserUncheckedUpdateWithoutMessagesInput = {
@@ -7116,6 +7363,7 @@ export namespace Prisma {
     name?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     memberships?: DemoMembershipUncheckedUpdateManyWithoutUserNestedInput
+    createdChannels?: DemoChannelUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
   export type DemoChannelUpsertWithoutMessagesInput = {
@@ -7132,10 +7380,10 @@ export namespace Prisma {
   export type DemoChannelUpdateWithoutMessagesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    creatorId?: StringFieldUpdateOperationsInput | string
     isTokenGated?: BoolFieldUpdateOperationsInput | boolean
     tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: DemoUserUpdateOneRequiredWithoutCreatedChannelsNestedInput
     members?: DemoMembershipUpdateManyWithoutChannelNestedInput
   }
 
@@ -7160,6 +7408,14 @@ export namespace Prisma {
     id?: string
     content: string
     channelId: string
+    createdAt?: Date | string
+  }
+
+  export type DemoChannelCreateManyCreatorInput = {
+    id?: string
+    name: string
+    isTokenGated?: boolean
+    tokenAddress?: string | null
     createdAt?: Date | string
   }
 
@@ -7202,6 +7458,34 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     channelId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DemoChannelUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    isTokenGated?: BoolFieldUpdateOperationsInput | boolean
+    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: DemoMembershipUpdateManyWithoutChannelNestedInput
+    messages?: DemoMessageUpdateManyWithoutChannelNestedInput
+  }
+
+  export type DemoChannelUncheckedUpdateWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    isTokenGated?: BoolFieldUpdateOperationsInput | boolean
+    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: DemoMembershipUncheckedUpdateManyWithoutChannelNestedInput
+    messages?: DemoMessageUncheckedUpdateManyWithoutChannelNestedInput
+  }
+
+  export type DemoChannelUncheckedUpdateManyWithoutCreatorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    isTokenGated?: BoolFieldUpdateOperationsInput | boolean
+    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

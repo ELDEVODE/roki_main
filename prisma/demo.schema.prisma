@@ -16,12 +16,14 @@ model DemoUser {
   name          String?
   memberships   DemoMembership[]
   messages      DemoMessage[]
+  createdChannels DemoChannel[]  @relation("DemoChannelCreator")
   createdAt     DateTime         @default(now())
 }
 
 model DemoChannel {
   id            String           @id @default(cuid())
   name          String
+  creator       DemoUser         @relation("DemoChannelCreator", fields: [creatorId], references: [id])
   creatorId     String
   isTokenGated  Boolean          @default(false)
   tokenAddress  String?
