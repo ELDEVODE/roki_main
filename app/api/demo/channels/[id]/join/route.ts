@@ -2,9 +2,12 @@ import { prisma } from '@/app/utils/prisma';
 import { verifyTokenOwnership } from '@/app/utils/zkTokenService';
 import { NextRequest } from 'next/server';
 
-export async function POST(req: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const { userId, walletAddress } = await req.json();
-  const channelId = params.id;
+  const channelId = (await params).id;
   
   try {
     // Check if channel exists
