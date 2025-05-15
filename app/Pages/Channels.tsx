@@ -250,8 +250,8 @@ export default function ChannelsPage() {
       
       <main className="pt-28 pb-20 px-4 max-w-6xl mx-auto">
         <div className="bg-gray-800/50 backdrop-blur-xl rounded-2xl border border-gray-700 shadow-xl p-6">
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-500 text-transparent bg-clip-text">
+          <div className="flex justify-between items-center mb-8 flex-wrap">
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-indigo-500 text-transparent bg-clip-text mb-4 lg:mb-0">
               Your Channels
             </h1>
             <div className="flex gap-4">
