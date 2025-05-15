@@ -13,8 +13,13 @@ export function middleware(request: NextRequest) {
 
   console.log("Current hostname:", hostname);
 
+  // Redirect /login to /app/login
+  if (url.pathname === "/login") {
+    return NextResponse.redirect(new URL("/app/login", url.origin));
+  }
+
   // If on the login page and already authenticated, redirect to app
-  if (url.pathname === "/login" || url.pathname === "/app/login") {
+  if (url.pathname === "/app/login") {
     if (isAuthenticated) {
       return NextResponse.redirect(new URL("/app", url.origin));
     }
@@ -26,7 +31,7 @@ export function middleware(request: NextRequest) {
     !url.pathname.startsWith("/app/login")
   ) {
     if (!isAuthenticated) {
-      return NextResponse.redirect(new URL("/login", url.origin));
+      return NextResponse.redirect(new URL("/app/login", url.origin));
     }
   }
 
