@@ -168,6 +168,10 @@ const config = {
         "fromEnvVar": null,
         "value": "debian-openssl-3.0.x",
         "native": true
+      },
+      {
+        "fromEnvVar": null,
+        "value": "rhel-openssl-3.0.x"
       }
     ],
     "previewFeatures": [],
@@ -194,8 +198,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"./generated/democlient\"\n}\n\ndatasource db {\n  provider  = \"postgresql\"\n  url       = env(\"DATABASE_URL\")\n  directUrl = env(\"DIRECT_URL\")\n}\n\nmodel DemoUser {\n  id            String           @id @default(cuid())\n  walletAddress String           @unique\n  name          String?\n  memberships   DemoMembership[]\n  messages      DemoMessage[]\n  createdAt     DateTime         @default(now())\n}\n\nmodel DemoChannel {\n  id           String           @id @default(cuid())\n  name         String\n  creatorId    String\n  isTokenGated Boolean          @default(false)\n  tokenAddress String?\n  members      DemoMembership[]\n  messages     DemoMessage[]\n  createdAt    DateTime         @default(now())\n}\n\nmodel DemoMembership {\n  id        String      @id @default(cuid())\n  user      DemoUser    @relation(fields: [userId], references: [id], onDelete: Cascade)\n  userId    String\n  channel   DemoChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)\n  channelId String\n  createdAt DateTime    @default(now())\n\n  @@unique([userId, channelId])\n}\n\nmodel DemoMessage {\n  id        String      @id @default(cuid())\n  content   String\n  user      DemoUser    @relation(fields: [userId], references: [id], onDelete: Cascade)\n  userId    String\n  channel   DemoChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)\n  channelId String\n  createdAt DateTime    @default(now())\n}\n",
-  "inlineSchemaHash": "6b811afe897cdbf46b2437cc6a894098065db6534fd3cd75ebe9733624c86336",
+  "inlineSchema": "generator client {\n  provider      = \"prisma-client-js\"\n  output        = \"./generated/democlient\"\n  binaryTargets = [\"native\", \"rhel-openssl-3.0.x\"]\n}\n\ndatasource db {\n  provider  = \"postgresql\"\n  url       = env(\"DATABASE_URL\")\n  directUrl = env(\"DIRECT_URL\")\n}\n\nmodel DemoUser {\n  id            String           @id @default(cuid())\n  walletAddress String           @unique\n  name          String?\n  memberships   DemoMembership[]\n  messages      DemoMessage[]\n  createdAt     DateTime         @default(now())\n}\n\nmodel DemoChannel {\n  id           String           @id @default(cuid())\n  name         String\n  creatorId    String\n  isTokenGated Boolean          @default(false)\n  tokenAddress String?\n  members      DemoMembership[]\n  messages     DemoMessage[]\n  createdAt    DateTime         @default(now())\n}\n\nmodel DemoMembership {\n  id        String      @id @default(cuid())\n  user      DemoUser    @relation(fields: [userId], references: [id], onDelete: Cascade)\n  userId    String\n  channel   DemoChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)\n  channelId String\n  createdAt DateTime    @default(now())\n\n  @@unique([userId, channelId])\n}\n\nmodel DemoMessage {\n  id        String      @id @default(cuid())\n  content   String\n  user      DemoUser    @relation(fields: [userId], references: [id], onDelete: Cascade)\n  userId    String\n  channel   DemoChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)\n  channelId String\n  createdAt DateTime    @default(now())\n}\n",
+  "inlineSchemaHash": "797c1062f36e3bd1243444433db0fe8a35d301c653cf29f1fb5c7ba90a4b3742",
   "copyEngine": true
 }
 
@@ -236,6 +240,10 @@ Object.assign(exports, Prisma)
 // file annotations for bundling tools to include these files
 path.join(__dirname, "libquery_engine-debian-openssl-3.0.x.so.node");
 path.join(process.cwd(), "prisma/generated/democlient/libquery_engine-debian-openssl-3.0.x.so.node")
+
+// file annotations for bundling tools to include these files
+path.join(__dirname, "libquery_engine-rhel-openssl-3.0.x.so.node");
+path.join(process.cwd(), "prisma/generated/democlient/libquery_engine-rhel-openssl-3.0.x.so.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
 path.join(process.cwd(), "prisma/generated/democlient/schema.prisma")
