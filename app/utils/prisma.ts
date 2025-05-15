@@ -63,6 +63,16 @@ class InMemoryPrismaClient {
           // Fall back to in-memory
           const id = data.id || `cuid-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
           const item = { ...data, id, createdAt: new Date() };
+          
+          // Special handling for relationships in demo data
+          if (tableName === 'DemoChannel' && data.creatorId) {
+            // Find the creator in the users store to include their name
+            const creator = inMemoryStore.users.find((user: any) => user.id === data.creatorId);
+            if (creator) {
+              item.creator = { id: creator.id, name: creator.name };
+            }
+          }
+          
           inMemoryStore[collection].push(item);
           return item;
         }

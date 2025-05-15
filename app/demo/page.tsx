@@ -124,8 +124,11 @@ function DemoContent() {
       const res = await fetch(`/api/demo/channels?id=${id}`);
       if (res.ok) {
         const data = await res.json();
+        console.log("Channel data received:", data);
         setChannel(data);
         setMessages(data.messages || []);
+      } else {
+        console.error("Failed to fetch channel:", await res.text());
       }
     } catch (err) {
       console.error("Failed to fetch channel", err);
@@ -160,6 +163,33 @@ function DemoContent() {
       return;
     }
     
+    // Prompt for channel name
+    const channelName = prompt("Enter channel name:", "New Channel");
+    if (!channelName) {
+      return; // User canceled
+    }
+    
+    // Prompt for username
+    const username = prompt("Enter your display name:", user?.email?.address || `User-${wallet?.address?.slice(0, 6)}`);
+    if (!username) {
+      return; // User canceled
+    }
+    
+    // Update user's name
+    try {
+      await fetch('/api/demo/users', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          userId,
+          name: username 
+        })
+      });
+    } catch (error) {
+      console.error("Failed to update username", error);
+      // Continue anyway since this is not critical
+    }
+    
     setLoading(true);
     setError(null);
     try {
@@ -168,7 +198,7 @@ function DemoContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          name: "ZK Token-Gated Channel",
+          name: channelName,
           creatorId: userId 
         })
       });
@@ -219,6 +249,27 @@ function DemoContent() {
   
   async function joinChannel() {
     if (!channelId || !userId) return;
+    
+    // Prompt for username
+    const username = prompt("Enter your display name:", user?.email?.address || `User-${wallet?.address?.slice(0, 6)}`);
+    if (!username) {
+      return; // User canceled
+    }
+    
+    // Update user's name
+    try {
+      await fetch('/api/demo/users', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          userId,
+          name: username 
+        })
+      });
+    } catch (error) {
+      console.error("Failed to update username", error);
+      // Continue anyway since this is not critical
+    }
     
     setLoading(true);
     try {
@@ -277,7 +328,7 @@ function DemoContent() {
       <Header />
       
       <main className="flex-grow container mx-auto pt-24 pb-10 px-4">
-        {!authenticated ? (
+              {!authenticated ? (
           <div className="flex flex-col items-center justify-center h-[80vh] text-center">
             <div className="mb-8">
               <h1 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-indigo-500 text-transparent bg-clip-text">
@@ -287,16 +338,16 @@ function DemoContent() {
                 Connect your wallet to experience token-gated messaging with zero-knowledge proofs.
               </p>
             </div>
-            <button
-              onClick={() => login()}
+                <button
+                  onClick={() => login()}
               className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 px-6 py-3 rounded-lg text-white font-medium shadow-lg shadow-blue-500/20 flex items-center gap-2"
               disabled={loading}
-            >
+                >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v-1l1-1 1-1-.257-.257A6 6 0 1118 8zm-6-4a1 1 0 100 2h5a1 1 0 100-2h-5z" clipRule="evenodd" />
               </svg>
-              Connect Wallet
-            </button>
+                  Connect Wallet
+                </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -306,13 +357,13 @@ function DemoContent() {
                 <h2 className="text-xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-indigo-500 text-transparent bg-clip-text">
                   Channel Controls
                 </h2>
-                
-                {error && (
+          
+          {error && (
                   <div className="mb-6 p-4 bg-red-900/30 border border-red-700 rounded-lg text-red-200">
-                    {error}
-                  </div>
-                )}
-                
+              {error}
+            </div>
+          )}
+          
                 <div className="space-y-4">
                   {!channelId ? (
                     <button
@@ -346,16 +397,16 @@ function DemoContent() {
                         </p>
                         
                         <div className="flex flex-wrap gap-2 mb-2">
-                          <button
-                            onClick={shareChannel}
+                  <button
+                    onClick={shareChannel}
                             className="flex-1 bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-lg text-sm font-medium 
                                     text-gray-300 flex items-center justify-center gap-1 transition-colors"
-                          >
+                  >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                               <path d="M15 8a3 3 0 10-2.977-2.63l-4.94 2.47a3 3 0 100 4.319l4.94 2.47a3 3 0 10.895-1.789l-4.94-2.47a3.027 3.027 0 000-.74l4.94-2.47C13.456 7.68 14.19 8 15 8z" />
                             </svg>
                             Share
-                          </button>
+                  </button>
                           
                           <Link href="/demo/channels" className="flex-1 bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded-lg text-sm font-medium 
                                      text-gray-300 flex items-center justify-center gap-1 transition-colors">
@@ -364,9 +415,9 @@ function DemoContent() {
                             </svg>
                             Channels
                           </Link>
-                        </div>
-                      </div>
-                      
+                </div>
+              </div>
+              
                       {!channel?.isTokenGated && (
                         <button
                           onClick={tokenGateChannel}
@@ -382,17 +433,17 @@ function DemoContent() {
                       )}
                       
                       {!isUserMember() && channel && (
-                        <button
-                          onClick={joinChannel}
+                  <button
+                    onClick={joinChannel}
                           className="w-full bg-blue-800 hover:bg-blue-700 px-4 py-3 rounded-lg text-white font-medium 
                                    flex items-center justify-center gap-2 transition-colors border border-blue-600"
                           disabled={loading}
-                        >
+                  >
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
                           </svg>
                           Join Channel
-                        </button>
+                  </button>
                       )}
                     </>
                   )}
@@ -401,9 +452,9 @@ function DemoContent() {
                 {loading && (
                   <div className="flex justify-center py-4">
                     <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-                  </div>
-                )}
-                
+                </div>
+              )}
+              
                 {channel?.isTokenGated && (
                   <div className={`mt-6 p-4 rounded-lg border ${hasTokenAccess ? 'bg-green-900/30 border-green-700 text-green-200' : 'bg-yellow-900/30 border-yellow-700 text-yellow-200'}`}>
                     <div className="flex items-start gap-3">
@@ -473,13 +524,13 @@ function DemoContent() {
                         </div>
                       ) : (
                         messages.map((msg) => (
-                          <div 
-                            key={msg.id} 
-                            className={`flex ${msg.userId === userId ? 'justify-end' : 'justify-start'}`}
-                          >
-                            <div 
+                      <div 
+                        key={msg.id} 
+                        className={`flex ${msg.userId === userId ? 'justify-end' : 'justify-start'}`}
+                      >
+                        <div 
                               className={`max-w-[80%] rounded-xl p-3 ${
-                                msg.userId === userId 
+                            msg.userId === userId 
                                   ? 'bg-blue-800/50 border border-blue-700 rounded-tr-none' 
                                   : 'bg-gray-700/40 border border-gray-600 rounded-tl-none'
                               }`}
@@ -588,9 +639,9 @@ function DemoContent() {
                   </div>
                 )}
               </div>
-            </div>
-          </div>
-        )}
+                  </div>
+                </div>
+              )}
       </main>
     </div>
   );
