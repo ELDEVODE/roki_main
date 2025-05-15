@@ -3431,6 +3431,7 @@ export namespace Prisma {
     id: string | null
     userId: string | null
     channelId: string | null
+    role: string | null
     createdAt: Date | null
   }
 
@@ -3438,6 +3439,7 @@ export namespace Prisma {
     id: string | null
     userId: string | null
     channelId: string | null
+    role: string | null
     createdAt: Date | null
   }
 
@@ -3445,6 +3447,7 @@ export namespace Prisma {
     id: number
     userId: number
     channelId: number
+    role: number
     createdAt: number
     _all: number
   }
@@ -3454,6 +3457,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     channelId?: true
+    role?: true
     createdAt?: true
   }
 
@@ -3461,6 +3465,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     channelId?: true
+    role?: true
     createdAt?: true
   }
 
@@ -3468,6 +3473,7 @@ export namespace Prisma {
     id?: true
     userId?: true
     channelId?: true
+    role?: true
     createdAt?: true
     _all?: true
   }
@@ -3548,6 +3554,7 @@ export namespace Prisma {
     id: string
     userId: string
     channelId: string
+    role: string
     createdAt: Date
     _count: DemoMembershipCountAggregateOutputType | null
     _min: DemoMembershipMinAggregateOutputType | null
@@ -3572,6 +3579,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     channelId?: boolean
+    role?: boolean
     createdAt?: boolean
     user?: boolean | DemoUserDefaultArgs<ExtArgs>
     channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
@@ -3581,6 +3589,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     channelId?: boolean
+    role?: boolean
     createdAt?: boolean
     user?: boolean | DemoUserDefaultArgs<ExtArgs>
     channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
@@ -3590,6 +3599,7 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     channelId?: boolean
+    role?: boolean
     createdAt?: boolean
     user?: boolean | DemoUserDefaultArgs<ExtArgs>
     channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
@@ -3599,10 +3609,11 @@ export namespace Prisma {
     id?: boolean
     userId?: boolean
     channelId?: boolean
+    role?: boolean
     createdAt?: boolean
   }
 
-  export type DemoMembershipOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "channelId" | "createdAt", ExtArgs["result"]["demoMembership"]>
+  export type DemoMembershipOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "channelId" | "role" | "createdAt", ExtArgs["result"]["demoMembership"]>
   export type DemoMembershipInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | DemoUserDefaultArgs<ExtArgs>
     channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
@@ -3626,6 +3637,7 @@ export namespace Prisma {
       id: string
       userId: string
       channelId: string
+      role: string
       createdAt: Date
     }, ExtArgs["result"]["demoMembership"]>
     composites: {}
@@ -4055,6 +4067,7 @@ export namespace Prisma {
     readonly id: FieldRef<"DemoMembership", 'String'>
     readonly userId: FieldRef<"DemoMembership", 'String'>
     readonly channelId: FieldRef<"DemoMembership", 'String'>
+    readonly role: FieldRef<"DemoMembership", 'String'>
     readonly createdAt: FieldRef<"DemoMembership", 'DateTime'>
   }
     
@@ -5576,6 +5589,7 @@ export namespace Prisma {
     id: 'id',
     userId: 'userId',
     channelId: 'channelId',
+    role: 'role',
     createdAt: 'createdAt'
   };
 
@@ -5797,6 +5811,7 @@ export namespace Prisma {
     id?: StringFilter<"DemoMembership"> | string
     userId?: StringFilter<"DemoMembership"> | string
     channelId?: StringFilter<"DemoMembership"> | string
+    role?: StringFilter<"DemoMembership"> | string
     createdAt?: DateTimeFilter<"DemoMembership"> | Date | string
     user?: XOR<DemoUserScalarRelationFilter, DemoUserWhereInput>
     channel?: XOR<DemoChannelScalarRelationFilter, DemoChannelWhereInput>
@@ -5806,6 +5821,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     channelId?: SortOrder
+    role?: SortOrder
     createdAt?: SortOrder
     user?: DemoUserOrderByWithRelationInput
     channel?: DemoChannelOrderByWithRelationInput
@@ -5819,6 +5835,7 @@ export namespace Prisma {
     NOT?: DemoMembershipWhereInput | DemoMembershipWhereInput[]
     userId?: StringFilter<"DemoMembership"> | string
     channelId?: StringFilter<"DemoMembership"> | string
+    role?: StringFilter<"DemoMembership"> | string
     createdAt?: DateTimeFilter<"DemoMembership"> | Date | string
     user?: XOR<DemoUserScalarRelationFilter, DemoUserWhereInput>
     channel?: XOR<DemoChannelScalarRelationFilter, DemoChannelWhereInput>
@@ -5828,6 +5845,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     channelId?: SortOrder
+    role?: SortOrder
     createdAt?: SortOrder
     _count?: DemoMembershipCountOrderByAggregateInput
     _max?: DemoMembershipMaxOrderByAggregateInput
@@ -5841,6 +5859,7 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"DemoMembership"> | string
     userId?: StringWithAggregatesFilter<"DemoMembership"> | string
     channelId?: StringWithAggregatesFilter<"DemoMembership"> | string
+    role?: StringWithAggregatesFilter<"DemoMembership"> | string
     createdAt?: DateTimeWithAggregatesFilter<"DemoMembership"> | Date | string
   }
 
@@ -6032,6 +6051,7 @@ export namespace Prisma {
 
   export type DemoMembershipCreateInput = {
     id?: string
+    role?: string
     createdAt?: Date | string
     user: DemoUserCreateNestedOneWithoutMembershipsInput
     channel: DemoChannelCreateNestedOneWithoutMembersInput
@@ -6041,11 +6061,13 @@ export namespace Prisma {
     id?: string
     userId: string
     channelId: string
+    role?: string
     createdAt?: Date | string
   }
 
   export type DemoMembershipUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: DemoUserUpdateOneRequiredWithoutMembershipsNestedInput
     channel?: DemoChannelUpdateOneRequiredWithoutMembersNestedInput
@@ -6055,6 +6077,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     channelId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -6062,11 +6085,13 @@ export namespace Prisma {
     id?: string
     userId: string
     channelId: string
+    role?: string
     createdAt?: Date | string
   }
 
   export type DemoMembershipUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -6074,6 +6099,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     channelId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -6327,6 +6353,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     channelId?: SortOrder
+    role?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -6334,6 +6361,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     channelId?: SortOrder
+    role?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -6341,6 +6369,7 @@ export namespace Prisma {
     id?: SortOrder
     userId?: SortOrder
     channelId?: SortOrder
+    role?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -6732,6 +6761,7 @@ export namespace Prisma {
 
   export type DemoMembershipCreateWithoutUserInput = {
     id?: string
+    role?: string
     createdAt?: Date | string
     channel: DemoChannelCreateNestedOneWithoutMembersInput
   }
@@ -6739,6 +6769,7 @@ export namespace Prisma {
   export type DemoMembershipUncheckedCreateWithoutUserInput = {
     id?: string
     channelId: string
+    role?: string
     createdAt?: Date | string
   }
 
@@ -6799,6 +6830,7 @@ export namespace Prisma {
     id?: StringFilter<"DemoMembership"> | string
     userId?: StringFilter<"DemoMembership"> | string
     channelId?: StringFilter<"DemoMembership"> | string
+    role?: StringFilter<"DemoMembership"> | string
     createdAt?: DateTimeFilter<"DemoMembership"> | Date | string
   }
 
@@ -6831,6 +6863,7 @@ export namespace Prisma {
 
   export type DemoMembershipCreateWithoutChannelInput = {
     id?: string
+    role?: string
     createdAt?: Date | string
     user: DemoUserCreateNestedOneWithoutMembershipsInput
   }
@@ -6838,6 +6871,7 @@ export namespace Prisma {
   export type DemoMembershipUncheckedCreateWithoutChannelInput = {
     id?: string
     userId: string
+    role?: string
     createdAt?: Date | string
   }
 
@@ -7118,6 +7152,7 @@ export namespace Prisma {
   export type DemoMembershipCreateManyUserInput = {
     id?: string
     channelId: string
+    role?: string
     createdAt?: Date | string
   }
 
@@ -7130,6 +7165,7 @@ export namespace Prisma {
 
   export type DemoMembershipUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     channel?: DemoChannelUpdateOneRequiredWithoutMembersNestedInput
   }
@@ -7137,12 +7173,14 @@ export namespace Prisma {
   export type DemoMembershipUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     channelId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DemoMembershipUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     channelId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -7170,6 +7208,7 @@ export namespace Prisma {
   export type DemoMembershipCreateManyChannelInput = {
     id?: string
     userId: string
+    role?: string
     createdAt?: Date | string
   }
 
@@ -7182,6 +7221,7 @@ export namespace Prisma {
 
   export type DemoMembershipUpdateWithoutChannelInput = {
     id?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: DemoUserUpdateOneRequiredWithoutMembershipsNestedInput
   }
@@ -7189,12 +7229,14 @@ export namespace Prisma {
   export type DemoMembershipUncheckedUpdateWithoutChannelInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DemoMembershipUncheckedUpdateManyWithoutChannelInput = {
     id?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

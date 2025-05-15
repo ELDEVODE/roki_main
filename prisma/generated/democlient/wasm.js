@@ -140,6 +140,7 @@ exports.Prisma.DemoMembershipScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   channelId: 'channelId',
+  role: 'role',
   createdAt: 'createdAt'
 };
 
