@@ -1,4 +1,4 @@
-import { PermissionType } from "@prisma/client";
+import { PermissionType } from "../../types/prisma";
 
 /**
  * Utility functions for working with roles and permissions on the client side
@@ -30,6 +30,7 @@ export type Member = {
 };
 
 export type Channel = {
+  maxRoles: number;
   id: string;
   title: string;
   type: string;

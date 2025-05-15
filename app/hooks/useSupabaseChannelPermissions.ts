@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { PermissionType } from "@prisma/client";
+import { PermissionType } from "../../types/prisma";
 import { supabase } from "../utils/supabase";
 import { getUserChannelPermissions } from "../utils/supabaseRolePermissions";
 import { hasPermission, getMemberPermissions } from "../utils/rolePermissions";

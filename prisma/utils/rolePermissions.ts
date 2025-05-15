@@ -1,7 +1,14 @@
-import { PermissionType } from "@prisma/client";
+import { PermissionType } from "../../types/prisma";
 import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient();
+// Create a PrismaClient with extended types
+interface CustomPrismaClient extends PrismaClient {
+  member: any;
+  channelRole: any;
+  memberRole: any;
+}
+
+const prisma = new PrismaClient() as CustomPrismaClient;
 
 /**
  * Checks if a user has the specified permission in a channel
@@ -98,7 +105,7 @@ export async function getUserChannelPermissions(
     }
 
     // Add each permission to the set
-    role.permissions.forEach((permission) => permissions.add(permission));
+    role.permissions.forEach((permission: PermissionType) => permissions.add(permission));
   }
 
   return Array.from(permissions);

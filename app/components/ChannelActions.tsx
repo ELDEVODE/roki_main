@@ -1,5 +1,6 @@
+import React from "react";
+import { PermissionType } from "../../types/prisma";
 import { useState } from "react";
-import { PermissionType } from "@prisma/client";
 import { useSupabaseChannelPermissions } from "../hooks/useSupabaseChannelPermissions";
 
 // Example component that demonstrates using the permissions system

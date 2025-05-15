@@ -1,4 +1,4 @@
-import { PermissionType, RoleTemplateType } from "@prisma/client";
+import { PermissionType, RoleTemplateType } from "../../types/prisma";
 import { supabase } from "./supabase";
 import {
   createChannelWithDefaultRoles,

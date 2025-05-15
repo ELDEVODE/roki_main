@@ -12,7 +12,7 @@ export default function LoginPage() {
       console.log("Login completed", params);
       // Navigate to dashboard on successful login
       if (params.user && !params.wasAlreadyAuthenticated) {
-        router.push("/app");
+        router.push("/demo");
       }
     },
     onError: (error) => {

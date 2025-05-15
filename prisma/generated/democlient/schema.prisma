@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/democlient"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model DemoUser {
+  id            String           @id @default(cuid())
+  walletAddress String           @unique
+  name          String?
+  memberships   DemoMembership[]
+  messages      DemoMessage[]
+  createdAt     DateTime         @default(now())
+}
+
+model DemoChannel {
+  id           String           @id @default(cuid())
+  name         String
+  creatorId    String
+  isTokenGated Boolean          @default(false)
+  tokenAddress String?
+  members      DemoMembership[]
+  messages     DemoMessage[]
+  createdAt    DateTime         @default(now())
+}
+
+model DemoMembership {
+  id        String      @id @default(cuid())
+  user      DemoUser    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  channel   DemoChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  channelId String
+  createdAt DateTime    @default(now())
+
+  @@unique([userId, channelId])
+}
+
+model DemoMessage {
+  id        String      @id @default(cuid())
+  content   String
+  user      DemoUser    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  channel   DemoChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  channelId String
+  createdAt DateTime    @default(now())
+}

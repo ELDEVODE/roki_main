@@ -1,5 +1,6 @@
+import React from "react";
 import { useState, useEffect } from "react";
-import { PermissionType } from "@prisma/client";
+import { PermissionType } from "../../types/prisma";
 import { useSupabaseChannelPermissions } from "../hooks/useSupabaseChannelPermissions";
 import {
   getChannelRoles,
@@ -253,15 +254,15 @@ export default function ManageChannelRoles({
                 <label>Permissions *</label>
                 <div className="permissions-grid">
                   {Object.values(PermissionType).map((permission) => (
-                    <div key={permission} className="permission-option">
+                    <div key={permission as string} className="permission-option">
                       <input
                         type="checkbox"
-                        id={`permission-${permission}`}
-                        checked={newRole.permissions.includes(permission)}
-                        onChange={() => togglePermission(permission)}
+                        id={`perm-${permission}`}
+                        checked={newRole.permissions.includes(permission as PermissionType)}
+                        onChange={() => togglePermission(permission as PermissionType)}
                       />
-                      <label htmlFor={`permission-${permission}`}>
-                        {permissionLabels[permission]}
+                      <label htmlFor={`perm-${permission}`}>
+                        {permissionLabels[permission as keyof typeof permissionLabels]}
                       </label>
                     </div>
                   ))}

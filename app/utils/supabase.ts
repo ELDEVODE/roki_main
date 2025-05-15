@@ -20,3 +20,15 @@ export const createClientWithSession = (supabaseAccessToken: string) => {
     },
   });
 };
+
+export function subscribeToChannel(channelId: string, callback: (payload: any) => void) {
+  return supabase
+    .channel(`channel:${channelId}`)
+    .on('postgres_changes', {
+      event: 'INSERT',
+      schema: 'public',
+      table: 'DemoMessage',
+      filter: `channelId=eq.${channelId}`
+    }, callback)
+    .subscribe();
+}

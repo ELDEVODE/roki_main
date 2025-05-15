@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { PermissionType } from "@prisma/client";
+import { PermissionType } from "../../types/prisma";
 import {
   hasPermission,
   getMemberPermissions,

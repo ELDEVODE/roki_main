@@ -1,5 +1,6 @@
+import React from "react";
 import { useState, useEffect } from "react";
-import { PermissionType } from "@prisma/client";
+import { PermissionType } from "../../types/prisma";
 import { useSupabaseChannelPermissions } from "../hooks/useSupabaseChannelPermissions";
 import {
   getChannelRoles,

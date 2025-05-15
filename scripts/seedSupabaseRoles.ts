@@ -1,4 +1,5 @@
-import { PrismaClient, PermissionType, RoleTemplateType } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+import { PermissionType, RoleTemplateType } from "../types/prisma";
 import { supabase } from "../app/utils/supabase";
 
 // Create default roles and permissions

@@ -1,4 +1,4 @@
-import { PermissionType, RoleTemplateType } from "@prisma/client";
+import { PermissionType, RoleTemplateType } from "./prisma";
 
 export type Json =
   | string

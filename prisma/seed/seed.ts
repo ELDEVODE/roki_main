@@ -1,6 +1,16 @@
-import { PrismaClient, PermissionType, RoleTemplateType } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+import { PermissionType, RoleTemplateType } from "../../types/prisma";
 
-const prisma = new PrismaClient();
+// Create a PrismaClient with extended types
+interface CustomPrismaClient extends PrismaClient {
+  role: any;
+  channel: any;
+  channelRole: any;
+  member: any;
+  memberRole: any;
+}
+
+const prisma = new PrismaClient() as CustomPrismaClient;
 
 async function seedDefaultRoles() {
   try {
