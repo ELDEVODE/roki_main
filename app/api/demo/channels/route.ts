@@ -32,8 +32,7 @@ export async function POST(req: NextRequest) {
           // Add creator as a member automatically
           members: {
             create: {
-              userId: creatorId,
-              role: 'OWNER'
+              userId: creatorId
             }
           }
         },
@@ -68,8 +67,7 @@ export async function POST(req: NextRequest) {
           await prisma.demoMembership.create({
             data: {
               channelId: channel.id,
-              userId: creatorId,
-              role: 'OWNER'
+              userId: creatorId
             }
           });
         }
