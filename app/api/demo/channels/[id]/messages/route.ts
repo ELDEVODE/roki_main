@@ -1,4 +1,5 @@
 import { prisma } from '@/app/utils/prisma';
+import { NextRequest } from 'next/server';
 
 // Define a type for the message
 interface DemoMessage {
@@ -9,9 +10,12 @@ interface DemoMessage {
   createdAt: Date;
 }
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const { content, userId } = await req.json();
-  const channelId = params.id;
+  const channelId = (await params).id;
   
   try {
     // Check if channel exists
@@ -57,8 +61,11 @@ export async function POST(req: Request, { params }: { params: { id: string } })
   }
 }
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
-  const channelId = params.id;
+export async function GET(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const channelId = (await params).id;
   
   try {
     // Check if channel exists

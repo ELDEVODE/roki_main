@@ -1,11 +1,12 @@
 import { prisma } from '@/app/utils/prisma';
+import { NextRequest } from 'next/server';
 
-// In-memory storage for the demo
-export const demoChannels = new Map();
-export const demoMessages = new Map();
-export const demoMemberships = new Map();
+// Define variables without exporting them
+const demoChannels = new Map();
+const demoMessages = new Map();
+const demoMemberships = new Map();
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const { name, creatorId } = await req.json();
   
   try {
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const id = url.searchParams.get('id');
   

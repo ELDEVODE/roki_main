@@ -1,8 +1,12 @@
 import { prisma } from '@/app/utils/prisma';
+import { NextRequest } from 'next/server';
 
-export async function PATCH(req: Request, { params }: { params: { id: string } }) {
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const { isTokenGated, tokenAddress } = await req.json();
-  const channelId = params.id;
+  const channelId = (await params).id;
   
   try {
     // Check if channel exists
