@@ -6,7 +6,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { isTokenGated, tokenAddress } = await req.json();
-  const channelId = (await params).id;
+  const { id: channelId } = await params;
   
   try {
     // Check if channel exists

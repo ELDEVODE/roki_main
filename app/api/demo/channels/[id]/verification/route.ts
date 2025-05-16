@@ -5,11 +5,11 @@ import { getWalletTokens } from '@/app/utils/zkTokenService';
 // Verify access to token-gated channel
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { walletAddress } = await req.json();
-    const channelId = params.id;
+    const { id: channelId } = await params;
     
     if (!walletAddress) {
       return new Response(JSON.stringify({ error: "Missing wallet address" }), {
