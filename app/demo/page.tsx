@@ -8,6 +8,19 @@ import ChatHeader from "@/app/components/ChatHeader";
 import ChatMessage from "@/app/components/ChatMessage";
 import ChatInput from "@/app/components/ChatInput";
 import CreateChannelModal from "@/app/components/modals/CreateChannelModal";
+import Header from "@/app/components/Header";
+import TokenPurchaseModal from "@/app/components/modals/TokenPurchaseModal";
+import { getWalletTokens, getSolBalance } from "@/app/utils/zkTokenService";
+import ToastNotification from "@/app/components/ToastNotification";
+
+// Token interface for type safety
+interface Token {
+  mint: string;
+  amount: string;
+  decimals: number;
+  name?: string;
+  symbol?: string;
+}
 
 function DemoContent() {
   const { login, authenticated, user } = usePrivy();
@@ -31,6 +44,16 @@ function DemoContent() {
   
   // Modal state
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isTokenPurchaseModalOpen, setIsTokenPurchaseModalOpen] = useState(false);
+  const [tokenInfo, setTokenInfo] = useState({ name: "", symbol: "" });
+  
+  // Toast notifications
+  interface Toast {
+    id: string;
+    message: string;
+    type: "success" | "error" | "info" | "warning";
+  }
+  const [toasts, setToasts] = useState<Toast[]>([]);
   
   // Typing state
   const [isUserTyping, setIsUserTyping] = useState<boolean>(false);
@@ -285,6 +308,28 @@ function DemoContent() {
       if (res.ok) {
         const { hasAccess } = await res.json();
         setHasTokenAccess(hasAccess);
+        
+        // Get additional token info if we don't have access
+        if (!hasAccess) {
+          // In a production app, you'd fetch token metadata from the blockchain
+          // For our demo, we'll use localStorage or mock data
+          const tokens = await getWalletTokens(wallet.address);
+          const existingToken = tokens.find(t => t.mint === channel.tokenAddress);
+          
+          if (existingToken) {
+            setTokenInfo({
+              name: existingToken.name || "Channel Token",
+              symbol: existingToken.symbol || "TOKEN"
+            });
+          } else {
+            // Use token address to generate a name/symbol
+            const tokenAddr = channel.tokenAddress;
+            setTokenInfo({
+              name: `Channel ${tokenAddr.slice(-4)} Token`,
+              symbol: `TKN${tokenAddr.slice(-4)}`
+            });
+          }
+        }
       }
     } catch (err) {
       console.error("Failed to check token access", err);
@@ -373,6 +418,12 @@ function DemoContent() {
   
   async function joinChannel() {
     if (!channelId || !userId) return;
+    
+    // If channel is token-gated and user doesn't have access, show purchase modal
+    if (channel?.isTokenGated && !hasTokenAccess) {
+      setIsTokenPurchaseModalOpen(true);
+      return;
+    }
     
     // Prompt for username
     const username = prompt("Enter your display name:", user?.email?.address || `User-${wallet?.address?.slice(0, 6)}`);
@@ -497,9 +548,87 @@ function DemoContent() {
     setIsUserTyping(false);
   };
   
+  // Handler for token purchase completion that includes error handling
+  async function handleTokenPurchaseComplete(success: boolean, errorMessage?: string) {
+    // Close the purchase modal
+    setIsTokenPurchaseModalOpen(false);
+    
+    if (!success) {
+      // Show error toast
+      showToast(errorMessage || "Failed to purchase token", "error");
+      return;
+    }
+    
+    // Show success toast
+    showToast("Token purchased successfully!", "success");
+    
+    // Recheck token access
+    if (channel?.isTokenGated && wallet?.address) {
+      try {
+        const res = await fetch(`/api/demo/channels/${channel.id}/verification`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ walletAddress: wallet.address })
+        });
+        
+        if (res.ok) {
+          const { hasAccess } = await res.json();
+          setHasTokenAccess(hasAccess);
+          
+          // If we now have access, join the channel
+          if (hasAccess) {
+            joinChannel();
+          } else {
+            showToast("Token purchase complete, but still can't access channel. Please try again.", "error");
+          }
+        }
+      } catch (err) {
+        console.error("Failed to recheck token access after purchase", err);
+        showToast("Failed to verify token access after purchase", "error");
+      }
+    }
+  }
+  
+  // Toast management functions
+  const showToast = (message: string, type: "success" | "error" | "info" | "warning" = "info") => {
+    const id = `toast-${Date.now()}`;
+    setToasts(prev => [...prev, { id, message, type }]);
+  };
+  
+  const removeToast = (id: string) => {
+    setToasts(prev => prev.filter(toast => toast.id !== id));
+  };
+  
   // If not authenticated, we let the AppLayout handle it
   if (!authenticated) {
-    return null;
+    return (
+      <div className="flex flex-col min-h-screen h-screen w-screen bg-black">
+        <Header />
+        <div className="flex flex-col items-center justify-center h-[80vh] text-center relative">
+          {/* Background gradient elements */}
+          <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-purple-700/20 blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 w-96 h-96 rounded-full bg-blue-700/10 blur-3xl"></div>
+          
+          <div className="mb-8 relative z-10">
+            <h1 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-indigo-400 text-transparent bg-clip-text">
+              Welcome to Token-Gated Chat
+            </h1>
+            <p className="text-gray-300 max-w-2xl mx-auto mb-6">
+              Connect your wallet to experience secure, token-gated communication channels powered by ZK-compressed tokens on Solana.
+            </p>
+          </div>
+          <button
+            onClick={() => login()}
+            className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 px-6 py-3 rounded-lg text-white font-medium shadow-lg shadow-purple-500/20 flex items-center gap-2 neon-purple-glow transition"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v-1l1-1 1-1-.257-.257A6 6 0 1118 8zm-6-4a1 1 0 100 2h5a1 1 0 100-2h-5z" clipRule="evenodd" />
+            </svg>
+            Connect Wallet
+          </button>
+        </div>
+      </div>
+    );
   }
   
   return (
@@ -519,112 +648,276 @@ function DemoContent() {
           {/* Channel header */}
           <ChatHeader 
             channelName={channel?.name || 'Loading...'}
-            memberCount={channel?.members?.length || 0}
+            memberCount={isUserMember() ? (channel?.members?.length || 0) : null}
             isTokenGated={channel?.isTokenGated}
-            onShareClick={shareChannel}
-            onAddMemberClick={() => {
+            onShareClick={isUserMember() ? shareChannel : undefined}
+            onAddMemberClick={isUserMember() ? () => {
               alert("Invite feature would open here");
-            }}
+            } : undefined}
             onSettingsClick={channel?.creatorId === userId ? tokenGateChannel : undefined}
           />
           
-          {/* Messages area */}
-          <div className="flex-1 overflow-y-auto custom-scrollbar bg-black/60 px-2">
-            {messages.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full text-center p-4">
-                <div className="bg-purple-900/20 rounded-full p-6 mb-4 neon-purple-glow">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14 text-purple-400" viewBox="0 0 20 20" fill="currentColor">
+          {/* Non-member view - show restricted access UI */}
+          {!isUserMember() && channel ? (
+            <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center text-center p-8 bg-black/60">
+              <div className="bg-purple-900/20 rounded-full p-6 mb-6 neon-purple-glow max-w-lg">
+                {channel.isTokenGated ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-purple-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 text-purple-400" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
-                            </svg>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3 neon-text">No messages yet</h3>
-                <p className="text-gray-400 max-w-md mb-6">
-                  Start the conversation by sending the first message in this channel.
-                </p>
-                
-                {!isUserMember() && (
-                  <button
-                    onClick={joinChannel}
-                    className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 px-6 py-2.5 rounded-lg text-white font-medium shadow-lg shadow-purple-500/20 flex items-center gap-2 transition neon-purple-glow"
-                          disabled={loading}
-                  >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
-                          </svg>
-                          Join Channel
-                  </button>
+                  </svg>
                 )}
               </div>
-            ) : (
-              <div className="py-4">
-                {/* Welcome message */}
-                <div className="mb-6 pb-6 border-b border-purple-900/30">
-                  <div className="text-center">
-                    <div className="bg-purple-900/20 rounded-full inline-flex p-4 mb-3 mx-auto neon-purple-glow">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-purple-400" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
-                          </svg>
+              
+              <h2 className="text-2xl lg:text-3xl font-bold text-white mb-3 neon-text">
+                Welcome to #{channel.name}
+              </h2>
+              
+              <p className="text-gray-400 max-w-lg mx-auto mb-8">
+                {channel.isTokenGated ? (
+                  <>This is a <span className="text-purple-400 font-medium">token-gated channel</span>. You need to have the required token to join the conversation.</>
+                ) : (
+                  <>Join this channel to start chatting with other members.</>
+                )}
+              </p>
+              
+              {channel.isTokenGated ? (
+                <>
+                  <div className="bg-gray-900/50 border border-purple-800/30 rounded-lg p-5 max-w-md w-full mx-auto mb-6">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="rounded-full bg-purple-900/30 p-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-purple-400" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z" />
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-medium">Required Token</h3>
+                        <p className="text-sm text-gray-500 mt-0.5">
+                          {tokenInfo.name || "Channel Token"} ({tokenInfo.symbol || "TOKEN"})
+                        </p>
+                      </div>
+                      {hasTokenAccess && (
+                        <div className="px-2 py-1 bg-green-900/30 border border-green-900/30 rounded-full text-xs text-green-400">
+                          You have this token
+                        </div>
+                      )}
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-2">Welcome to #{channel?.name}</h3>
-                    <p className="text-gray-400 max-w-lg mx-auto mb-3">
-                      This is the start of the channel. {channel?.isTokenGated ? 'This channel is token-gated, meaning only users with the right tokens can access it.' : ''}
-                    </p>
-                    {!isUserMember() && (
-                      <button
-                        onClick={joinChannel}
-                        className="mt-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 rounded-md text-sm font-medium text-white inline-flex items-center shadow-lg shadow-purple-500/20"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                    
+                    {!hasTokenAccess && wallet?.address && (
+                      <div className="text-sm bg-gray-800/70 rounded-md p-3 text-left">
+                        <p className="text-gray-400 mb-1">Token address:</p>
+                        <p className="font-mono text-xs text-gray-300 truncate">
+                          {channel.tokenAddress}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <button
+                    onClick={joinChannel}
+                    className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 px-6 py-3 rounded-lg text-white font-medium shadow-lg shadow-purple-500/20 flex items-center gap-2 transition neon-purple-glow"
+                    disabled={loading}
+                  >
+                    {hasTokenAccess ? (
+                      <>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                           <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
                         </svg>
                         Join Channel
-                      </button>
-                                )}
-                              </div>
-                            </div>
-                
-                {/* Regular messages */}
-                {messages.map((msg) => (
-                  <ChatMessage 
-                    key={msg.id}
-                    id={msg.id}
-                    content={msg.content}
-                    createdAt={msg.createdAt}
-                    userId={msg.userId}
-                    user={msg.user || { name: 'Unknown User', id: msg.userId }}
-                    currentUserId={userId}
-                    isRead={readReceipts[msg.id] || msg.userId === userId}
-                  />
-                ))}
-                      <div ref={messagesEndRef}></div>
-                
-                {/* Typing indicator */}
-                {typingUsers.size > 0 && (
-                  <div className="px-4 py-2 text-sm text-purple-300">
-                    <div className="flex items-center space-x-2">
-                      <span className="relative flex h-3 w-3">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></span>
+                      </>
+                    ) : (
+                      <>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
+                          <path fillRule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clipRule="evenodd" />
+                        </svg>
+                        Purchase Token to Join
+                      </>
+                    )}
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={joinChannel}
+                  className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 px-6 py-3 rounded-lg text-white font-medium shadow-lg shadow-purple-500/20 flex items-center gap-2 transition neon-purple-glow"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <svg className="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Joining...
+                    </>
+                  ) : (
+                    <>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+                      </svg>
+                      Join Channel
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+          ) : (
+            <>
+              {/* Token access banner - show if channel is token-gated and user doesn't have access */}
+              {channel?.isTokenGated && !hasTokenAccess && (
+                <div className="bg-purple-900/30 border-t border-b border-purple-800 py-3 px-4 mb-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-400 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                      </svg>
+                      <span className="text-purple-200 font-medium">
+                        This channel requires token ownership to participate
                       </span>
-                      <span>{getTypingIndicator()}</span>
                     </div>
+                    <button
+                      onClick={() => setIsTokenPurchaseModalOpen(true)}
+                      className="bg-purple-600 hover:bg-purple-700 text-white text-sm py-1 px-3 rounded transition-colors flex items-center"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
+                        <path fillRule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clipRule="evenodd" />
+                      </svg>
+                      Get Access
+                    </button>
+                  </div>
+                </div>
+              )}
+              
+              {/* Messages area */}
+              <div className="flex-1 overflow-y-auto custom-scrollbar bg-black/60 px-2">
+                {messages.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center h-full text-center p-4">
+                    <div className="bg-purple-900/20 rounded-full p-6 mb-4 neon-purple-glow">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14 text-purple-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+                              </svg>
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-3 neon-text">No messages yet</h3>
+                    <p className="text-gray-400 max-w-md mb-6">
+                      Start the conversation by sending the first message in this channel.
+                    </p>
+                    
+                    {!isUserMember() && (
+                      <button
+                        onClick={joinChannel}
+                        className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 px-6 py-2.5 rounded-lg text-white font-medium shadow-lg shadow-purple-500/20 flex items-center gap-2 transition neon-purple-glow"
+                        disabled={loading}
+                      >
+                        {channel?.isTokenGated && !hasTokenAccess ? (
+                          <>
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                              <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
+                              <path fillRule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clipRule="evenodd" />
+                            </svg>
+                            Purchase Token to Join
+                          </>
+                        ) : (
+                          <>
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                              <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+                            </svg>
+                            Join Channel
+                          </>
+                        )}
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="py-4">
+                    {/* Welcome message */}
+                    <div className="mb-6 pb-6 border-b border-purple-900/30">
+                      <div className="text-center">
+                        <div className="bg-purple-900/20 rounded-full inline-flex p-4 mb-3 mx-auto neon-purple-glow">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-purple-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <h3 className="text-2xl font-bold text-white mb-2">Welcome to #{channel?.name}</h3>
+                        <p className="text-gray-400 max-w-lg mx-auto mb-3">
+                          This is the start of the channel. {channel?.isTokenGated ? 'This channel is token-gated, meaning only users with the right tokens can access it.' : ''}
+                        </p>
+                        {!isUserMember() && (
+                          <button
+                            onClick={joinChannel}
+                            className="mt-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 rounded-md text-sm font-medium text-white inline-flex items-center shadow-lg shadow-purple-500/20"
+                          >
+                            {channel?.isTokenGated && !hasTokenAccess ? (
+                              <>
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                                  <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
+                                  <path fillRule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clipRule="evenodd" />
+                                </svg>
+                                Purchase Token to Join
+                              </>
+                            ) : (
+                              <>
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                                  <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+                                </svg>
+                                Join Channel
+                              </>
+                            )}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Regular messages */}
+                    {messages.map((msg) => (
+                      <ChatMessage 
+                        key={msg.id}
+                        id={msg.id}
+                        content={msg.content}
+                        createdAt={msg.createdAt}
+                        userId={msg.userId}
+                        user={msg.user || { name: 'Unknown User', id: msg.userId }}
+                        currentUserId={userId}
+                        isRead={readReceipts[msg.id] || msg.userId === userId}
+                      />
+                    ))}
+                          <div ref={messagesEndRef}></div>
+                    
+                    {/* Typing indicator */}
+                    {typingUsers.size > 0 && (
+                      <div className="px-4 py-2 text-sm text-purple-300">
+                        <div className="flex items-center space-x-2">
+                          <span className="relative flex h-3 w-3">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></span>
+                          </span>
+                          <span>{getTypingIndicator()}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
-            )}
-                    </div>
-                    
-                    {/* Message input */}
-          <ChatInput 
-            onSendMessage={sendMessage}
-            disabled={!isUserMember() || !hasTokenAccess}
-            channelName={channel?.name || ''}
-            onTypingStart={handleUserTypingStart}
-            onTypingStop={handleUserTypingStop}
-          />
-                  </>
-                ) : (
-                  <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+            </>
+          )}
+          
+          {/* Message input - only show for members with token access */}
+          {isUserMember() && (
+            <ChatInput 
+              onSendMessage={sendMessage}
+              disabled={!hasTokenAccess}
+              channelName={channel?.name || ''}
+              onTypingStart={handleUserTypingStart}
+              onTypingStop={handleUserTypingStop}
+            />
+          )}
+        </>
+      ) : (
+        <div className="flex flex-col items-center justify-center h-full p-8 text-center">
           <div className="bg-purple-900/20 rounded-full p-6 mb-6 neon-purple-glow">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14 text-purple-400" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
@@ -685,9 +978,22 @@ function DemoContent() {
                 <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
             </button>
-                  </div>
-                </div>
-              )}
+          </div>
+        </div>
+      )}
+      
+      {/* Token Purchase Modal */}
+      {channel?.tokenAddress && wallet?.address && (
+        <TokenPurchaseModal
+          isOpen={isTokenPurchaseModalOpen}
+          onClose={() => setIsTokenPurchaseModalOpen(false)}
+          tokenAddress={channel.tokenAddress}
+          tokenName={tokenInfo.name}
+          tokenSymbol={tokenInfo.symbol}
+          walletAddress={wallet.address}
+          onPurchaseComplete={handleTokenPurchaseComplete}
+        />
+      )}
     </AppLayout>
   );
 }

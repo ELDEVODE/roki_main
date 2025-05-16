@@ -91,6 +91,8 @@ model Channel {
   type          String
   parentId      String?
   maxRoles      Int       @default(10) // Maximum number of custom roles allowed
+  isTokenGated  Boolean   @default(false) // Whether the channel is token gated
+  tokenAddress  String?   // Address of the token used for gating
   subchannels   SubChannel[] @relation("ChannelHierarchy")
   creator       User?     @relation("ChannelCreator", fields: [creatorId], references: [id], onDelete: SetNull)
   creatorId     String?
@@ -116,8 +118,6 @@ model SubChannel {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
-
-
 
 model Content {
   id        String   @id @default(cuid())
@@ -230,4 +230,60 @@ model ContentTag {
   tagId      String
 
   @@id([contentId, tagId])
+}
+
+// Demo models for the demo application
+model DemoUser {
+  id            String   @id @default(cuid())
+  name          String?
+  walletAddress String?  
+  privyId       String?  @unique
+  avatarUrl     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  createdChannels DemoChannel[]  @relation("DemoChannelCreator")
+  memberships     DemoMembership[]
+  messages        DemoMessage[]
+}
+
+model DemoChannel {
+  id            String   @id @default(cuid())
+  name          String
+  type          String   @default("TEXT")
+  creatorId     String?
+  creator       DemoUser? @relation("DemoChannelCreator", fields: [creatorId], references: [id], onDelete: SetNull)
+  isTokenGated  Boolean  @default(false)
+  tokenAddress  String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  members       DemoMembership[]
+  messages      DemoMessage[]
+}
+
+model DemoMembership {
+  id        String      @id @default(cuid())
+  userId    String
+  user      DemoUser    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channelId String
+  channel   DemoChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  role      String      @default("MEMBER")
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@unique([userId, channelId])
+}
+
+model DemoMessage {
+  id        String      @id @default(cuid())
+  content   String
+  userId    String
+  user      DemoUser    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channelId String
+  channel   DemoChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
 }

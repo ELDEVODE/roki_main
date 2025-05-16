@@ -125,6 +125,8 @@ export async function createChannelWithDefaultRoles(
   title: string,
   type: string,
   creatorId: string,
+  isTokenGated: boolean = false,
+  tokenAddress?: string,
   icon?: string
 ) {
   try {
@@ -137,6 +139,8 @@ export async function createChannelWithDefaultRoles(
         creatorId,
         icon,
         maxRoles: 10,
+        isTokenGated,
+        tokenAddress,
       })
       .select()
       .single();

@@ -13,10 +13,12 @@ export async function createChannel(
   title: string,
   type: string,
   creatorId: string,
+  isTokenGated: boolean = false,
+  tokenAddress?: string,
   icon?: string
 ) {
   try {
-    return await createChannelWithDefaultRoles(title, type, creatorId, icon);
+    return await createChannelWithDefaultRoles(title, type, creatorId, isTokenGated, tokenAddress, icon);
   } catch (error) {
     console.error("Error creating channel:", error);
     throw error;

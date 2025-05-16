@@ -86,6 +86,8 @@ export interface Database {
           type: string;
           parentId: string | null;
           maxRoles: number;
+          isTokenGated: boolean;
+          tokenAddress: string | null;
           creatorId: string | null;
           createdAt: string;
           updatedAt: string;
@@ -97,6 +99,8 @@ export interface Database {
           type: string;
           parentId?: string | null;
           maxRoles?: number;
+          isTokenGated?: boolean;
+          tokenAddress?: string | null;
           creatorId?: string | null;
           createdAt?: string;
           updatedAt?: string;
@@ -108,6 +112,8 @@ export interface Database {
           type?: string;
           parentId?: string | null;
           maxRoles?: number;
+          isTokenGated?: boolean;
+          tokenAddress?: string | null;
           creatorId?: string | null;
           createdAt?: string;
           updatedAt?: string;

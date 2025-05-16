@@ -4,10 +4,10 @@ import { NextRequest } from 'next/server';
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   const { userId, walletAddress } = await req.json();
-  const channelId = (await params).id;
+  const channelId = params.id;
   
   try {
     // Check if channel exists

@@ -1,6 +1,15 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Modal from "./Modal";
+import { usePrivy } from "@privy-io/react-auth";
+import { getWalletTokens } from "@/app/utils/zkTokenService";
+import { useRouter } from "next/navigation";
+
+interface Token {
+  mint: string;
+  amount: string;
+  decimals: number;
+}
 
 interface CreateChannelModalProps {
   isOpen: boolean;
@@ -15,10 +24,42 @@ export default function CreateChannelModal({
   onCreateChannel,
   isLoading = false
 }: CreateChannelModalProps) {
+  const { user } = usePrivy();
+  const router = useRouter();
   const [channelName, setChannelName] = useState("");
   const [isTokenGated, setIsTokenGated] = useState(false);
-  const [tokenAddress, setTokenAddress] = useState("");
+  const [selectedToken, setSelectedToken] = useState("");
   const [nameError, setNameError] = useState("");
+  const [tokenError, setTokenError] = useState("");
+  const [userTokens, setUserTokens] = useState<Token[]>([]);
+  const [isLoadingTokens, setIsLoadingTokens] = useState(false);
+
+  const walletAddress = user?.wallet?.address || "";
+
+  useEffect(() => {
+    if (isOpen && walletAddress && isTokenGated) {
+      fetchUserTokens();
+    }
+  }, [isOpen, walletAddress, isTokenGated]);
+
+  const fetchUserTokens = async () => {
+    if (!walletAddress) return;
+    
+    setIsLoadingTokens(true);
+    try {
+      const tokens = await getWalletTokens(walletAddress);
+      setUserTokens(tokens);
+      
+      // Auto-select the first token if available
+      if (tokens.length > 0 && !selectedToken) {
+        setSelectedToken(tokens[0].mint);
+      }
+    } catch (error) {
+      console.error("Error fetching user tokens:", error);
+    } finally {
+      setIsLoadingTokens(false);
+    }
+  };
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,25 +81,54 @@ export default function CreateChannelModal({
     }
     
     // Token gated validation
-    if (isTokenGated && !tokenAddress.trim()) {
-      // For demo, we'll use a default token address
-      const defaultTokenAddress = "cTokELwf3CuXFTUzLcRENMzWrkfMD1T6YgGBKDmV3rn";
-      await onCreateChannel(channelName, isTokenGated, defaultTokenAddress);
+    if (isTokenGated) {
+      if (userTokens.length === 0) {
+        setTokenError("You don't have any tokens to gate with");
+        return;
+      }
+      
+      if (!selectedToken) {
+        setTokenError("Please select a token for gating");
+        return;
+      }
+      
+      await onCreateChannel(channelName, isTokenGated, selectedToken);
     } else {
-      await onCreateChannel(channelName, isTokenGated, tokenAddress);
+      await onCreateChannel(channelName, isTokenGated);
     }
     
     // Reset form
+    resetForm();
+  };
+  
+  const resetForm = () => {
     setChannelName("");
     setIsTokenGated(false);
-    setTokenAddress("");
+    setSelectedToken("");
     setNameError("");
+    setTokenError("");
+  };
+  
+  const handleTokenGateToggle = (checked: boolean) => {
+    setIsTokenGated(checked);
+    
+    if (checked && userTokens.length === 0 && walletAddress) {
+      fetchUserTokens();
+    }
+  };
+  
+  const handleCreateToken = () => {
+    onClose(); // Close this modal
+    router.push('/token'); // Redirect to token creation page
   };
   
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={() => {
+        resetForm();
+        onClose();
+      }}
       title="Create New Channel"
     >
       <form onSubmit={handleSubmit}>
@@ -89,7 +159,7 @@ export default function CreateChannelModal({
               type="checkbox"
               id="isTokenGated"
               checked={isTokenGated}
-              onChange={(e) => setIsTokenGated(e.target.checked)}
+              onChange={(e) => handleTokenGateToggle(e.target.checked)}
               className="h-4 w-4 rounded bg-black border-purple-900/50 text-purple-600 focus:ring-purple-500 focus:ring-offset-black"
             />
             <label htmlFor="isTokenGated" className="ml-2 block text-sm font-medium text-gray-300">
@@ -102,49 +172,68 @@ export default function CreateChannelModal({
         </div>
         
         {isTokenGated && (
-          <div className="mb-4 p-3 bg-purple-900/20 rounded-md border border-purple-900/30">
-            <label htmlFor="tokenAddress" className="block text-sm font-medium text-gray-300 mb-1">
-              Token Address (Optional)
-            </label>
-            <input
-              type="text"
-              id="tokenAddress"
-              value={tokenAddress}
-              onChange={(e) => setTokenAddress(e.target.value)}
-              placeholder="e.g. 0x123...abc"
-              className="w-full bg-black/40 border border-purple-900/30 rounded-md py-2 px-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
-            />
-            <p className="mt-1 text-xs text-gray-500">
-              Leave blank to use a demo token address
-            </p>
+          <div className="mb-6 p-4 bg-gray-800/40 rounded-md">
+            {userTokens.length > 0 ? (
+              <div>
+                <label htmlFor="tokenSelector" className="block text-sm font-medium text-gray-300 mb-2">
+                  Select a token for gating
+                </label>
+                <select
+                  id="tokenSelector"
+                  value={selectedToken}
+                  onChange={(e) => {
+                    setSelectedToken(e.target.value);
+                    setTokenError("");
+                  }}
+                  className="w-full bg-black/40 border border-purple-900/30 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition"
+                >
+                  <option value="" disabled>Select a token</option>
+                  {userTokens.map((token) => (
+                    <option key={token.mint} value={token.mint}>
+                      {token.mint.substring(0, 8)}... ({parseInt(token.amount) / Math.pow(10, token.decimals)})
+                    </option>
+                  ))}
+                </select>
+                {tokenError && (
+                  <p className="mt-1 text-sm text-red-400">{tokenError}</p>
+                )}
+              </div>
+            ) : isLoadingTokens ? (
+              <div className="text-center py-3">
+                <p className="text-sm text-gray-400">Loading your tokens...</p>
+              </div>
+            ) : (
+              <div className="text-center">
+                <p className="text-sm text-gray-300 mb-3">You don't have any tokens to gate with</p>
+                <button
+                  type="button"
+                  onClick={handleCreateToken}
+                  className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-md text-sm transition"
+                >
+                  Create a Token
+                </button>
+              </div>
+            )}
           </div>
         )}
         
-        <div className="flex justify-end space-x-3 mt-6">
+        <div className="flex justify-end gap-3">
           <button
             type="button"
-            onClick={onClose}
-            className="px-4 py-2 rounded-md text-gray-300 hover:text-white hover:bg-gray-800 transition"
-            disabled={isLoading}
+            onClick={() => {
+              resetForm();
+              onClose();
+            }}
+            className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-md text-sm transition"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 rounded-md text-white font-medium shadow-lg shadow-purple-900/30 transition disabled:opacity-70 disabled:cursor-not-allowed neon-purple-glow"
-            disabled={isLoading}
+            disabled={isLoading || (isTokenGated && userTokens.length === 0)}
+            className="px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-900 disabled:cursor-not-allowed rounded-md text-sm transition"
           >
-            {isLoading ? (
-              <span className="flex items-center">
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Creating...
-              </span>
-            ) : (
-              "Create Channel"
-            )}
+            {isLoading ? "Creating..." : "Create Channel"}
           </button>
         </div>
       </form>
