@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --discord-dark: #2a2439;
-  --discord-darker: #1a1625;
-  --discord-message: #2d2640;
-  --discord-channel: #352d4d;
-  --discord-hover: #403858;
-  --discord-user-bg: #221d30;
-  --discord-divider: #3e3052;
-  --discord-accent: #7c5de5;
-  --discord-accent-hover: #654bc9;
-  --discord-highlight: #8d6aff;
+  --discord-dark: #0f0a19;
+  --discord-darker: #080510;
+  --discord-message: #130d23;
+  --discord-channel: #191029;
+  --discord-hover: #221635;
+  --discord-user-bg: #120a24;
+  --discord-divider: #271a40;
+  --discord-accent: #8d6aff;
+  --discord-accent-hover: #7c58ff;
+  --discord-highlight: #a16efb;
   --discord-text: #e1dbf0;
   --discord-muted: #a899d0;
-  --discord-darker-hover: #2d2242;
+  --discord-darker-hover: #161027;
 }
 
 html {
@@ -25,11 +25,47 @@ body {
   /* background: var(--background); */
   /* color: var(--foreground); */
   font-family: Arial, Helvetica, sans-serif;
-  background-color: var(--discord-dark);
+  background-color: black;
   color: var(--discord-text);
   overflow-x: hidden;
   min-height: 100vh;
   width: 100%;
+}
+
+/* Custom scrollbar for Discord-like UI */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(141, 106, 255, 0.4);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(141, 106, 255, 0.6);
+}
+
+/* For Firefox */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(141, 106, 255, 0.4) rgba(0, 0, 0, 0.2);
+}
+
+/* Hide scrollbar but keep functionality */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
 }
 
 /* Mobile optimizations */
@@ -111,6 +147,46 @@ img {
 
 .purple-gradient-dark {
   background: linear-gradient(135deg, #6746c3 0%, #8953e8 100%);
+}
+
+/* Glow effects */
+.neon-purple-glow {
+  filter: drop-shadow(0 0 2px rgba(141, 106, 255, 0.8))
+         drop-shadow(0 0 4px rgba(123, 31, 162, 0.9));
+}
+
+.neon-indigo-glow {
+  filter: drop-shadow(0 0 2px rgba(99, 102, 241, 0.8))
+         drop-shadow(0 0 4px rgba(79, 70, 229, 0.9));
+}
+
+.neon-text {
+  text-shadow: 0 0 10px rgba(141, 106, 255, 0.8),
+               0 0 20px rgba(161, 110, 251, 0.5);
+}
+
+/* Animated gradient background */
+.animated-gradient-bg {
+  position: relative;
+}
+
+.animated-gradient-bg::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(225deg, rgba(103, 58, 183, 0.1), rgba(0, 0, 0, 0));
+  background-size: 200% 200%;
+  animation: gradientMove 8s ease infinite;
+  z-index: -1;
+}
+
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* Improved mobile touch targets */
