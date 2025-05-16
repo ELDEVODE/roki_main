@@ -60,11 +60,11 @@ export default function Header() {
 
   return (
     <header
-      className={`py-4 px-6 fixed w-full z-50 transition-all duration-300 ${
+      className={`h-16 flex items-center px-6 fixed w-full z-50 transition-all duration-300 ${
         isScrolled ? "bg-black/80 backdrop-blur-md shadow-lg" : "bg-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
+      <div className="max-w-7xl mx-auto flex justify-between items-center w-full">
         <div className="flex items-center space-x-2">
           <Link href="/demo">
             <div className="w-12 h-12 relative rounded-lg overflow-hidden flex items-center justify-center ">
@@ -131,18 +131,18 @@ export default function Header() {
 
         <div className="flex items-center space-x-4">
           {authenticated ? (
-            <div className="relative profile-menu-container">
+            <div className="relative profile-menu-container flex items-center">
               <button 
                 onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
                 className="inline-flex items-center justify-center w-10 h-10 overflow-hidden rounded-full bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-700 border-2 border-transparent hover:border-purple-400/30 shadow-lg shadow-purple-900/20 transition-all duration-300 hover:scale-105 hover:shadow-purple-500/20"
                 aria-label="Open user menu"
               >
                 {user?.email?.address ? (
-                  <span className="font-medium text-white text-base">
+                  <span className="font-medium text-white text-base flex items-center justify-center h-full w-full">
                     {user.email.address[0].toUpperCase()}
                   </span>
                 ) : (
-                  <span className="font-medium text-white text-base">U</span>
+                  <span className="font-medium text-white text-base flex items-center justify-center h-full w-full">U</span>
                 )}
                 {user?.wallet?.address && (
                   <div className="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-purple-500 rounded-full border border-black shadow-inner shadow-purple-700/50 z-10">
@@ -158,7 +158,7 @@ export default function Header() {
                 <div className="py-3 px-4">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-700 flex items-center justify-center shadow-inner shadow-purple-900/50">
-                      <span className="font-medium text-white text-lg">
+                      <span className="font-medium text-white text-lg flex items-center justify-center">
                         {user?.email?.address ? user.email.address[0].toUpperCase() : 'U'}
                       </span>
                     </div>
@@ -223,7 +223,7 @@ export default function Header() {
             </div>
           ) : (
             <Link href="/login">
-              <button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-sm font-medium px-5 py-2.5 rounded-lg shadow-lg shadow-blue-500/20 transition-all flex items-center gap-2">
+              <button className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-sm font-medium px-5 py-2.5 rounded-lg shadow-lg shadow-purple-500/20 transition-all flex items-center gap-2 neon-purple-glow">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v-1l1-1 1-1-.257-.257A6 6 0 1118 8zm-6-4a1 1 0 100 2h5a1 1 0 100-2h-5z" clipRule="evenodd" />
                 </svg>

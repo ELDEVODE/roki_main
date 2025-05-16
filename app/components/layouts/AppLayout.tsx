@@ -17,6 +17,7 @@ interface AppLayoutProps {
   onCreateChannel?: () => void;
   members?: any[];
   currentUserId?: string;
+  themedHeaderBorder?: boolean;
 }
 
 export default function AppLayout({
@@ -28,7 +29,8 @@ export default function AppLayout({
   onChannelSelect = () => {},
   onCreateChannel = () => {},
   members = [],
-  currentUserId = ""
+  currentUserId = "",
+  themedHeaderBorder = false
 }: AppLayoutProps) {
   const { login, authenticated, user } = usePrivy();
   const router = useRouter();
@@ -154,7 +156,7 @@ export default function AppLayout({
   return (
     <div className="flex flex-col min-h-screen h-screen w-screen overflow-hidden bg-black">
       {/* Top header - fixed height of 4rem (64px) */}
-      <div className="h-16">
+      <div className={`h-16 ${themedHeaderBorder ? 'border-b border-purple-900/30' : ''}`}>
         <Header />
       </div>
       

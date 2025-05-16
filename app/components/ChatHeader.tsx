@@ -8,6 +8,9 @@ interface ChatHeaderProps {
   onShareClick?: () => void;
   onAddMemberClick?: () => void;
   onSettingsClick?: () => void;
+  onToggleCollapse?: () => void;
+  isCollapsed?: boolean;
+  isLoading?: boolean;
 }
 
 export default function ChatHeader({
@@ -16,7 +19,10 @@ export default function ChatHeader({
   isTokenGated = false,
   onShareClick,
   onAddMemberClick,
-  onSettingsClick
+  onSettingsClick,
+  onToggleCollapse,
+  isCollapsed = false,
+  isLoading = false
 }: ChatHeaderProps) {
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -27,19 +33,35 @@ export default function ChatHeader({
       <div className="flex items-center">
         <div className="text-purple-400 mr-2 text-2xl neon-text">#</div>
         <div>
-          <h2 className="font-medium text-white">{channelName}</h2>
+          <h2 className="font-medium text-white flex items-center">
+            {channelName}
+            {isLoading && (
+              <span className="ml-2 inline-block w-4 h-4">
+                <svg className="animate-spin h-4 w-4 text-purple-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              </span>
+            )}
+          </h2>
           <div className="text-xs text-gray-400 flex items-center">
-            <span>{memberCount} {memberCount === 1 ? 'member' : 'members'}</span>
-            {isTokenGated && (
+            {!isLoading ? (
               <>
-                <span className="mx-1.5">•</span>
-                <div className="flex items-center text-purple-400">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1 neon-purple-glow" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                  </svg>
-                  Token-gated
-                </div>
+                <span>{memberCount} {memberCount === 1 ? 'member' : 'members'}</span>
+                {isTokenGated && (
+                  <>
+                    <span className="mx-1.5">•</span>
+                    <div className="flex items-center text-purple-400">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1 neon-purple-glow" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                      </svg>
+                      Token-gated
+                    </div>
+                  </>
+                )}
               </>
+            ) : (
+              <span>Loading channel details...</span>
             )}
           </div>
         </div>
@@ -101,6 +123,19 @@ export default function ChatHeader({
             <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z" />
           </svg>
         </button>
+        
+        {/* Toggle members panel */}
+        {onToggleCollapse && (
+          <button 
+            onClick={onToggleCollapse}
+            className={`text-gray-400 hover:text-purple-400 p-2 rounded-full hover:bg-purple-900/20 transition ${!isCollapsed ? 'bg-purple-900/20 text-purple-400' : ''}`}
+            title={isCollapsed ? "Show members" : "Hide members"}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
+            </svg>
+          </button>
+        )}
         
         {/* Add member */}
         <button 

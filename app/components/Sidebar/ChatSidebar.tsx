@@ -557,7 +557,7 @@ export default function ChatSidebar({
         {/* User area at bottom */}
         <div className="p-3 border-t border-purple-900/30 bg-black">
           <div className="flex items-center space-x-3">
-            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 neon-purple-glow relative group cursor-pointer">
+            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-r from-purple-600 to-indigo-600 relative group cursor-pointer">
               {user?.email?.address ? (
                 <span className="text-sm font-medium text-white">
                   {user.email.address[0].toUpperCase()}
