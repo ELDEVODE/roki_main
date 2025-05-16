@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 // shadcn button
 import Header from "@/app/components/Header";
+import Image from "next/image";
 
 export default function HomePage() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -119,33 +120,47 @@ export default function HomePage() {
             </div>
 
             <div className="w-full md:w-1/2 mt-12 md:mt-0 relative">
-              <div className="relative z-10 bg-gradient-to-br from-purple-900/30 to-indigo-900/30 border border-white/10 rounded-2xl p-2 shadow-2xl backdrop-blur-md">
-                <div className="aspect-[5/3] rounded-lg overflow-hidden bg-gray-900 relative">
-                  {/* Dashboard mockup image would go here */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-gray-900 via-transparent to-transparent"></div>
-
-                  {/* UI elements mockup */}
-                  <div className="absolute top-4 left-4 right-4 h-8 bg-gray-800/80 rounded-md flex items-center px-3">
-                    <div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
-                    <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
-                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
-
-                    <div className="h-4 w-32 bg-gray-700/50 rounded-sm mx-auto"></div>
-                  </div>
-
-                  <div className="absolute top-16 left-4 right-4 bottom-4 grid grid-cols-3 gap-3">
-                    <div className="bg-gray-800/50 rounded-md"></div>
-                    <div className="bg-gray-800/30 rounded-md col-span-2"></div>
-                    <div className="bg-gray-800/30 rounded-md col-span-2"></div>
-                    <div className="bg-gradient-to-r from-purple-600/30 to-indigo-600/30 text-center flex justify-center items-center text-purple-700 italics uppercase rounded-md">
-                      Roki
-                    </div>
-                    <div className="bg-gray-800/50 rounded-md"></div>
-                    <div className="bg-gray-800/30 rounded-md"></div>
-                    <div className="bg-gray-800/30 rounded-md col-span-2"></div>
-                  </div>
+              {/* Container for image with strobe neon effect */}
+              <div className="relative flex items-center justify-center">
+                
+                {/* Image with intense neon glow that follows PNG outline with rounded bottom */}
+                <div className="relative z-10 rounded-t-none rounded-b-full overflow-hidden bg-black/20 p-2 max-w-[90%] mx-auto">
+                  <Image 
+                    src="/output-onlinepngtools.png" 
+                    alt="Community members" 
+                    width={700}
+                    height={420}
+                    className="w-full h-auto object-contain neon-glow"
+                    priority
+                  />
                 </div>
               </div>
+
+              {/* Style for neon strobe effect */}
+              <style jsx global>{`
+                .neon-glow {
+                  position: relative;
+                  filter: drop-shadow(0 0 2px rgba(255, 0, 255, 0.8))
+                         drop-shadow(0 0 4px rgba(123, 31, 162, 0.9))
+                         drop-shadow(0 0 6px rgba(103, 232, 249, 0.7));
+                  will-change: filter;
+                  animation: neon-strobe 1.5s infinite alternate;
+                }
+                
+                @keyframes neon-strobe {
+                  0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                    filter: drop-shadow(0 0 2px rgba(255, 0, 255, 0.8))
+                           drop-shadow(0 0 4px rgba(123, 31, 162, 0.9))
+                           drop-shadow(0 0 6px rgba(103, 232, 249, 0.7));
+                  }
+                  
+                  20%, 24%, 55% {
+                    filter: drop-shadow(0 0 2px rgba(255, 0, 255, 0.9))
+                           drop-shadow(0 0 4px rgba(123, 31, 162, 1))
+                           drop-shadow(0 0 8px rgba(103, 232, 249, 0.8));
+                  }
+                }
+              `}</style>
 
               {/* Decorative elements */}
               <div className="absolute -top-8 -right-8 w-40 h-40 bg-purple-600/10 blur-2xl rounded-full"></div>
