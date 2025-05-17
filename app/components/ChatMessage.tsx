@@ -14,6 +14,8 @@ export interface ChatMessageProps {
   currentUserId: string;
   isBot?: boolean;
   isRead?: boolean;
+  isPending?: boolean;
+  hasError?: boolean;
 }
 
 export default function ChatMessage({ 
@@ -22,15 +24,20 @@ export default function ChatMessage({
   user, 
   currentUserId,
   isBot = false,
-  isRead = false
+  isRead = false,
+  isPending = false,
+  hasError = false
 }: ChatMessageProps) {
   const [showActions, setShowActions] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+  const [wasEverPending, setWasEverPending] = useState(isPending);
   const isCurrentUser = user.id === currentUserId;
   
+  // Mark the message as "wasEverPending" if it starts pending
   useEffect(() => {
-    setIsVisible(true);
-  }, []);
+    if (isPending) {
+      setWasEverPending(true);
+    }
+  }, [isPending]);
   
   // Format the timestamp
   const formatTimestamp = (timestamp: string) => {
@@ -69,13 +76,10 @@ export default function ChatMessage({
   const userColors = getUserColor(user.name);
   
   return (
-    <motion.div 
+    <div 
       className={`px-4 py-2 hover:bg-purple-900/5 relative group ${isCurrentUser ? 'ml-8' : 'mr-8'}`}
       onMouseEnter={() => setShowActions(true)}
       onMouseLeave={() => setShowActions(false)}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
-      transition={{ duration: 0.3 }}
     >
       <div className={`flex items-start ${isCurrentUser ? 'justify-end' : ''}`}>
         {/* User avatar - show only if not current user */}
@@ -105,7 +109,7 @@ export default function ChatMessage({
           <div 
             className={`rounded-2xl px-4 py-3 text-gray-100 shadow-md ${
               isCurrentUser 
-                ? 'bg-purple-800/50 rounded-br-none' 
+                ? `bg-purple-800/50 rounded-br-none ${isPending ? 'border border-purple-500/30 bg-opacity-30' : ''} ${hasError ? 'border border-red-500/40 bg-red-900/20' : ''}` 
                 : `${userColors.bg} rounded-bl-none`
             }`}
           >
@@ -114,19 +118,36 @@ export default function ChatMessage({
             </div>
           </div>
           
-          {/* Read receipts */}
+          {/* Message status indicators */}
           {isCurrentUser && (
             <div className="text-right mt-1">
-              <span className={`text-xs ${isRead ? 'text-purple-400' : 'text-gray-500'}`}>
-                {isRead ? (
-                  <span className="flex items-center justify-end">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                    Read
+              {isPending ? (
+                <span className="flex items-center justify-end text-xs text-purple-300">
+                  <span className="flex h-2 w-2 relative mr-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-purple-500"></span>
                   </span>
-                ) : 'Sent'}
-              </span>
+                  Sending...
+                </span>
+              ) : hasError ? (
+                <span className="flex items-center justify-end text-xs text-red-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  </svg>
+                  Failed to send
+                </span>
+              ) : (
+                <span className={`text-xs ${isRead ? 'text-purple-400' : 'text-gray-500'}`}>
+                  {isRead ? (
+                    <span className="flex items-center justify-end">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                      Read
+                    </span>
+                  ) : 'Sent'}
+                </span>
+              )}
             </div>
           )}
         </div>
@@ -138,8 +159,8 @@ export default function ChatMessage({
           </div>
         )}
         
-        {/* Message actions */}
-        {showActions && (
+        {/* Message actions - hide for pending messages */}
+        {showActions && !isPending && !hasError && (
           <div className={`absolute ${isCurrentUser ? 'right-16' : 'right-4'} top-2 flex items-center space-x-1 bg-black/80 border border-purple-900 shadow-md rounded-md p-1 opacity-0 group-hover:opacity-100 transition-opacity z-10`}>
             <button className="p-1 rounded hover:bg-purple-900 text-gray-400 hover:text-purple-400 transition" title="React">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -167,7 +188,18 @@ export default function ChatMessage({
             )}
           </div>
         )}
+        
+        {/* Retry button for failed messages */}
+        {hasError && isCurrentUser && (
+          <div className="absolute right-16 top-2 flex items-center space-x-1 bg-black/80 border border-red-500/40 shadow-md rounded-md p-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+            <button className="p-1 rounded hover:bg-purple-900 text-gray-400 hover:text-purple-400 transition" title="Retry">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clipRule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
-    </motion.div>
+    </div>
   );
 } 

@@ -124,16 +124,37 @@ exports.Prisma.DemoUserScalarFieldEnum = {
   id: 'id',
   walletAddress: 'walletAddress',
   name: 'name',
-  createdAt: 'createdAt'
+  username: 'username',
+  profileImage: 'profileImage',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  online: 'online',
+  lastSeen: 'lastSeen'
 };
 
 exports.Prisma.DemoChannelScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  icon: 'icon',
+  type: 'type',
   creatorId: 'creatorId',
+  defaultSubchannelId: 'defaultSubchannelId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.DemoSubChannelScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  icon: 'icon',
+  type: 'type',
+  channelId: 'channelId',
   isTokenGated: 'isTokenGated',
   tokenAddress: 'tokenAddress',
-  createdAt: 'createdAt'
+  isDefault: 'isDefault',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.DemoMembershipScalarFieldEnum = {
@@ -141,14 +162,27 @@ exports.Prisma.DemoMembershipScalarFieldEnum = {
   userId: 'userId',
   channelId: 'channelId',
   role: 'role',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  lastReadAt: 'lastReadAt'
 };
 
 exports.Prisma.DemoMessageScalarFieldEnum = {
   id: 'id',
   content: 'content',
   userId: 'userId',
+  subchannelId: 'subchannelId',
+  createdAt: 'createdAt',
+  readByUsers: 'readByUsers'
+};
+
+exports.Prisma.DemoInviteScalarFieldEnum = {
+  id: 'id',
+  inviteCode: 'inviteCode',
   channelId: 'channelId',
+  createdBy: 'createdBy',
+  expiresAt: 'expiresAt',
+  maxUses: 'maxUses',
+  useCount: 'useCount',
   createdAt: 'createdAt'
 };
 
@@ -171,8 +205,10 @@ exports.Prisma.NullsOrder = {
 exports.Prisma.ModelName = {
   DemoUser: 'DemoUser',
   DemoChannel: 'DemoChannel',
+  DemoSubChannel: 'DemoSubChannel',
   DemoMembership: 'DemoMembership',
-  DemoMessage: 'DemoMessage'
+  DemoMessage: 'DemoMessage',
+  DemoInvite: 'DemoInvite'
 };
 
 /**

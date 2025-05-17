@@ -8,16 +8,92 @@ import ChatHeader from "@/app/components/ChatHeader";
 import ChatMessage from "@/app/components/ChatMessage";
 import ChatInput from "@/app/components/ChatInput";
 import CreateChannelModal from "@/app/components/modals/CreateChannelModal";
+import UsernameModal from "@/app/components/modals/UsernameModal";
+import ChannelInfoContent from "@/app/components/ChannelInfoContent";
 import { motion } from "framer-motion";
+import InviteModal from '../components/modals/InviteModal';
+import { useToast } from '../context/ToastContext';
+
+// Define ChannelFormData interface to match what CreateChannelModal sends
+interface ChannelFormData {
+  name: string;
+  icon?: string;
+  type?: string;
+}
+
+// Cache utilities
+const CACHE_PREFIX = 'channel_messages_';
+const FIRST_VISIT_PREFIX = 'first_visit_';
+const CACHE_TTL = 1000 * 60 * 60; // 1 hour
+
+function getMessageCache(channelId: string) {
+  try {
+    const cacheKey = `${CACHE_PREFIX}${channelId}`;
+    const cachedData = localStorage.getItem(cacheKey);
+    
+    if (cachedData) {
+      const { messages, timestamp } = JSON.parse(cachedData);
+      const now = Date.now();
+      
+      // Check if cache is still valid (within TTL)
+      if (now - timestamp < CACHE_TTL) {
+        return messages;
+      }
+    }
+  } catch (err) {
+    console.error("Error reading from cache", err);
+  }
+  
+  return null;
+}
+
+function setMessageCache(channelId: string, messages: any[]) {
+  try {
+    const cacheKey = `${CACHE_PREFIX}${channelId}`;
+    const cacheData = {
+      messages,
+      timestamp: Date.now()
+    };
+    
+    localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+  } catch (err) {
+    console.error("Error writing to cache", err);
+  }
+}
 
 function DemoContent() {
-  const { login, authenticated, user } = usePrivy();
+  const { login, authenticated, user, ready } = usePrivy();
   // Use wallet directly from the Privy user object
   const wallet = user?.wallet;
   const router = useRouter();
   const searchParams = useSearchParams();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  
+  // Debug logs for authentication
+  useEffect(() => {
+    console.log("🔍 Demo Auth Debug:", { 
+      ready,
+      authenticated, 
+      user: !!user,
+      wallet: !!wallet,
+      walletAddress: wallet?.address || 'none',
+      channelParam: searchParams.get('channel') || 'none'
+    });
+  }, [ready, authenticated, user, wallet, searchParams]);
+  
+  // Check for channel in URL params
+  const channelParam = searchParams.get('channel');
+  const subchannelParam = searchParams.get('subchannel');
+  
+  // New effect to handle authentication redirect
+  useEffect(() => {
+    // If user is not authenticated and there's a channel param, show login prompt
+    if (!authenticated && channelParam) {
+      // We could also redirect to the invite page if we have an invite code
+      console.log("User not authenticated but trying to access a channel");
+    }
+  }, [authenticated, channelParam]);
   
   // State
   const [userId, setUserId] = useState("");
@@ -31,10 +107,14 @@ function DemoContent() {
   const [userChannels, setUserChannels] = useState<any[]>([]);
   const [createdChannels, setCreatedChannels] = useState<any[]>([]);
   const [messagesLoading, setMessagesLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false); // New state for tracking refresh status
   const [isAtBottom, setIsAtBottom] = useState(true);
   const [hasViewedBottom, setHasViewedBottom] = useState(false);
   const [initialLoadComplete, setInitialLoadComplete] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [lastMessageId, setLastMessageId] = useState<string | null>(null); // To track newest message
+  const [isFirstVisit, setIsFirstVisit] = useState<boolean>(false);
+  const viewParam = searchParams?.get('view');
   
   // Modal state
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -46,6 +126,19 @@ function DemoContent() {
   
   // Add this state to track the collapsed state of the members panel
   const [isMembersPanelCollapsed, setIsMembersPanelCollapsed] = useState(false);
+  
+  // Use a ref to track if we've initialized from cache
+  const initializedFromCacheRef = useRef(false);
+  
+  // Add the state variable for the invite modal
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  
+  // Add state for the username modal
+  const [showUsernameModal, setShowUsernameModal] = useState(false);
+  const [joiningChannelId, setJoiningChannelId] = useState<string | null>(null);
+  
+  // Add useToast hook
+  const { showToast } = useToast();
   
   // Log connection state for debugging
   useEffect(() => {
@@ -61,7 +154,12 @@ function DemoContent() {
   useEffect(() => {
     if (authenticated && wallet?.address) {
       console.log("Attempting to register user with wallet:", wallet.address);
-      registerUser();
+      // Only register if userId is not already set
+      if (!userId) {
+        registerUser();
+      } else {
+        console.log("User already registered with ID:", userId);
+      }
     }
   }, [authenticated, wallet?.address]);
   
@@ -74,9 +172,32 @@ function DemoContent() {
       setIsInitialLoad(true);
       setMessagesLoading(true);
       setInitialLoadComplete(false);
+      setLastMessageId(null);
       
       if (userId) {
-        fetchChannel(id);
+        // Try to load from cache first
+        const cachedMessages = typeof window !== 'undefined' ? getMessageCache(id) : null;
+        if (cachedMessages && cachedMessages.length > 0) {
+          console.log("Using cached messages for channel:", id);
+          setMessages(cachedMessages);
+          setMessagesLoading(false);
+          setInitialLoadComplete(true);
+          setIsInitialLoad(false);
+          
+          // Get the newest message ID for incremental updates
+          const newestMessage = [...cachedMessages].sort((a, b) => 
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          )[0];
+          if (newestMessage) {
+            setLastMessageId(newestMessage.id);
+          }
+          
+          // Still fetch fresh data but don't show the loading animation
+          fetchChannel(id, false);
+        } else {
+          // No cache, do a regular fetch with loading animation
+          fetchChannel(id, true);
+        }
       }
     } else {
       // Only set not loading if no channel selected
@@ -93,13 +214,13 @@ function DemoContent() {
     }
   }, [userId, wallet?.address]);
   
-  // Refresh channel data every 1 second for faster updates - without showing loading
+  // Refresh channel data every 3 seconds for faster updates - without showing loading
   useEffect(() => {
     if (channelId && userId && initialLoadComplete) {
       const interval = setInterval(() => {
         // Use a different function for polling that doesn't trigger loading state
         refreshChannel(channelId);
-      }, 1000);
+      }, 3000); // Increased to 3 seconds to reduce server load
       
       return () => clearInterval(interval);
     }
@@ -158,9 +279,11 @@ function DemoContent() {
   
   // Check token access
   useEffect(() => {
-    if (channel?.isTokenGated && wallet?.address) {
+    const hasTokenGatedSubchannels = channel?.subchannels?.some((sc: any) => sc.isTokenGated);
+    
+    if (hasTokenGatedSubchannels && wallet?.address) {
       checkTokenAccess();
-    } else if (!channel?.isTokenGated) {
+    } else if (!hasTokenGatedSubchannels) {
       setHasTokenAccess(true);
     }
   }, [channel, wallet?.address]);
@@ -171,6 +294,28 @@ function DemoContent() {
       setTypingUsers(new Set());
     }
   }, [channelId]);
+  
+  // Check for first visit to channel
+  useEffect(() => {
+    if (channelId && typeof window !== 'undefined') {
+      // Check if this is the user's first visit to this channel
+      const firstVisitKey = `${FIRST_VISIT_PREFIX}${channelId}`;
+      const hasVisited = localStorage.getItem(firstVisitKey);
+      
+      if (!hasVisited) {
+        // Mark as first visit and redirect to info page
+        setIsFirstVisit(true);
+        // Only redirect if not already on info page
+        if (viewParam !== 'info') {
+          router.push(`/demo?channel=${channelId}&view=info`);
+        }
+        // Mark channel as visited for future
+        localStorage.setItem(firstVisitKey, 'visited');
+      } else {
+        setIsFirstVisit(false);
+      }
+    }
+  }, [channelId, viewParam, router]);
   
   // Handle typing indicator simulation
   useEffect(() => {
@@ -231,6 +376,18 @@ function DemoContent() {
     
     return () => clearTimeout(markAsRead);
   }, [messages, userId, readReceipts]);
+  
+  // Initialize from cache on component mount
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !initializedFromCacheRef.current && channelId) {
+      const cachedMessages = getMessageCache(channelId);
+      if (cachedMessages && cachedMessages.length > 0) {
+        console.log("Initializing from cache on mount:", cachedMessages.length, "messages");
+        setMessages(cachedMessages);
+        initializedFromCacheRef.current = true;
+      }
+    }
+  }, [channelId]);
   
   function scrollToBottom() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -332,10 +489,10 @@ function DemoContent() {
     }
   }
   
-  // The original fetch function - shows loading
-  async function fetchChannel(id: string) {
-    // Only set loading to true on the initial load
-    if (isInitialLoad) {
+  // The original fetch function - shows loading based on parameter
+  async function fetchChannel(id: string, showLoading: boolean = true) {
+    // Only set loading to true if we should show loading
+    if (showLoading) {
       setMessagesLoading(true);
     }
     
@@ -345,7 +502,35 @@ function DemoContent() {
         const data = await res.json();
         console.log("Channel data received:", data);
         setChannel(data);
-        setMessages(data.messages || []);
+        
+        // Check if the user is a member and update token access
+        const isMember = data.members?.some((m: any) => 
+          String(m.userId) === String(userId)
+        );
+        
+        // If user is a member, they should have access to send messages
+        if (isMember) {
+          setHasTokenAccess(true);
+        } else {
+          // If not a member, check token access separately
+          checkTokenAccess();
+        }
+        
+        const newMessages = data.messages || [];
+        setMessages(newMessages);
+        
+        // Cache the messages
+        if (typeof window !== 'undefined' && newMessages.length > 0) {
+          setMessageCache(id, newMessages);
+          
+          // Update the last message ID
+          const newestMessage = [...newMessages].sort((a, b) => 
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          )[0];
+          if (newestMessage) {
+            setLastMessageId(newestMessage.id);
+          }
+        }
         
         // Set loading to false after data is received
         setMessagesLoading(false);
@@ -365,30 +550,227 @@ function DemoContent() {
     }
   }
   
-  // New function for polling updates - doesn't show loading
+  // Update the sendMessage function to ensure messages stay visible and properly cached
+  async function sendMessage(content: string) {
+    if (!channelId || !userId || !content) return;
+    
+    // Get the active subchannel ID from the channel data or URL params
+    const subchannelId = searchParams.get('subchannel') || channel?.activeSubchannelId;
+    
+    // Clear typing indicator when sending
+    setIsUserTyping(false);
+    
+    // Generate temporary ID for optimistic update
+    const tempId = `temp-${Date.now()}`;
+    const timestamp = new Date().toISOString();
+    
+    // Create temporary message with pending status
+    const tempMessage = {
+      id: tempId,
+      content,
+      createdAt: timestamp,
+      userId,
+      user: { name: user?.email?.address || `User-${wallet?.address?.slice(0, 6)}`, id: userId },
+      isPending: true
+    };
+    
+    // Add optimistic message to the UI immediately
+    const newMessages = [...messages, tempMessage];
+    setMessages(newMessages);
+    
+    // Update cache immediately so the message stays visible
+    if (typeof window !== 'undefined') {
+      setMessageCache(channelId, newMessages);
+    }
+    
+    // Force scrolling to bottom when user sends a message
+    setIsAtBottom(true);
+    scrollToBottom();
+    
+    try {
+      // Send the actual message to the server
+      const response = await fetch(`/api/demo/channels/${channelId}/messages`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          content,
+          userId,
+          subchannelId // Include the active subchannel ID
+        })
+      });
+      
+      if (response.ok) {
+        // Get the confirmed message ID from the server response if available
+        let confirmedMessageId = null;
+        try {
+          const responseData = await response.json();
+          confirmedMessageId = responseData.id;
+        } catch (e) {
+          // If we can't parse the response, that's ok, we'll just update status
+        }
+        
+        // Immediately update the message status to sent (not pending)
+        const updatedMessages = messages.map(msg => 
+          msg.id === tempId 
+            ? { 
+                ...msg, 
+                isPending: false,
+                id: confirmedMessageId || msg.id // Use the server ID if available
+              } 
+            : msg
+        );
+        
+        setMessages(updatedMessages);
+        
+        // Update cache with the confirmed message
+        if (typeof window !== 'undefined') {
+          setMessageCache(channelId, updatedMessages);
+        }
+      } else {
+        // Message failed to send
+        const errorMessages = messages.map(msg => 
+          msg.id === tempId 
+            ? { ...msg, hasError: true, isPending: false } 
+            : msg
+        );
+        
+        setMessages(errorMessages);
+        
+        // Update cache with the error state
+        if (typeof window !== 'undefined') {
+          setMessageCache(channelId, errorMessages);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to send message", err);
+      
+      // Update the temporary message to show error state
+      const errorMessages = messages.map(msg => 
+        msg.id === tempId 
+          ? { ...msg, hasError: true, isPending: false } 
+          : msg
+      );
+      
+      setMessages(errorMessages);
+      
+      // Update cache with the error state
+      if (typeof window !== 'undefined') {
+        setMessageCache(channelId, errorMessages);
+      }
+    }
+  }
+  
+  // New function for polling updates - with minimal loading indicator only for large changes
   async function refreshChannel(id: string) {
     // Don't refresh while initial loading is happening
     if (messagesLoading || !initialLoadComplete) return;
     
+    // Get the current subchannel from URL or state
+    const activeSubchannel = searchParams.get('subchannel') || channel?.activeSubchannelId;
+    
     try {
-      const res = await fetch(`/api/demo/channels?id=${id}`);
+      // Include the active subchannel in the request if available
+      const url = activeSubchannel 
+        ? `/api/demo/channels?id=${id}&subchannelId=${activeSubchannel}`
+        : `/api/demo/channels?id=${id}`;
+      
+      const res = await fetch(url);
       if (res.ok) {
         const data = await res.json();
         
-        // Check if there are actual changes before updating state
-        const messagesChanged = JSON.stringify(data.messages) !== JSON.stringify(messages);
+        // Get new messages from server
+        const serverMessages = data.messages || [];
+        
+        // Filter out any pending messages that don't belong to the current user to avoid duplicates
+        const currentMessages = messages.filter((msg: any) => {
+          if (msg.isPending) {
+            return msg.userId === userId; // Only keep pending messages from the current user
+          }
+          return true; // Keep all other messages
+        });
+        
+        // Get message IDs for comparing
+        const currentIds = new Set(currentMessages.map((m: any) => m.id));
+        const serverIds = new Set(serverMessages.map((m: any) => m.id));
+        
+        // Find new messages that don't exist in our current state
+        const newServerMessages = serverMessages.filter((msg: any) => !currentIds.has(msg.id));
+        
+        // Calculate differences for determining if this is a bulk update
+        const addedMessageIds = Array.from(serverIds).filter(id => !currentIds.has(id));
+        const removedMessageIds = Array.from(currentIds).filter(
+          id => !serverIds.has(id) && !id.toString().startsWith('temp-')
+        );
+        
+        // Determine if there are changes worth updating
+        const hasNewMessages = newServerMessages.length > 0;
         const channelDetailsChanged = 
           data.name !== channel?.name || 
           data.isTokenGated !== channel?.isTokenGated || 
           JSON.stringify(data.members) !== JSON.stringify(channel?.members);
         
-        // Only update if there are actual changes
-        if (messagesChanged) {
-          setMessages(data.messages || []);
-        }
+        // Calculate if changes are substantial enough to show indicator
+        const hasSubstantialChanges = 
+          // More than 3 new messages
+          addedMessageIds.length > 3 || 
+          // Any message removal
+          removedMessageIds.length > 0 ||
+          // Channel details changed (name, token-gating, or members)
+          channelDetailsChanged;
         
-        if (channelDetailsChanged) {
-          setChannel(data);
+        // Update if we have changes
+        if (hasNewMessages || channelDetailsChanged) {
+          // Only show refresh indicator for substantial changes
+          if (hasSubstantialChanges) {
+            setIsRefreshing(true);
+            
+            // Hide refresh indicator after a delay
+            setTimeout(() => {
+              setIsRefreshing(false);
+            }, 300);
+          }
+          
+          // Update messages if there are new ones
+          if (hasNewMessages) {
+            // Merge current messages with new ones
+            const mergedMessages = [...currentMessages, ...newServerMessages].sort(
+              (a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+            );
+            
+            // Deduplicate based on ID
+            const messageLookup = new Map();
+            mergedMessages.forEach((msg: any) => {
+              // Always prefer non-pending version of a message
+              if (!messageLookup.has(msg.id) || msg.isPending === false) {
+                messageLookup.set(msg.id, msg);
+              }
+            });
+            
+            const uniqueMessages = Array.from(messageLookup.values());
+            
+            // Sort messages by time
+            uniqueMessages.sort((a: any, b: any) => 
+              new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+            );
+            
+            setMessages(uniqueMessages);
+            
+            // Cache the updated messages
+            if (typeof window !== 'undefined') {
+              setMessageCache(id, uniqueMessages);
+              
+              // Update the last message ID
+              const newestMessage = uniqueMessages.length > 0 ? uniqueMessages[uniqueMessages.length - 1] : null;
+              if (newestMessage) {
+                setLastMessageId(newestMessage.id);
+              }
+            }
+          }
+          
+          // Update channel if details changed
+          if (channelDetailsChanged) {
+            setChannel(data);
+          }
         }
       } else {
         console.error("Failed to refresh channel:", await res.text());
@@ -400,9 +782,9 @@ function DemoContent() {
   
   async function checkTokenAccess() {
     try {
-      if (!channel?.tokenAddress || !wallet?.address) return;
+      if (!channelId || !wallet?.address) return;
       
-      const res = await fetch(`/api/demo/channels/${channel.id}/verification`, {
+      const res = await fetch(`/api/demo/channels/${channelId}/verification`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ walletAddress: wallet.address })
@@ -419,7 +801,10 @@ function DemoContent() {
     }
   }
   
-  async function handleCreateChannel(name: string, isTokenGated: boolean, tokenAddress?: string) {
+  async function handleCreateChannel(channelData: ChannelFormData) {
+    // Debug the userId value
+    console.log("Current userId when creating channel:", {userId, walletAddress: wallet?.address});
+    
     if (!userId) {
       console.error("Cannot create channel: No userId available");
       setError("Please connect your wallet first");
@@ -431,14 +816,15 @@ function DemoContent() {
     
     try {
       console.log("Creating channel with userId:", userId);
+      // Make sure userId is passed correctly
+      console.log(`Creating channel with userId: ${userId}`);
+      
       const res = await fetch('/api/demo/channels', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          name,
-          creatorId: userId,
-          isTokenGated,
-          tokenAddress
+          name: channelData.name,
+          userId
         })
       });
       
@@ -480,7 +866,15 @@ function DemoContent() {
       // Example devnet token address
       const tokenAddress = "cTokELwf3CuXFTUzLcRENMzWrkfMD1T6YgGBKDmV3rn";
       
-      await fetch(`/api/demo/channels/${channelId}`, {
+      // Get the 'general' subchannel id
+      const generalSubchannel = channel?.subchannels?.find((sc: any) => sc.name === 'general');
+      if (!generalSubchannel) {
+        setError("Could not find general subchannel");
+        return;
+      }
+      
+      // Update the subchannel to be token gated
+      await fetch(`/api/demo/channels/${channelId}/subchannels/${generalSubchannel.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -492,7 +886,8 @@ function DemoContent() {
       fetchChannel(channelId);
       fetchUserChannels();
     } catch (err) {
-      console.error("Failed to token-gate channel", err);
+      console.error("Failed to token-gate subchannel", err);
+      setError(`Error: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setLoading(false);
     }
@@ -501,11 +896,15 @@ function DemoContent() {
   async function joinChannel() {
     if (!channelId || !userId) return;
     
-    // Prompt for username
-    const username = prompt("Enter your display name:", user?.email?.address || `User-${wallet?.address?.slice(0, 6)}`);
-    if (!username) {
-      return; // User canceled
-    }
+    // Open the username modal instead of using prompt
+    const defaultUsername = user?.email?.address?.split('@')[0] || `User-${wallet?.address?.slice(0, 6)}`;
+    setJoiningChannelId(channelId);
+    setShowUsernameModal(true);
+  }
+  
+  // Function to complete the join process with the provided username
+  async function completeJoinChannel(username: string) {
+    if (!joiningChannelId || !userId) return;
     
     // Update user's name
     try {
@@ -524,7 +923,7 @@ function DemoContent() {
     
     setLoading(true);
     try {
-      await fetch(`/api/demo/channels/${channelId}/join`, {
+      const joinResponse = await fetch(`/api/demo/channels/${joiningChannelId}/join`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -533,52 +932,49 @@ function DemoContent() {
         })
       });
       
-      fetchChannel(channelId);
+      const joinData = await joinResponse.json();
+      console.log("Channel join response:", joinData);
+      
+      // Debug logging for membership after join
+      const membershipDebug = await fetch(`/api/demo/channels/${joiningChannelId}/debug-membership?userId=${userId}`);
+      if (membershipDebug.ok) {
+        const debugData = await membershipDebug.json();
+        console.log("Membership debug data:", debugData);
+      }
+      
+      fetchChannel(joiningChannelId);
       fetchUserChannels();
+      showToast(`You have joined the channel successfully!`, 'success');
     } catch (err) {
       console.error("Failed to join channel", err);
+      showToast("Failed to join channel", 'error');
     } finally {
       setLoading(false);
-    }
-  }
-  
-  // Update the sendMessage function to also not trigger loading
-  async function sendMessage(content: string) {
-    if (!channelId || !userId || !content) return;
-    
-    // Clear typing indicator when sending
-    setIsUserTyping(false);
-    
-    try {
-      await fetch(`/api/demo/channels/${channelId}/messages`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          content,
-          userId
-        })
-      });
-      
-      // Force scrolling to bottom when user sends a message
-      setIsAtBottom(true);
-      
-      // Use refreshChannel instead to avoid loading animation
-      refreshChannel(channelId);
-    } catch (err) {
-      console.error("Failed to send message", err);
+      setJoiningChannelId(null);
     }
   }
   
   function shareChannel() {
     if (channelId) {
       navigator.clipboard.writeText(`${window.location.origin}/demo?channel=${channelId}`);
-      alert("Channel link copied to clipboard!");
+      showToast("Channel link copied to clipboard!", "success");
     }
   }
   
   function isUserMember() {
     if (!channel || !userId) return false;
-    return channel.members?.some((m: any) => m.userId === userId);
+    
+    // Add debug logging to help diagnose issues
+    console.log("isUserMember check:", { 
+      currentUserId: userId, 
+      channelMemberIds: channel.members?.map((m: any) => m.userId),
+      memberCount: channel.members?.length || 0
+    });
+    
+    // Ensure we're comparing strings (not objects)
+    return channel.members?.some((m: any) => 
+      String(m.userId) === String(userId)
+    );
   }
   
   // Format members for UserList component
@@ -598,7 +994,37 @@ function DemoContent() {
   };
   
   const handleChannelSelect = (id: string) => {
-    router.push(`/demo?channel=${id}`);
+    // Find the channel to check its subchannels
+    const selectedChannel = [...userChannels, ...createdChannels].find(c => c.id === id);
+    
+    // For first-time visits, store in a variable if we want to direct users to info page
+    const firstVisitToChannel = !localStorage.getItem(`${FIRST_VISIT_PREFIX}${id}`);
+    
+    if (firstVisitToChannel) {
+      // First time users get the info page
+      router.push(`/demo?channel=${id}&view=info`);
+      // Mark the channel as visited for future reference
+      localStorage.setItem(`${FIRST_VISIT_PREFIX}${id}`, 'visited');
+    } else if (selectedChannel) {
+      // Find the "general" subchannel if it exists
+      const generalSubchannel = selectedChannel.subchannels?.find(
+        (sub: any) => sub.name.toLowerCase() === 'general'
+      );
+      
+      if (generalSubchannel) {
+        // Route to general subchannel
+        router.push(`/demo?channel=${id}&subchannel=${generalSubchannel.id}`);
+      } else if (selectedChannel.subchannels?.length > 0) {
+        // If no general subchannel, use the first one
+        router.push(`/demo?channel=${id}&subchannel=${selectedChannel.subchannels[0].id}`);
+      } else {
+        // If no subchannels, just go to the channel
+        router.push(`/demo?channel=${id}`);
+      }
+    } else {
+      // If we can't find the channel in our state, just navigate to it
+      router.push(`/demo?channel=${id}`);
+    }
   };
   
   // Format typing indicators
@@ -640,8 +1066,51 @@ function DemoContent() {
     setIsMembersPanelCollapsed(!isMembersPanelCollapsed);
   };
   
-  // If not authenticated, we let the AppLayout handle it
+  // Check if the user is an admin of the current channel
+  const isUserAdmin = () => {
+    if (!channel || !userId) return false;
+    return channel.creatorId === userId || channel.members?.some((m: any) => m.userId === userId && m.role === 'admin');
+  };
+  
+  // If not authenticated, show login prompt if accessing a channel, otherwise return null
   if (!authenticated) {
+    if (channelParam) {
+      // User is trying to access a specific channel but isn't authenticated
+      return (
+        <AppLayout
+          userChannels={[]}
+          createdChannels={[]}
+          onChannelSelect={() => {}}
+          onCreateChannel={() => {}}
+          activeChannelId=""
+          showUserList={false}
+          members={[]}
+          themedHeaderBorder={false}
+          isAdmin={false}
+        >
+          <div className="flex flex-col items-center justify-center h-full p-8 text-center">
+            <div className="bg-purple-900/20 rounded-full p-6 mb-6 neon-purple-glow">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14 text-purple-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-3 neon-text">Login Required</h3>
+            <p className="text-gray-400 max-w-lg mx-auto mb-6">
+              Connect your wallet to access this channel. You've been invited to join a conversation!
+            </p>
+            <button
+              onClick={login}
+              className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 px-6 py-3 rounded-lg text-white font-medium shadow-lg shadow-purple-500/20 flex items-center gap-2 transition"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v-1l1-1 1-1-.257-.257A6 6 0 1118 8zm-6-4a1 1 0 100 2h5a1 1 0 100-2h-5z" clipRule="evenodd" />
+              </svg>
+              Connect Wallet
+            </button>
+          </div>
+        </AppLayout>
+      );
+    }
     return null;
   }
   
@@ -652,10 +1121,17 @@ function DemoContent() {
       createdChannels={createdChannels}
       activeChannelId={channelId}
       onChannelSelect={handleChannelSelect}
-      onCreateChannel={() => setIsCreateModalOpen(true)}
+      onCreateChannel={() => {
+        if (userId) {
+          setIsCreateModalOpen(true);
+        } else {
+          showToast("Please wait, still registering your account...", "warning");
+        }
+      }}
       members={formatMembers()}
       currentUserId={userId}
       themedHeaderBorder={true}
+      isAdmin={isUserAdmin()}
     >
       {/* Main content area with channel content */}
       {channelId ? (
@@ -664,10 +1140,10 @@ function DemoContent() {
           <ChatHeader 
             channelName={channel?.name || (messagesLoading ? 'Loading...' : 'Unknown Channel')}
             memberCount={channel?.members?.length || 0}
-            isTokenGated={channel?.isTokenGated || false}
+            isTokenGated={channel?.subchannels?.some((sc: any) => sc.isTokenGated) || false}
             onShareClick={shareChannel}
             onAddMemberClick={() => {
-              alert("Invite feature would open here");
+              setShowInviteModal(true);
             }}
             onSettingsClick={channel?.creatorId === userId ? tokenGateChannel : undefined}
             onToggleCollapse={toggleMembersPanel}
@@ -675,135 +1151,155 @@ function DemoContent() {
             isLoading={messagesLoading}
           />
           
-          {/* Messages area */}
-          <div 
-            ref={messagesContainerRef}
-            className="flex-1 overflow-y-auto custom-scrollbar bg-black/60 px-2 relative"
-          >
-            {messagesLoading ? (
-              // Enhanced Loading Animation (standalone, not an overlay)
-              <div className="flex flex-col items-center justify-center h-full">
-                <div className="relative w-20 h-20 mb-6">
-                  <div className="absolute inset-0 rounded-full border-4 border-purple-500/30"></div>
-                  <div className="absolute inset-0 rounded-full border-4 border-t-purple-600 border-r-transparent border-b-transparent border-l-transparent animate-spin"></div>
-                  <div className="absolute inset-2 rounded-full border-4 border-t-purple-400 border-r-transparent border-b-transparent border-l-transparent animate-spin" style={{animationDuration: '0.75s'}}></div>
-                  <div className="absolute inset-4 rounded-full border-2 border-t-purple-300 border-r-transparent border-b-transparent border-l-transparent animate-spin" style={{animationDuration: '0.5s'}}></div>
-                </div>
-                <p className="text-purple-300 font-medium text-lg mb-2">Loading messages...</p>
-                <p className="text-purple-400/60 text-sm">Getting the latest conversations</p>
-              </div>
-            ) : !messagesLoading && initialLoadComplete && messages.length === 0 ? (
-              // No messages state - only shown after loading is complete and there are no messages
-              <div className="flex flex-col items-center justify-center h-full text-center p-4">
-                <div className="bg-purple-900/20 rounded-full p-6 mb-4 neon-purple-glow">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14 text-purple-400" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3 neon-text">No messages yet</h3>
-                <p className="text-gray-400 max-w-md mb-6">
-                  Start the conversation by sending the first message in this channel.
-                </p>
-                
-                {!isUserMember() && (
-                  <button
-                    onClick={joinChannel}
-                    className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 px-6 py-2.5 rounded-lg text-white font-medium shadow-lg shadow-purple-500/20 flex items-center gap-2 transition neon-purple-glow"
-                    disabled={loading}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
-                    </svg>
-                    Join Channel
-                  </button>
-                )}
-              </div>
-            ) : !messagesLoading && messages.length > 0 ? (
-              // Has messages state - only shown when not loading and there are messages
-              <div className="py-4">
-                {/* Welcome message - only show on first visit to a channel */}
-                {channel && initialLoadComplete && (
-                  <div className="mb-6 pb-6 border-b border-purple-900/30">
-                    <div className="text-center">
-                      <div className="bg-purple-900/20 rounded-full inline-flex p-4 mb-3 mx-auto neon-purple-glow">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-purple-400" viewBox="0 0 20 20" fill="currentColor">
-                          <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
-                        </svg>
+          {/* Info Content or Messages */}
+          {viewParam === 'info' ? (
+            <ChannelInfoContent channel={channel} />
+          ) : (
+            <>
+              {/* Messages area */}
+              <div 
+                ref={messagesContainerRef}
+                className="flex-1 overflow-y-auto custom-scrollbar bg-black/60 px-2 relative"
+              >
+                {/* Small refreshing indicator - shown when fetching new messages only */}
+                {isRefreshing && !messagesLoading && (
+                  <div className="sticky top-0 left-0 right-0 z-10 flex justify-center">
+                    <div className="bg-purple-900/90 backdrop-blur-sm px-3 py-1.5 rounded-b-lg shadow-lg flex items-center space-x-2 text-xs text-purple-100">
+                      <div className="w-3 h-3 relative">
+                        <div className="absolute inset-0 rounded-full border-2 border-t-purple-300 border-r-transparent border-b-transparent border-l-transparent animate-spin"></div>
                       </div>
-                      <h3 className="text-2xl font-bold text-white mb-2">Welcome to #{channel?.name}</h3>
-                      <p className="text-gray-400 max-w-lg mx-auto mb-3">
-                        This is the start of the channel. {channel?.isTokenGated ? 'This channel is token-gated, meaning only users with the right tokens can access it.' : ''}
-                      </p>
-                      {!isUserMember() && (
-                        <button
-                          onClick={joinChannel}
-                          className="mt-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 rounded-md text-sm font-medium text-white inline-flex items-center shadow-lg shadow-purple-500/20"
-                        >
-                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
-                            <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
-                          </svg>
-                          Join Channel
-                        </button>
-                      )}
+                      <span>Updating...</span>
                     </div>
                   </div>
                 )}
                 
-                {/* Regular messages */}
-                {messages.map((msg) => (
-                  <ChatMessage 
-                    key={msg.id}
-                    id={msg.id}
-                    content={msg.content}
-                    createdAt={msg.createdAt}
-                    userId={msg.userId}
-                    user={msg.user || { name: 'Unknown User', id: msg.userId }}
-                    currentUserId={userId}
-                    isRead={msg.userId === userId ? false : readReceipts[msg.id]}
-                  />
-                ))}
-                <div ref={messagesEndRef}></div>
-                
-                {/* Typing indicator - only shown if others are typing */}
-                {hasOtherUsersTyping() && (
-                  <div className="px-4 py-2 text-sm text-purple-300">
-                    <div className="flex items-center space-x-2">
-                      <span className="relative flex h-3 w-3">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></span>
-                      </span>
-                      <span>{getTypingIndicator()}</span>
+                {messagesLoading ? (
+                  // Enhanced Loading Animation (standalone, not an overlay) - only shown on initial load
+                  <div className="flex flex-col items-center justify-center h-full">
+                    <div className="relative w-20 h-20 mb-6">
+                      <div className="absolute inset-0 rounded-full border-4 border-purple-500/30"></div>
+                      <div className="absolute inset-0 rounded-full border-4 border-t-purple-600 border-r-transparent border-b-transparent border-l-transparent animate-spin"></div>
+                      <div className="absolute inset-2 rounded-full border-4 border-t-purple-400 border-r-transparent border-b-transparent border-l-transparent animate-spin" style={{animationDuration: '0.75s'}}></div>
                     </div>
+                    <p className="text-purple-300 font-medium text-lg mb-2">Loading messages...</p>
+                    <p className="text-purple-400/60 text-sm">Getting the latest conversations</p>
+                  </div>
+                ) : !messagesLoading && initialLoadComplete && messages.length === 0 ? (
+                  // No messages state - only shown after loading is complete and there are no messages
+                  <div className="flex flex-col items-center justify-center h-full text-center p-4">
+                    <div className="bg-purple-900/20 rounded-full p-6 mb-4 neon-purple-glow">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-14 w-14 text-purple-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-3 neon-text">No messages yet</h3>
+                    <p className="text-gray-400 max-w-md mb-6">
+                      Start the conversation by sending the first message in this channel.
+                    </p>
+                    
+                    {!isUserMember() && (
+                      <button
+                        onClick={joinChannel}
+                        className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 px-6 py-2.5 rounded-lg text-white font-medium shadow-lg shadow-purple-500/20 flex items-center gap-2 transition neon-purple-glow"
+                        disabled={loading}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+                        </svg>
+                        Join Channel
+                      </button>
+                    )}
+                  </div>
+                ) : !messagesLoading && messages.length > 0 ? (
+                  // Has messages state - only shown when not loading and there are messages
+                  <div className="py-4">
+                    {/* Welcome message - only show on first visit to a channel */}
+                    {channel && initialLoadComplete && (
+                      <div className="mb-6 pb-6 border-b border-purple-900/30">
+                        <div className="text-center">
+                          <div className="bg-purple-900/20 rounded-full inline-flex p-4 mb-3 mx-auto neon-purple-glow">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-purple-400" viewBox="0 0 20 20" fill="currentColor">
+                              <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+                            </svg>
+                          </div>
+                          <h3 className="text-2xl font-bold text-white mb-2">Welcome to #{channel?.name}</h3>
+                          <p className="text-gray-400 max-w-lg mx-auto mb-3">
+                            This is the start of the channel. {channel?.subchannels?.some((sc: any) => sc.isTokenGated) ? 'This channel has token-gated subchannels, meaning only users with the right tokens can access certain content.' : ''}
+                          </p>
+                          {!isUserMember() && (
+                            <button
+                              onClick={joinChannel}
+                              className="mt-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 rounded-md text-sm font-medium text-white inline-flex items-center shadow-lg shadow-purple-500/20"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z" />
+                              </svg>
+                              Join Channel
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* Regular messages */}
+                    {messages.map((msg) => (
+                      <ChatMessage 
+                        key={msg.id}
+                        id={msg.id}
+                        content={msg.content}
+                        createdAt={msg.createdAt}
+                        userId={msg.userId}
+                        user={msg.user || { name: 'Unknown User', id: msg.userId }}
+                        currentUserId={userId}
+                        isRead={msg.userId === userId ? false : readReceipts[msg.id]}
+                        isPending={msg.isPending}
+                        hasError={msg.hasError}
+                      />
+                    ))}
+                    <div ref={messagesEndRef}></div>
+                    
+                    {/* Typing indicator - only shown if others are typing */}
+                    {hasOtherUsersTyping() && (
+                      <div className="px-4 py-2 text-sm text-purple-300">
+                        <div className="flex items-center space-x-2">
+                          <span className="relative flex h-3 w-3">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-3 w-3 bg-purple-500"></span>
+                          </span>
+                          <span>{getTypingIndicator()}</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : null}
+                
+                {/* Scroll to bottom button - positioned inside the messages container */}
+                {!isAtBottom && messages.length > 0 && !messagesLoading && (
+                  <div className="sticky bottom-6 mr-4 flex justify-end pointer-events-none">
+                    <motion.button
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      onClick={scrollToBottom}
+                      className="bg-purple-600 text-white p-2.5 rounded-full shadow-lg shadow-purple-900/40 hover:bg-purple-500 transition-colors z-30 pointer-events-auto"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" transform="rotate(180, 10, 10)" />
+                      </svg>
+                    </motion.button>
                   </div>
                 )}
               </div>
-            ) : null}
-            
-            {/* Scroll to bottom button - positioned inside the messages container */}
-            {!isAtBottom && messages.length > 0 && !messagesLoading && (
-              <div className="sticky bottom-6 mr-4 flex justify-end pointer-events-none">
-                <motion.button
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  onClick={scrollToBottom}
-                  className="bg-purple-600 text-white p-2.5 rounded-full shadow-lg shadow-purple-900/40 hover:bg-purple-500 transition-colors z-30 pointer-events-auto"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clipRule="evenodd" transform="rotate(180, 10, 10)" />
-                  </svg>
-                </motion.button>
-              </div>
-            )}
-          </div>
-          
-          {/* Message input */}
-          <ChatInput 
-            onSendMessage={sendMessage}
-            disabled={!isUserMember() || !hasTokenAccess}
-            channelName={channel?.name || ''}
-            onTypingStart={handleUserTypingStart}
-            onTypingStop={handleUserTypingStop}
-          />
+              
+              {/* Message input */}
+              <ChatInput 
+                onSendMessage={sendMessage}
+                disabled={!hasTokenAccess}
+                channelName={channel?.name || ''}
+                onTypingStart={handleUserTypingStart}
+                onTypingStop={handleUserTypingStop}
+              />
+            </>
+          )}
         </>
       ) : (
         <div className="flex flex-col items-center justify-center h-full p-8 text-center">
@@ -820,7 +1316,7 @@ function DemoContent() {
             <button
               onClick={() => setIsCreateModalOpen(true)}
               className="px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 rounded-lg text-white font-medium shadow-lg shadow-purple-500/20 flex items-center gap-2 transition neon-purple-glow"
-              disabled={loading}
+              disabled={loading || !userId}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2h-1a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
@@ -870,6 +1366,24 @@ function DemoContent() {
           </div>
         </div>
       )}
+      
+      {/* Invite Modal */}
+      {channel && (
+        <InviteModal
+          isOpen={showInviteModal}
+          onClose={() => setShowInviteModal(false)}
+          channelId={channel.id}
+          channelName={channel.name}
+        />
+      )}
+      
+      {/* Username Modal */}
+      <UsernameModal 
+        isOpen={showUsernameModal}
+        onClose={() => setShowUsernameModal(false)}
+        onSubmit={completeJoinChannel}
+        defaultUsername={user?.email?.address?.split('@')[0] || `User-${wallet?.address?.slice(0, 6) || 'new'}`}
+      />
     </AppLayout>
   );
 }

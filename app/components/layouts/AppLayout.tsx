@@ -1,7 +1,7 @@
 "use client";
 import { ReactNode, useState, useEffect, useRef } from "react";
 import { usePrivy } from "@privy-io/react-auth";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Header from "../Header";
 import ChatSidebar from "../Sidebar/ChatSidebar";
 import UserList from "../UserList";
@@ -18,6 +18,7 @@ interface AppLayoutProps {
   members?: any[];
   currentUserId?: string;
   themedHeaderBorder?: boolean;
+  isAdmin?: boolean;
 }
 
 export default function AppLayout({
@@ -30,13 +31,19 @@ export default function AppLayout({
   onCreateChannel = () => {},
   members = [],
   currentUserId = "",
-  themedHeaderBorder = false
+  themedHeaderBorder = false,
+  isAdmin = false
 }: AppLayoutProps) {
-  const { login, authenticated, user } = usePrivy();
+  const { login, authenticated, user, ready } = usePrivy();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  // Get current channel and subchannel from URL
+  const channelId = searchParams?.get('channel') || '';
+  const subchannelId = searchParams?.get('subchannel') || '';
   
   // State for resizable panels
-  const [sidebarWidth, setSidebarWidth] = useState(256); // 16rem/256px
+  const [sidebarWidth, setSidebarWidth] = useState(328); // 16rem/256px
   const [userListWidth, setUserListWidth] = useState(240); // 15rem/240px
   const [isResizingSidebar, setIsResizingSidebar] = useState(false);
   const [isResizingUserList, setIsResizingUserList] = useState(false);
@@ -113,14 +120,35 @@ export default function AppLayout({
   // Redirect to login if not authenticated
   useEffect(() => {
     if (!authenticated && typeof window !== 'undefined') {
-      // Add a small delay to avoid immediate redirects during hydration
-      const timer = setTimeout(() => {
-        router.push('/');
-      }, 100);
+      // Only redirect if there's no channel parameter in the URL
+      const channelParam = searchParams?.get('channel');
+      console.log("🚧 Redirect check:", {
+        authenticated,
+        channelParam,
+        shouldRedirect: !authenticated && !channelParam
+      });
       
-      return () => clearTimeout(timer);
+      // Only redirect if we don't have a channel parameter
+      if (!channelParam) {
+        const timer = setTimeout(() => {
+          router.push('/');
+        }, 100);
+        
+        return () => clearTimeout(timer);
+      }
     }
-  }, [authenticated, router]);
+  }, [authenticated, router, searchParams]);
+  
+  // Debug auth state in AppLayout
+  useEffect(() => {
+    console.log("🔒 AppLayout Auth Debug:", { 
+      ready,
+      authenticated, 
+      user: !!user,
+      channelId,
+      currentPath: window?.location?.pathname + window?.location?.search
+    });
+  }, [ready, authenticated, user, channelId]);
   
   if (!authenticated) {
     return (
@@ -162,14 +190,15 @@ export default function AppLayout({
       
       {/* Main content area - fills remaining height */}
       <div ref={containerRef} className="flex flex-1 overflow-hidden h-[calc(100vh-4rem)] w-full">
-        {/* Left sidebar with chat channels */}
+        {/* Left sidebar with chat channels and subchannels */}
         <div className="hidden md:block" style={{ width: `${sidebarWidth}px` }}>
           <ChatSidebar 
             userChannels={userChannels}
             createdChannels={createdChannels}
-            activeChannelId={activeChannelId}
+            activeChannelId={channelId || activeChannelId}
             onChannelSelect={onChannelSelect}
             onCreateChannel={onCreateChannel}
+            isAdmin={isAdmin}
           />
         </div>
         
@@ -187,7 +216,7 @@ export default function AppLayout({
         <MobileNav 
           userChannels={userChannels}
           createdChannels={createdChannels}
-          activeChannelId={activeChannelId}
+          activeChannelId={channelId || activeChannelId}
           onChannelSelect={onChannelSelect}
           onCreateChannel={onCreateChannel}
         />

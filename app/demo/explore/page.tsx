@@ -111,6 +111,7 @@ function ExploreContent() {
   }
 
   function handleChannelSelect(channelId: string) {
+    // Now we'll navigate to the channel, and it will show the first subchannel by default
     router.push(`/demo?channel=${channelId}`);
   }
 
@@ -139,6 +140,12 @@ function ExploreContent() {
         damping: 24
       }
     }
+  };
+
+  // Helper to check if a channel has token-gated content
+  const hasTokenGatedContent = (channel: any) => {
+    return channel.hasTokenGatedContent || 
+           (channel.subchannels && channel.subchannels.some((subchannel: any) => subchannel.isTokenGated));
   };
 
   return (
@@ -226,7 +233,7 @@ function ExploreContent() {
                           {channel.members?.length || 0} members
                         </p>
                       </div>
-                      {channel.isTokenGated && (
+                      {hasTokenGatedContent(channel) && (
                         <div className="ml-auto text-purple-400 neon-purple-glow flex items-center">
                           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
@@ -284,7 +291,7 @@ function ExploreContent() {
                     <div className="flex-1">
                       <h3 className="font-medium text-white flex items-center">
                         {channel.name}
-                        {channel.isTokenGated && (
+                        {hasTokenGatedContent(channel) && (
                           <span className="ml-2 text-purple-400 neon-purple-glow">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                               <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
@@ -293,7 +300,7 @@ function ExploreContent() {
                         )}
                       </h3>
                       <p className="text-xs text-gray-400">
-                        {channel.members?.length || 0} members • {channel.messages?.length || 0} messages
+                        {channel.members?.length || 0} members • {channel.subchannels?.length || 0} subchannels
                       </p>
                     </div>
                     <div className="flex items-center">

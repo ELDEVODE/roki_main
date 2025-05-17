@@ -1,29 +1,27 @@
-import { prisma } from '@/app/utils/prisma';
+import { demoPrisma } from '@/app/utils/demo-prisma';
 import { NextRequest } from 'next/server';
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { isTokenGated, tokenAddress } = await req.json();
-  const channelId = (await params).id;
+export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+  const { id } = params;
+  const { name, icon } = await req.json();
   
   try {
-    // Check if channel exists
-    const existingChannel = await prisma.demoChannel.findUnique({
-      where: { id: channelId }
-    });
-    
-    if (!existingChannel) {
-      return new Response(JSON.stringify({ error: "Channel not found" }), { status: 404 });
-    }
-    
-    // Update token gating settings
-    const channel = await prisma.demoChannel.update({
-      where: { id: channelId },
+    // Update the channel with the provided fields
+    const channel = await demoPrisma.demoChannel.update({
+      where: { id },
       data: {
-        isTokenGated,
-        tokenAddress: isTokenGated ? (tokenAddress || "cTokELwf3CuXFTUzLcRENMzWrkfMD1T6YgGBKDmV3rn") : null
+        name: name || undefined,
+        icon: icon || undefined
+      },
+      include: {
+        members: true,
+        subchannels: true,
+        creator: {
+          select: {
+            id: true,
+            name: true
+          }
+        }
       }
     });
     

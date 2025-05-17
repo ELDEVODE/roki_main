@@ -1,4 +1,4 @@
-import { prisma } from '@/app/utils/prisma';
+import { demoPrisma } from '@/app/utils/demo-prisma';
 import { NextRequest } from 'next/server';
 
 // Define variables without exporting them
@@ -6,124 +6,26 @@ const demoChannels = new Map();
 const demoMessages = new Map();
 const demoMemberships = new Map();
 
-export async function POST(req: NextRequest) {
-  const { name, creatorId } = await req.json();
-  
-  try {
-    // First, get the creator's information to include with the channel
-    const creator = await prisma.demoUser.findUnique({
-      where: { id: creatorId },
-      select: { id: true, name: true }
-    });
-    
-    if (!creator) {
-      return new Response(JSON.stringify({ error: "Creator not found" }), { status: 404 });
-    }
-    
-    console.log("Creating channel with creator:", creator);
-    
-    try {
-      // Create a channel using Prisma
-      const channel = await prisma.demoChannel.create({
-        data: {
-          name,
-          creatorId,
-          isTokenGated: false,
-          // Add creator as a member automatically
-          members: {
-            create: {
-              userId: creatorId,
-              role: 'OWNER'
-            }
-          }
-        },
-        include: {
-          creator: {
-            select: {
-              id: true,
-              name: true
-            }
-          },
-          members: {
-            include: {
-              user: {
-                select: {
-                  id: true,
-                  name: true
-                }
-              }
-            }
-          }
-        }
-      });
-      
-      // For in-memory client, manually add membership if needed
-      // @ts-ignore - We're doing a runtime check here
-      const isRealPrisma = prisma.user !== undefined;
-      if (!isRealPrisma) {
-        // Check if member was already added (should be done by members.create above)
-        if (!channel.members || !channel.members.some((m: any) => m.userId === creatorId)) {
-          console.log("Adding creator as member manually for in-memory client");
-          // @ts-ignore - Type safety is checked at runtime
-          await prisma.demoMembership.create({
-            data: {
-              channelId: channel.id,
-              userId: creatorId,
-              role: 'OWNER'
-            }
-          });
-        }
-      }
-      
-      console.log("Channel created with data:", JSON.stringify(channel, null, 2));
-      
-      // Make sure creator info is included in the response
-      const responseChannel = {
-        ...channel,
-        creator: creator,
-        members: channel.members || []
-      };
-      
-      return new Response(JSON.stringify(responseChannel));
-    } catch (error: any) {
-      console.error('Channel creation error:', error);
-      return new Response(JSON.stringify({ error: error.message }), { status: 500 });
-    }
-  } catch (error: any) {
-    console.error('Creator lookup error:', error);
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
-  }
-}
-
+/**
+ * Get channels for a user
+ */
 export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const id = url.searchParams.get('id');
+  const userId = url.searchParams.get('userId');
   
   try {
+    // Get a specific channel
     if (id) {
-      // Get channel with members and messages
-      const channel = await prisma.demoChannel.findUnique({
+      const channel = await demoPrisma.demoChannel.findUnique({
         where: { id },
         include: {
           members: {
             include: {
-              user: {
-                select: {
-                  id: true,
-                  name: true
-                }
-              }
+              user: true
             }
           },
-          messages: {
-            include: {
-              user: {
-                select: {
-                  id: true,
-                  name: true
-                }
-              }
-            },
+          subchannels: {
             orderBy: {
               createdAt: 'asc'
             }
@@ -135,36 +37,167 @@ export async function GET(req: NextRequest) {
         return new Response(JSON.stringify({ error: "Channel not found" }), { status: 404 });
       }
       
-      // Manually fetch creator info and add it to the response
-      if (channel.creatorId) {
-        try {
-          const creator = await prisma.demoUser.findUnique({
-            where: { id: channel.creatorId },
-            select: { id: true, name: true }
-          });
+      // Standardize user IDs in members to ensure string format
+      const standardizedMembers = channel.members.map(member => ({
+        ...member,
+        userId: String(member.userId),
+        user: member.user ? {
+          ...member.user,
+          id: String(member.user.id)
+        } : null
+      }));
+      
+      // Create a standardized channel object
+      const standardizedChannel = {
+        ...channel,
+        creatorId: String(channel.creatorId),
+        members: standardizedMembers
+      };
+      
+      // Get the active subchannel
+      let targetSubchannelId = channel.defaultSubchannelId;
+      
+      // If no default set but there are subchannels, find one
+      if (!targetSubchannelId && channel.subchannels.length > 0) {
+        // Try to find "general" first
+        const generalSubchannel = channel.subchannels.find(
+          sub => sub.name.toLowerCase() === 'general'
+        );
+        
+        if (generalSubchannel) {
+          targetSubchannelId = generalSubchannel.id;
+        } else {
+          // Find one marked as default, or use the first
+          const defaultSubchannel = channel.subchannels.find(
+            sub => sub.isDefault
+          ) || channel.subchannels[0];
           
-          if (creator) {
-            // Add creator info to the channel
-            const enhancedChannel = {
-              ...channel,
-              creator: creator
-            };
-            
-            return new Response(JSON.stringify(enhancedChannel));
-          }
-        } catch (error) {
-          console.error('Error fetching creator info:', error);
-          // Continue without creator info
+          targetSubchannelId = defaultSubchannel.id;
+          
+          // Update the channel setting
+          await demoPrisma.demoChannel.update({
+            where: { id },
+            data: { defaultSubchannelId: targetSubchannelId }
+          });
         }
       }
       
-      // Return channel without creator info if we couldn't get it
-      return new Response(JSON.stringify(channel));
+      // Only fetch messages if there's a subchannel
+      let messages: any[] = [];
+      if (targetSubchannelId) {
+        const rawMessages = await demoPrisma.demoMessage.findMany({
+          where: { subchannelId: targetSubchannelId },
+          orderBy: { createdAt: 'asc' },
+          include: { user: true }
+        });
+        
+        // Standardize user IDs in messages
+        messages = rawMessages.map(msg => ({
+          ...msg,
+          userId: String(msg.userId),
+          user: msg.user ? {
+            ...msg.user,
+            id: String(msg.user.id)
+          } : null
+        }));
+      }
+      
+      console.log(`Channel ${id} fetched with ${standardizedMembers.length} members and ${messages.length} messages`);
+      
+      return new Response(JSON.stringify({
+        ...standardizedChannel,
+        messages,
+        activeSubchannelId: targetSubchannelId
+      }));
     }
     
-    return new Response(JSON.stringify({ error: "Channel ID required" }), { status: 400 });
+    // Get all channels for a user
+    if (userId) {
+      // Get channels the user is a member of
+      const memberships = await demoPrisma.demoMembership.findMany({
+        where: { userId },
+        include: {
+          channel: {
+            include: {
+              subchannels: true
+            }
+          }
+        }
+      });
+      
+      const channels = memberships.map(membership => membership.channel);
+      
+      return new Response(JSON.stringify(channels));
+    }
+    
+    // Get all channels
+    const channels = await demoPrisma.demoChannel.findMany({
+      include: {
+        subchannels: true
+      }
+    });
+    
+    return new Response(JSON.stringify(channels));
   } catch (error: any) {
     console.error('Channel fetch error:', error);
+    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+  }
+}
+
+/**
+ * Create a new channel
+ */
+export async function POST(req: NextRequest) {
+  const { name, userId, initialSubchannelName = "general" } = await req.json();
+  
+  if (!userId) {
+    return new Response(JSON.stringify({ error: "userId is required" }), { status: 400 });
+  }
+  
+  try {
+    // Create the channel with a transaction to ensure we create both channel and subchannel
+    const result = await demoPrisma.$transaction(async (prisma) => {
+      // Create the channel first
+      const channel = await prisma.demoChannel.create({
+        data: {
+          name,
+          creator: {
+            connect: { id: userId }
+          },
+          // Add the creator as a member with admin role
+          members: {
+            create: {
+              userId,
+              role: 'ADMIN'
+            }
+          }
+        }
+      });
+      
+      // Create the initial "general" subchannel
+      const subchannel = await prisma.demoSubChannel.create({
+        data: {
+          name: initialSubchannelName,
+          channelId: channel.id,
+          isDefault: true
+        }
+      });
+      
+      // Update the channel with the default subchannel ID
+      await prisma.demoChannel.update({
+        where: { id: channel.id },
+        data: { defaultSubchannelId: subchannel.id }
+      });
+      
+      return {
+        channel,
+        subchannel
+      };
+    });
+    
+    return new Response(JSON.stringify(result.channel));
+  } catch (error: any) {
+    console.error('Channel creation error:', error);
     return new Response(JSON.stringify({ error: error.message }), { status: 500 });
   }
 } 

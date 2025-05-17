@@ -1,75 +1,37 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/app/utils/prisma";
+import { demoPrisma } from "@/app/utils/demo-prisma";
 
 // Register a new user or get an existing one
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { walletAddress, name } = body;
+    const { walletAddress, name, username, profileImage, description } = body;
     
     if (!walletAddress) {
       return NextResponse.json({ error: "Wallet address is required" }, { status: 400 });
     }
     
-    // Check which client we have
-    // @ts-ignore - We're doing a runtime check here
-    const isRealPrisma = prisma.user !== undefined;
-    
-    if (isRealPrisma) {
-      // Using real Prisma client
-      // First, check if a user with this wallet already exists
-      // @ts-ignore - Type safety is checked at runtime
-      let user = await prisma.user.findFirst({
-        where: {
-          walletAddresses: {
-            some: {
-              address: walletAddress
-            }
-          }
-        }
-      });
-      
-      if (user) {
-        return NextResponse.json(user);
-      }
-      
-      // Create a new user
-      // @ts-ignore - Type safety is checked at runtime
-      user = await prisma.user.create({
-        data: {
-          name: name || `User-${walletAddress.slice(0, 6)}`,
-          walletAddresses: {
-            create: {
-              address: walletAddress,
-              isDefault: true
-            }
-          }
-        }
-      });
-      
-      return NextResponse.json(user);
-    } else {
-      // Using InMemoryPrismaClient
-      // @ts-ignore - Type safety is checked at runtime
-    let user = await prisma.demoUser.findUnique({
+    // Check if user already exists
+    let user = await demoPrisma.demoUser.findUnique({
       where: { walletAddress }
     });
     
-      if (user) {
-        return NextResponse.json(user);
-      }
-      
-      // Create a new user
-      // @ts-ignore - Type safety is checked at runtime
-      user = await prisma.demoUser.create({
-        data: { 
-          name: name || `User-${walletAddress.slice(0, 6)}`,
-          walletAddress
-        }
-      });
-      
+    if (user) {
       return NextResponse.json(user);
     }
+    
+    // Create a new user with additional profile fields
+    user = await demoPrisma.demoUser.create({
+      data: { 
+        name: name || `User-${walletAddress.slice(0, 6)}`,
+        walletAddress,
+        username: username,
+        profileImage: profileImage,
+        description: description,
+      }
+    });
+    
+    return NextResponse.json(user);
     
   } catch (error) {
     console.error("Error creating/getting user:", error);
@@ -84,35 +46,24 @@ export async function POST(request: NextRequest) {
 export async function PATCH(request: NextRequest) {
   try {
     const body = await request.json();
-    const { userId, name } = body;
+    const { userId, name, username, profileImage, description } = body;
     
     if (!userId) {
       return NextResponse.json({ error: "User ID is required" }, { status: 400 });
     }
     
-    // Check which client we have
-    // @ts-ignore - We're doing a runtime check here
-    const isRealPrisma = prisma.user !== undefined;
+    // Update the user
+    const user = await demoPrisma.demoUser.update({
+      where: { id: userId },
+      data: { 
+        name,
+        username,
+        profileImage,
+        description
+      }
+    });
     
-    if (isRealPrisma) {
-      // Using real Prisma client
-      // @ts-ignore - Type safety is checked at runtime
-      const user = await prisma.user.update({
-        where: { id: userId },
-        data: { name }
-      });
-      
-      return NextResponse.json(user);
-    } else {
-      // Using InMemoryPrismaClient
-      // @ts-ignore - Type safety is checked at runtime
-      const user = await prisma.demoUser.update({
-        where: { id: userId },
-        data: { name }
-      });
-      
-      return NextResponse.json(user);
-    }
+    return NextResponse.json(user);
     
   } catch (error) {
     console.error("Error updating user:", error);

@@ -8,6 +8,7 @@ interface ModalProps {
   title: string;
   children: ReactNode;
   maxWidth?: string;
+  size?: "sm" | "md" | "lg" | "xl";
 }
 
 export default function Modal({ 
@@ -15,8 +16,20 @@ export default function Modal({
   onClose, 
   title, 
   children,
-  maxWidth = "md:max-w-md"
+  maxWidth = "md:max-w-md",
+  size = "md"
 }: ModalProps) {
+  // Calculate actual maxWidth based on size prop
+  const getMaxWidth = () => {
+    switch(size) {
+      case "sm": return "md:max-w-sm";
+      case "md": return "md:max-w-md";
+      case "lg": return "md:max-w-lg";
+      case "xl": return "md:max-w-xl";
+      default: return maxWidth; // Use provided maxWidth as fallback
+    }
+  };
+
   // Close on escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -59,7 +72,7 @@ export default function Modal({
                 damping: 25, 
                 stiffness: 350 
               }}
-              className={`w-full ${maxWidth} bg-gray-900/90 backdrop-blur-md rounded-xl border border-purple-900/30 shadow-xl shadow-purple-900/20 overflow-hidden`}
+              className={`w-full ${getMaxWidth()} bg-gray-900/90 backdrop-blur-md rounded-xl border border-purple-900/30 shadow-xl shadow-purple-900/20 overflow-hidden`}
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}

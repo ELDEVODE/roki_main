@@ -113,8 +113,8 @@ export default function Header() {
                   className="w-full block py-3 px-4 text-gray-300 hover:text-white hover:bg-gray-800/50 rounded-lg transition-all text-left"
                 >
                   <div className="flex items-center gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V7.414l-5-5H3zm7 2a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1zm1 8a1 1 0 100 2h.01a1 1 0 100-2H11z" clipRule="evenodd" />
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V9a1 1 0 10-2 0v6H5V5h6a1 1 0 100-2H3zm12.707 4.707a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L12.586 9H7a1 1 0 010-2h5.586l-1.293-1.293a1 1 0 111.414-1.414l3 3z" clipRule="evenodd" />
                     </svg>
                     <span className="font-medium">Sign Out</span>
                   </div>
@@ -131,7 +131,7 @@ export default function Header() {
 
         <div className="flex items-center space-x-4">
           {authenticated ? (
-            <div className="relative profile-menu-container flex items-center">
+            <div className="relative profile-menu-container">
               <button 
                 onClick={() => setIsProfileMenuOpen(!isProfileMenuOpen)}
                 className="inline-flex items-center justify-center w-10 h-10 overflow-hidden rounded-full bg-gradient-to-br from-purple-600 via-indigo-600 to-blue-700 border-2 border-transparent hover:border-purple-400/30 shadow-lg shadow-purple-900/20 transition-all duration-300 hover:scale-105 hover:shadow-purple-500/20"
@@ -150,10 +150,20 @@ export default function Header() {
                   </div>
                 )}
               </button>
+              {isProfileMenuOpen && (
+                <div 
+                  className="fixed inset-0 h-full w-full z-10"
+                  onClick={() => setIsProfileMenuOpen(false)}
+                />
+              )}
               <div 
-                className={`absolute right-0 z-10 mt-2 w-64 origin-top-right rounded-xl bg-gray-900/95 backdrop-blur-xl shadow-xl border border-gray-700/50 transition-all duration-200 ${
-                  isProfileMenuOpen ? 'opacity-100 visible transform translate-y-0' : 'opacity-0 invisible transform -translate-y-2'
+                className={`absolute right-0 top-full z-20 mt-2 w-64 origin-top-right rounded-xl bg-gray-900/95 backdrop-blur-xl shadow-xl border border-gray-700/50 transition-all duration-200 ${
+                  isProfileMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
                 }`}
+                style={{ 
+                  transformOrigin: 'top right',
+                  transform: isProfileMenuOpen ? 'translateY(0)' : 'translateY(-8px)'
+                }}
               >
                 <div className="py-3 px-4">
                   <div className="flex items-center gap-3 mb-3">
@@ -209,14 +219,53 @@ export default function Header() {
                     </div>
                   )}
                   
+                  {/* User Profile Link */}
+                  <Link
+                    href="/profile"
+                    className="w-full px-3 py-2 text-sm text-left text-gray-300 hover:text-white hover:bg-gray-800/50 rounded-lg transition-colors flex items-center gap-2"
+                    onClick={() => setIsProfileMenuOpen(false)}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
+                    </svg>
+                    My Profile
+                  </Link>
+
+                  {/* Demo Link */}
+                  <Link
+                    href="/demo"
+                    className="w-full px-3 py-2 text-sm text-left text-gray-300 hover:text-white hover:bg-gray-800/50 rounded-lg transition-colors flex items-center gap-2"
+                    onClick={() => setIsProfileMenuOpen(false)}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-purple-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M9 9a2 2 0 114 0 2 2 0 01-4 0z" />
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a4 4 0 00-3.446 6.032l-2.261 2.26a1 1 0 101.414 1.415l2.261-2.261A4 4 0 1011 5z" clipRule="evenodd" />
+                    </svg>
+                    Demo
+                  </Link>
+
+                  {/* Settings Link */}
+                  <Link
+                    href="/settings"
+                    className="w-full px-3 py-2 text-sm text-left text-gray-300 hover:text-white hover:bg-gray-800/50 rounded-lg transition-colors flex items-center gap-2"
+                    onClick={() => setIsProfileMenuOpen(false)}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
+                    </svg>
+                    Settings
+                  </Link>
+                  
+                  <hr className="my-2 border-gray-700/50" />
+                  
                   <button
                     onClick={() => logout()}
-                    className="w-full px-3 py-2 text-sm text-left text-gray-300 hover:text-white hover:bg-gray-800/50 rounded-lg transition-colors flex items-center gap-2"
+                    className="w-full mt-2 px-4 py-2.5 text-sm font-medium bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V7.414l-5-5H3zm6 6V5.414l3.293 3.293a1 1 0 000 1.414 1 1 0 001.414 0l3-3a1 1 0 000-1.414l-3-3a1 1 0 00-1.414 1.414L15.586 7H10.414l-3-3a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414-1.414L7.414 4 11 7.586V9h2v2h-2v2h2v2h-2v-2H9v-2h2V9H9z" clipRule="evenodd" />
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V9a1 1 0 10-2 0v6H5V5h6a1 1 0 100-2H3zm12.707 4.707a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L12.586 9H7a1 1 0 010-2h5.586l-1.293-1.293a1 1 0 111.414-1.414l3 3z" clipRule="evenodd" />
                     </svg>
-                    Logout
+                    Sign Out
                   </button>
                 </div>
               </div>
