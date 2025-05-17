@@ -1,5 +1,6 @@
 import { demoPrisma } from '@/app/utils/demo-prisma';
 import { NextRequest } from 'next/server';
+import { verifyTokenOwnership } from '@/app/utils/tokenUtils';
 
 // Define a type for the message
 interface DemoMessage {
@@ -15,6 +16,8 @@ interface DemoSubChannel {
   name: string;
   channelId: string;
   isDefault: boolean;
+  isTokenGated: boolean;
+  tokenAddress: string | null;
   // other properties as needed
 }
 
@@ -85,11 +88,43 @@ export async function POST(
     }
     
     // Verify the subchannel belongs to this channel
-    if (!channel.subchannels.some((sub: DemoSubChannel) => sub.id === subchannelId)) {
+    const subchannel = channel.subchannels.find(sub => sub.id === subchannelId);
+    if (!subchannel) {
       return new Response(
         JSON.stringify({ error: "Subchannel not found in this channel" }), 
         { status: 404 }
       );
+    }
+    
+    // If the subchannel is token-gated, verify the user has access
+    // (Skip for channel creators who always have access)
+    if (subchannel.isTokenGated && subchannel.tokenAddress) {
+      // Check if user is the channel creator
+      const isCreator = channel.creatorId === userId;
+      
+      if (!isCreator) {
+        // Get user's wallet address
+        const user = await demoPrisma.demoUser.findUnique({
+          where: { id: userId }
+        });
+        
+        if (!user?.walletAddress) {
+          return new Response(
+            JSON.stringify({ error: "Cannot verify token ownership: No wallet address found" }), 
+            { status: 403 }
+          );
+        }
+        
+        // Verify token ownership
+        const hasAccess = await verifyTokenOwnership(user.walletAddress, subchannel.tokenAddress);
+        
+        if (!hasAccess) {
+          return new Response(
+            JSON.stringify({ error: "You need the required token to send messages in this subchannel" }), 
+            { status: 403 }
+          );
+        }
+      }
     }
     
     // Create a message

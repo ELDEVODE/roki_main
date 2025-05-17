@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
+import CreateSubchannelModal from '../modals/CreateSubchannelModal';
 
 // Icon components
 const HashtagIcon = () => (
@@ -53,9 +54,6 @@ export default function ChannelSidebar({ channelId, subchannelId, isAdmin = fals
   const [subchannels, setSubchannels] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [newSubchannelName, setNewSubchannelName] = useState("");
-  const [newSubchannelType, setNewSubchannelType] = useState("TEXT");
-  const [isTokenGated, setIsTokenGated] = useState(false);
   
   // Get view parameter for highlighting
   const viewParam = searchParams?.get('view') || '';
@@ -121,33 +119,8 @@ export default function ChannelSidebar({ channelId, subchannelId, isAdmin = fals
     return colors[Math.abs(hash) % colors.length];
   };
 
-  const createSubchannel = async () => {
-    if (!newSubchannelName.trim()) return;
-    
-    try {
-      const res = await fetch(`/api/demo/channels/${channelId}/subchannels`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: newSubchannelName,
-          type: newSubchannelType,
-          isTokenGated
-        }),
-      });
-      
-      if (res.ok) {
-        const newSubchannel = await res.json();
-        setSubchannels([...subchannels, newSubchannel]);
-        setShowModal(false);
-        setNewSubchannelName("");
-        setNewSubchannelType("TEXT");
-        setIsTokenGated(false);
-      }
-    } catch (err) {
-      console.error("Failed to create subchannel", err);
-    }
+  const handleCreateSuccess = (newSubchannel: any) => {
+    setSubchannels([...subchannels, newSubchannel]);
   };
 
   const handleOpenSettings = () => {
@@ -259,64 +232,12 @@ export default function ChannelSidebar({ channelId, subchannelId, isAdmin = fals
       </div>
 
       {/* Create Subchannel Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
-          <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 w-full max-w-md">
-            <h3 className="text-xl font-bold text-white mb-4">Create New Subchannel</h3>
-            
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-400 mb-1">Name</label>
-              <input
-                type="text"
-                value={newSubchannelName}
-                onChange={(e) => setNewSubchannelName(e.target.value)}
-                className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-                placeholder="e.g. announcements"
-              />
-            </div>
-            
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-400 mb-1">Type</label>
-              <select
-                value={newSubchannelType}
-                onChange={(e) => setNewSubchannelType(e.target.value)}
-                className="w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
-              >
-                <option value="TEXT">Text Channel</option>
-                <option value="VOICE">Voice Channel</option>
-                <option value="VIDEO">Video Channel</option>
-              </select>
-            </div>
-            
-            <div className="mb-6">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={isTokenGated}
-                  onChange={(e) => setIsTokenGated(e.target.checked)}
-                  className="rounded bg-gray-800 border-gray-700 text-purple-600 focus:ring-purple-500"
-                />
-                <span className="ml-2 text-sm text-gray-400">Token Gated (requires NFT to access)</span>
-              </label>
-            </div>
-            
-            <div className="flex justify-end space-x-3">
-              <button
-                onClick={() => setShowModal(false)}
-                className="px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-md"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={createSubchannel}
-                className="px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white rounded-md"
-              >
-                Create
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <CreateSubchannelModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        channelId={channelId}
+        onCreateSuccess={handleCreateSuccess}
+      />
     </div>
   );
 } 

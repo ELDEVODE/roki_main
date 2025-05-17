@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useState, useEffect, useRef } from "react";
+import { ReactNode, useState, useEffect, useRef, Suspense } from "react";
 import { usePrivy } from "@privy-io/react-auth";
 import { useRouter, useSearchParams } from "next/navigation";
 import Header from "../Header";
@@ -21,6 +21,23 @@ interface AppLayoutProps {
   isAdmin?: boolean;
 }
 
+// Separate component to handle all URL parameters logic
+function ParamsHandler({
+  onAuthCheck
+}: {
+  onAuthCheck: (channelId: string, subchannelId: string) => void
+}) {
+  const searchParams = useSearchParams();
+  const channelId = searchParams?.get('channel') || '';
+  const subchannelId = searchParams?.get('subchannel') || '';
+  
+  useEffect(() => {
+    onAuthCheck(channelId, subchannelId);
+  }, [searchParams, onAuthCheck, channelId, subchannelId]);
+  
+  return null;
+}
+
 export default function AppLayout({
   children, 
   showUserList = false,
@@ -36,11 +53,18 @@ export default function AppLayout({
 }: AppLayoutProps) {
   const { login, authenticated, user, ready } = usePrivy();
   const router = useRouter();
-  const searchParams = useSearchParams();
   
-  // Get current channel and subchannel from URL
-  const channelId = searchParams?.get('channel') || '';
-  const subchannelId = searchParams?.get('subchannel') || '';
+  // State for channel and subchannel from URL
+  const [channelId, setChannelId] = useState('');
+  const [subchannelId, setSubchannelId] = useState('');
+  
+  // Handle auth check when URL params change
+  const handleAuthCheck = (channelId: string, subchannelId: string) => {
+    setChannelId(channelId);
+    setSubchannelId(subchannelId);
+    
+    // Optional: add any logic that was previously dependent on search params
+  };
   
   // State for resizable panels
   const [sidebarWidth, setSidebarWidth] = useState(328); // 16rem/256px
@@ -121,15 +145,14 @@ export default function AppLayout({
   useEffect(() => {
     if (!authenticated && typeof window !== 'undefined') {
       // Only redirect if there's no channel parameter in the URL
-      const channelParam = searchParams?.get('channel');
       console.log("🚧 Redirect check:", {
         authenticated,
-        channelParam,
-        shouldRedirect: !authenticated && !channelParam
+        channelId,
+        shouldRedirect: !authenticated && !channelId
       });
       
       // Only redirect if we don't have a channel parameter
-      if (!channelParam) {
+      if (!channelId) {
         const timer = setTimeout(() => {
           router.push('/');
         }, 100);
@@ -137,7 +160,7 @@ export default function AppLayout({
         return () => clearTimeout(timer);
       }
     }
-  }, [authenticated, router, searchParams]);
+  }, [authenticated, router, channelId]);
   
   // Debug auth state in AppLayout
   useEffect(() => {
@@ -153,6 +176,11 @@ export default function AppLayout({
   if (!authenticated) {
     return (
       <div className="flex flex-col min-h-screen h-screen w-screen bg-black">
+        {/* Suspense boundary for search params */}
+        <Suspense fallback={null}>
+          <ParamsHandler onAuthCheck={handleAuthCheck} />
+        </Suspense>
+        
         <Header />
         <div className="flex flex-col items-center justify-center h-[80vh] text-center relative">
           {/* Background gradient elements */}
@@ -183,6 +211,11 @@ export default function AppLayout({
   
   return (
     <div className="flex flex-col min-h-screen h-screen w-screen overflow-hidden bg-black">
+      {/* Suspense boundary for search params */}
+      <Suspense fallback={null}>
+        <ParamsHandler onAuthCheck={handleAuthCheck} />
+      </Suspense>
+      
       {/* Top header - fixed height of 4rem (64px) */}
       <div className={`h-16 ${themedHeaderBorder ? 'border-b border-purple-900/30' : ''}`}>
         <Header />

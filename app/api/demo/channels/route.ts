@@ -13,6 +13,7 @@ export async function GET(req: NextRequest) {
   const url = new URL(req.url);
   const id = url.searchParams.get('id');
   const userId = url.searchParams.get('userId');
+  const subchannelId = url.searchParams.get('subchannelId');
   
   try {
     // Get a specific channel
@@ -54,10 +55,10 @@ export async function GET(req: NextRequest) {
         members: standardizedMembers
       };
       
-      // Get the active subchannel
-      let targetSubchannelId = channel.defaultSubchannelId;
+      // Get the active subchannel - use the provided subchannelId if available
+      let targetSubchannelId = subchannelId || channel.defaultSubchannelId;
       
-      // If no default set but there are subchannels, find one
+      // If no subchannel specified and no default set but there are subchannels, find one
       if (!targetSubchannelId && channel.subchannels.length > 0) {
         // Try to find "general" first
         const generalSubchannel = channel.subchannels.find(
@@ -102,7 +103,7 @@ export async function GET(req: NextRequest) {
         }));
       }
       
-      console.log(`Channel ${id} fetched with ${standardizedMembers.length} members and ${messages.length} messages`);
+      console.log(`Channel ${id} fetched with ${standardizedMembers.length} members and ${messages.length} messages for subchannel ${targetSubchannelId}`);
       
       return new Response(JSON.stringify({
         ...standardizedChannel,
@@ -148,7 +149,13 @@ export async function GET(req: NextRequest) {
  * Create a new channel
  */
 export async function POST(req: NextRequest) {
-  const { name, userId, initialSubchannelName = "general" } = await req.json();
+  const { 
+    name, 
+    userId, 
+    initialSubchannelName = "general",
+    isTokenGated = false,
+    tokenAddress = null
+  } = await req.json();
   
   if (!userId) {
     return new Response(JSON.stringify({ error: "userId is required" }), { status: 400 });
@@ -179,7 +186,9 @@ export async function POST(req: NextRequest) {
         data: {
           name: initialSubchannelName,
           channelId: channel.id,
-          isDefault: true
+          isDefault: true,
+          isTokenGated: isTokenGated,
+          tokenAddress: isTokenGated ? tokenAddress : null
         }
       });
       

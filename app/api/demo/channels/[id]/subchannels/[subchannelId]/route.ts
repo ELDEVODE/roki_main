@@ -44,7 +44,7 @@ export async function PATCH(
   req: NextRequest,
   { params }: { params: Promise<{ id: string, subchannelId: string }> }
 ) {
-  const { name, type } = await req.json();
+  const { name, type, isTokenGated, tokenAddress } = await req.json();
   const channelId = (await params).id;
   const subchannelId = (await params).subchannelId;
   
@@ -61,15 +61,28 @@ export async function PATCH(
       return new Response(JSON.stringify({ error: "Subchannel not found" }), { status: 404 });
     }
     
+    // Prepare update data
+    const updateData: any = {};
+    
+    // Only include fields that were provided in the request
+    if (name !== undefined) updateData.name = name;
+    if (type !== undefined) updateData.type = type;
+    if (isTokenGated !== undefined) updateData.isTokenGated = isTokenGated;
+    
+    // Only update tokenAddress if isTokenGated is true
+    if (isTokenGated === true && tokenAddress) {
+      updateData.tokenAddress = tokenAddress;
+    } else if (isTokenGated === false) {
+      // Clear token address if token gating is disabled
+      updateData.tokenAddress = null;
+    }
+    
     // Update subchannel
     const subchannel = await demoPrisma.demoSubChannel.update({
       where: {
         id: subchannelId
       },
-      data: {
-        name: name,
-        type: type
-      }
+      data: updateData
     });
     
     return new Response(JSON.stringify(subchannel));

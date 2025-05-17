@@ -1,8 +1,8 @@
 import { demoPrisma } from '@/app/utils/demo-prisma';
 import { NextRequest } from 'next/server';
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
-  const { id } = params;
+export async function PATCH(req: NextRequest, context: { params: Promise<{ id: string }> }) {
+  const { id } = await context.params;
   const { name, icon } = await req.json();
   
   try {

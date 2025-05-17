@@ -6,10 +6,10 @@ import { demoPrisma } from '@/app/utils/demo-prisma';
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id: channelId } = params;
+    const { id: channelId } = await context.params;
     const userId = req.nextUrl.searchParams.get('userId');
     
     if (!userId) {

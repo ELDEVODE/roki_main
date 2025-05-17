@@ -42,6 +42,56 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// Update user information using PUT (used by the ChatSidebar component)
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { walletAddress, name, username, profileImage, description } = body;
+    
+    if (!walletAddress) {
+      return NextResponse.json({ error: "Wallet address is required" }, { status: 400 });
+    }
+    
+    // Find user by wallet address
+    let user = await demoPrisma.demoUser.findUnique({
+      where: { walletAddress }
+    });
+    
+    if (user) {
+      // Update existing user
+      user = await demoPrisma.demoUser.update({
+        where: { walletAddress },
+        data: { 
+          name,
+          username,
+          profileImage,
+          description
+        }
+      });
+    } else {
+      // Create user if not found
+      user = await demoPrisma.demoUser.create({
+        data: { 
+          name: name || `User-${walletAddress.slice(0, 6)}`,
+          walletAddress,
+          username: username || "",
+          profileImage: profileImage || "",
+          description: description || "",
+        }
+      });
+    }
+    
+    return NextResponse.json(user);
+    
+  } catch (error) {
+    console.error("Error updating user:", error);
+    return NextResponse.json(
+      { error: "Failed to update user", details: String(error) },
+      { status: 500 }
+    );
+  }
+}
+
 // Update user information
 export async function PATCH(request: NextRequest) {
   try {

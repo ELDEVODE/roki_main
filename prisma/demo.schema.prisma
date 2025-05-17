@@ -24,11 +24,14 @@ model DemoUser {
   updatedAt     DateTime         @updatedAt
   online        Boolean          @default(false)
   lastSeen      DateTime?
+
+  @@index([walletAddress])
 }
 
 model DemoChannel {
   id            String           @id @default(cuid())
   name          String
+  description   String?
   icon          String?
   type          String           @default("TEXT")
   creator       DemoUser         @relation("DemoChannelCreator", fields: [creatorId], references: [id])
@@ -39,6 +42,8 @@ model DemoChannel {
   invites       DemoInvite[]     // Relation to the channel's invites
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
+
+  @@index([creatorId])
 }
 
 model DemoSubChannel {
@@ -54,6 +59,8 @@ model DemoSubChannel {
   messages      DemoMessage[]
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
+
+  @@index([channelId])
 }
 
 model DemoMembership {
@@ -67,6 +74,8 @@ model DemoMembership {
   lastReadAt  DateTime    @default(now()) // Track when the user last read messages
 
   @@unique([userId, channelId])
+  @@index([userId])
+  @@index([channelId])
 }
 
 model DemoMessage {
@@ -78,6 +87,10 @@ model DemoMessage {
   subchannelId   String
   createdAt      DateTime       @default(now())
   readByUsers    String[]       // Array of user IDs who have read this message
+
+  @@index([userId])
+  @@index([subchannelId])
+  @@index([createdAt])
 }
 
 model DemoInvite {
@@ -90,4 +103,7 @@ model DemoInvite {
   maxUses      Int?       // Optional maximum number of uses (null = unlimited)
   useCount     Int        @default(0)
   createdAt    DateTime   @default(now())
+
+  @@index([inviteCode])
+  @@index([channelId])
 } 

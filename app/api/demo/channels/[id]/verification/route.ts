@@ -1,38 +1,35 @@
 import { NextRequest } from 'next/server';
 import { demoPrisma } from '@/app/utils/demo-prisma';
-
-// Simulate token verification logic for demo purposes
-// In a real app, this would query the blockchain
-function simulateTokenVerification(walletAddress: string, tokenAddress: string) {
-  // For demo purposes, always grant access if wallet address ends with 'a', 'c', 'e'
-  const lastChar = walletAddress.slice(-1).toLowerCase();
-  return ['a', 'c', 'e', '0', '2', '4', '6', '8'].includes(lastChar);
-  
-  // In production, you would:
-  // 1. Connect to blockchain (Solana, Ethereum, etc.)
-  // 2. Verify the wallet's token balance for the specific token address
-  // 3. Return true if they meet the required token threshold
-}
+import { verifyTokenOwnership } from '@/app/utils/tokenUtils';
 
 // This endpoint verifies if a wallet has access to a token-gated channel
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const { walletAddress } = await req.json();
-    const { id } = params;
+    const { id } = await context.params;
     
     // First check if the channel exists
     const channel = await demoPrisma.demoChannel.findUnique({
       where: { id },
       include: {
+        creator: true,
         subchannels: true
       }
     });
     
     if (!channel) {
       return new Response(JSON.stringify({ error: "Channel not found" }), { status: 404 });
+    }
+    
+    // Check if the user is the channel creator - creators always have access
+    if (channel.creator?.walletAddress && channel.creator.walletAddress === walletAddress) {
+      return new Response(JSON.stringify({ 
+        hasAccess: true,
+        isCreator: true
+      }));
     }
     
     // Check if any subchannel is token-gated
@@ -50,7 +47,9 @@ export async function POST(
     
     for (const subchannel of tokenGatedSubchannels) {
       if (subchannel.tokenAddress) {
-        const hasTokenAccess = simulateTokenVerification(walletAddress, subchannel.tokenAddress);
+        // Use the real token verification function that checks the user's wallet
+        const hasTokenAccess = await verifyTokenOwnership(walletAddress, subchannel.tokenAddress);
+        
         if (!hasTokenAccess) {
           allAccess = false;
           break;
@@ -59,7 +58,14 @@ export async function POST(
     }
     
     // Return the verification result
-    return new Response(JSON.stringify({ hasAccess: allAccess }));
+    return new Response(JSON.stringify({ 
+      hasAccess: allAccess,
+      requiredTokens: tokenGatedSubchannels.map(sub => ({
+        subchannelId: sub.id,
+        subchannelName: sub.name,
+        tokenAddress: sub.tokenAddress
+      }))
+    }));
     
   } catch (error: any) {
     console.error("Token verification error:", error);

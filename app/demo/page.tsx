@@ -19,6 +19,8 @@ interface ChannelFormData {
   name: string;
   icon?: string;
   type?: string;
+  isTokenGated?: boolean;
+  tokenAddress?: string;
 }
 
 // Cache utilities
@@ -277,16 +279,57 @@ function DemoContent() {
     }
   }, [messages, messagesLoading, isAtBottom, initialLoadComplete]);
   
-  // Check token access
-  useEffect(() => {
-    const hasTokenGatedSubchannels = channel?.subchannels?.some((sc: any) => sc.isTokenGated);
-    
-    if (hasTokenGatedSubchannels && wallet?.address) {
-      checkTokenAccess();
-    } else if (!hasTokenGatedSubchannels) {
-      setHasTokenAccess(true);
-    }
-  }, [channel, wallet?.address]);
+        // Check token access
+      useEffect(() => {
+        const hasTokenGatedSubchannels = channel?.subchannels?.some((sc: any) => sc.isTokenGated);
+        
+        if (hasTokenGatedSubchannels && wallet?.address) {
+          checkTokenAccess();
+        } else if (!hasTokenGatedSubchannels) {
+          setHasTokenAccess(true);
+        }
+      }, [channel, wallet?.address]);
+      
+      // Store token address for marketplace redirection and UI
+      const [tokenRequiredAddress, setTokenRequiredAddress] = useState<string | null>(null);
+      const [tokenRequiredName, setTokenRequiredName] = useState<string | null>(null);
+      
+      useEffect(() => {
+        if (channel?.subchannels) {
+          const tokenGatedSubchannel = channel.subchannels.find((sc: any) => sc.isTokenGated && sc.tokenAddress);
+          if (tokenGatedSubchannel) {
+            setTokenRequiredAddress(tokenGatedSubchannel.tokenAddress);
+            
+            // Try to get the token name if available
+            const getTokenName = async () => {
+              try {
+                if (wallet?.address) {
+                  const response = await fetch(`/api/demo/channels/${channelId}/verification`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ walletAddress: wallet.address })
+                  });
+                  
+                  if (response.ok) {
+                    const data = await response.json();
+                    // If there's a required token name from the response, use it
+                    if (data.requiredTokens && data.requiredTokens.length > 0) {
+                      setTokenRequiredName(data.requiredTokens[0].subchannelName);
+                    }
+                  }
+                }
+              } catch (err) {
+                console.error("Failed to fetch token info", err);
+              }
+            };
+            
+            getTokenName();
+          } else {
+            setTokenRequiredAddress(null);
+            setTokenRequiredName(null);
+          }
+        }
+      }, [channel, wallet?.address, channelId]);
   
   // Reset typing users when changing channels
   useEffect(() => {
@@ -294,6 +337,19 @@ function DemoContent() {
       setTypingUsers(new Set());
     }
   }, [channelId]);
+  
+  // Reload messages when subchannel changes
+  useEffect(() => {
+    if (channelId && initialLoadComplete) {
+      // Don't reload on initial load to avoid duplicate fetches
+      const subchannelId = searchParams.get('subchannel');
+      if (subchannelId) {
+        console.log("Subchannel changed, reloading messages for:", subchannelId);
+        // Fetch channel with the specific subchannel - use false to avoid showing full loading screen
+        fetchChannel(channelId, false);
+      }
+    }
+  }, [searchParams.get('subchannel')]);
   
   // Check for first visit to channel
   useEffect(() => {
@@ -497,7 +553,16 @@ function DemoContent() {
     }
     
     try {
-      const res = await fetch(`/api/demo/channels?id=${id}`);
+      // Get the active subchannel from URL params
+      const subchannelId = searchParams.get('subchannel');
+      
+      // Always include the subchannel ID in the request if available
+      let url = `/api/demo/channels?id=${id}`;
+      if (subchannelId) {
+        url += `&subchannelId=${subchannelId}`;
+      }
+      
+      const res = await fetch(url);
       if (res.ok) {
         const data = await res.json();
         console.log("Channel data received:", data);
@@ -666,13 +731,14 @@ function DemoContent() {
     if (messagesLoading || !initialLoadComplete) return;
     
     // Get the current subchannel from URL or state
-    const activeSubchannel = searchParams.get('subchannel') || channel?.activeSubchannelId;
+    const subchannelId = searchParams.get('subchannel') || channel?.activeSubchannelId;
     
     try {
-      // Include the active subchannel in the request if available
-      const url = activeSubchannel 
-        ? `/api/demo/channels?id=${id}&subchannelId=${activeSubchannel}`
-        : `/api/demo/channels?id=${id}`;
+      // Always include the active subchannel in the request if available
+      let url = `/api/demo/channels?id=${id}`;
+      if (subchannelId) {
+        url += `&subchannelId=${subchannelId}`;
+      }
       
       const res = await fetch(url);
       if (res.ok) {
@@ -819,12 +885,23 @@ function DemoContent() {
       // Make sure userId is passed correctly
       console.log(`Creating channel with userId: ${userId}`);
       
+      // Check if token gating is enabled
+      const isTokenGated = channelData.isTokenGated;
+      const tokenAddress = channelData.tokenAddress;
+      
+      // Log token gating details
+      if (isTokenGated) {
+        console.log(`Creating token-gated channel with token: ${tokenAddress}`);
+      }
+      
       const res = await fetch('/api/demo/channels', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           name: channelData.name,
-          userId
+          userId,
+          isTokenGated,
+          tokenAddress
         })
       });
       
@@ -855,6 +932,17 @@ function DemoContent() {
       setError(`Error: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setLoading(false);
+    }
+  }
+  
+  // Function to open the marketplace for a particular token
+  function openTokenMarketplace(tokenAddress?: string) {
+    if (tokenAddress) {
+      window.open(`/token?tab=marketplace&token=${tokenAddress}`, '_blank');
+      console.log(`Opening token marketplace for specific token: ${tokenAddress}`);
+    } else {
+      window.open('/token?tab=marketplace', '_blank');
+      console.log(`Opening general token marketplace`);
     }
   }
   
@@ -1072,6 +1160,14 @@ function DemoContent() {
     return channel.creatorId === userId || channel.members?.some((m: any) => m.userId === userId && m.role === 'admin');
   };
   
+  // Update this part to get the active subchannel information
+  const getActiveSubchannel = () => {
+    const subchannelId = searchParams.get('subchannel') || channel?.activeSubchannelId;
+    if (!subchannelId || !channel?.subchannels) return null;
+    
+    return channel.subchannels.find((sc: any) => sc.id === subchannelId);
+  };
+  
   // If not authenticated, show login prompt if accessing a channel, otherwise return null
   if (!authenticated) {
     if (channelParam) {
@@ -1222,9 +1318,19 @@ function DemoContent() {
                               <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
                             </svg>
                           </div>
-                          <h3 className="text-2xl font-bold text-white mb-2">Welcome to #{channel?.name}</h3>
+                          {(() => {
+                            const activeSubchannel = getActiveSubchannel();
+                            return (
+                              <h3 className="text-2xl font-bold text-white mb-2">
+                                {activeSubchannel 
+                                  ? `Welcome to #${activeSubchannel.name} in ${channel.name}`
+                                  : `Welcome to #${channel.name}`
+                                }
+                              </h3>
+                            );
+                          })()}
                           <p className="text-gray-400 max-w-lg mx-auto mb-3">
-                            This is the start of the channel. {channel?.subchannels?.some((sc: any) => sc.isTokenGated) ? 'This channel has token-gated subchannels, meaning only users with the right tokens can access certain content.' : ''}
+                            This is the start of the {getActiveSubchannel()?.name ? 'subchannel' : 'channel'}. {channel?.subchannels?.some((sc: any) => sc.isTokenGated) ? 'This channel has token-gated subchannels, meaning only users with the right tokens can access certain content.' : ''}
                           </p>
                           {!isUserMember() && (
                             <button
@@ -1239,6 +1345,47 @@ function DemoContent() {
                           )}
                         </div>
                       </div>
+                    )}
+                    
+                    {/* Token gate access message */}
+                    {!hasTokenAccess && channel?.subchannels?.some((sc: any) => sc.isTokenGated) && (
+                                          <div className="bg-gradient-to-br from-indigo-900/50 to-purple-900/40 p-5 mb-6 rounded-lg border border-indigo-500/30 mx-4">
+                      <div className="flex items-start space-x-4">
+                        <div className="bg-indigo-800/50 p-3 rounded-full">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-indigo-300" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 116 0z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-lg font-medium text-white">This channel is token gated</h3>
+                          <p className="text-indigo-200 mt-1 mb-3">
+                            You need to own the required token to access this channel's content.
+                            {tokenRequiredName && <span className="font-semibold"> Access requires a token in subchannel: <span className="text-purple-300">{tokenRequiredName}</span></span>}
+                          </p>
+                          <div className="flex flex-wrap gap-3">
+                            <button
+                              onClick={() => openTokenMarketplace(tokenRequiredAddress || undefined)}
+                              className="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-md shadow-sm transition-colors"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
+                                <path fillRule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clipRule="evenodd" />
+                              </svg>
+                              Buy Required Token
+                            </button>
+                            <Link 
+                              href="/token" 
+                              className="inline-flex items-center px-4 py-2 bg-purple-700/70 hover:bg-purple-700 text-white text-sm font-medium rounded-md shadow-sm transition-colors"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M5 4a1 1 0 00-2 0v7.268a2 2 0 000 3.464V16a1 1 0 102 0v-1.268a2 2 0 000-3.464V4zM11 4a1 1 0 10-2 0v1.268a2 2 0 000 3.464V16a1 1 0 102 0V8.732a2 2 0 000-3.464V4zM16 3a1 1 0 011 1v7.268a2 2 0 010 3.464V16a1 1 0 11-2 0v-1.268a2 2 0 010-3.464V4a1 1 0 011-1z" />
+                              </svg>
+                              Manage Tokens
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                     )}
                     
                     {/* Regular messages */}
@@ -1293,7 +1440,7 @@ function DemoContent() {
               {/* Message input */}
               <ChatInput 
                 onSendMessage={sendMessage}
-                disabled={!hasTokenAccess}
+                disabled={!hasTokenAccess && channel?.creatorId !== userId}
                 channelName={channel?.name || ''}
                 onTypingStart={handleUserTypingStart}
                 onTypingStop={handleUserTypingStop}

@@ -5,6 +5,17 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePrivy } from "@privy-io/react-auth";
 import { motion, AnimatePresence } from "framer-motion";
 import ChannelItem from './ChannelItem';
+import { getWalletTokens } from "@/app/utils/tokenUtils";
+
+// Add TokenData interface
+interface TokenData {
+  mint: string;
+  name?: string;
+  symbol?: string;
+  amount: string;
+  decimals: number;
+  createdAt?: number;
+}
 
 type SectionType = 'subchannels' | null;
 
@@ -53,9 +64,49 @@ export default function ChatSidebar({
   const [modalPosition, setModalPosition] = useState({ x: 0, y: 0 });
   const [imageError, setImageError] = useState(false);
   
+  // Add token-related state
+  const [userTokens, setUserTokens] = useState<TokenData[]>([]);
+  const [loadingTokens, setLoadingTokens] = useState(false);
+  const [tokenAddress, setTokenAddress] = useState("");
+  
   // Get current active channel
   const allChannels = [...createdChannels, ...userChannels];
   const activeChannel = allChannels.find(channel => channel.id === activeChannelId) || null;
+  
+  // Add function to fetch user tokens
+  const fetchUserTokens = async () => {
+    if (!user?.wallet?.address) return;
+    
+    console.log("Fetching tokens for wallet:", user.wallet.address);
+    setLoadingTokens(true);
+    try {
+      const tokens = await getWalletTokens(user.wallet.address);
+      console.log("Tokens fetched:", tokens);
+      setUserTokens(tokens);
+    } catch (error) {
+      console.error("Error fetching user tokens:", error);
+    } finally {
+      setLoadingTokens(false);
+    }
+  };
+  
+  // Add function to select a token
+  const selectToken = (mint: string) => {
+    console.log("Token selected:", mint);
+    setTokenAddress(mint);
+  };
+  
+  // Add function to redirect to token page
+  const redirectToTokenPage = () => {
+    router.push('/token');
+  };
+  
+  // Fetch user tokens when component mounts or user changes
+  useEffect(() => {
+    if (user?.wallet?.address) {
+      fetchUserTokens();
+    }
+  }, [user?.wallet?.address]);
   
   // Detect if we're on the explore page
   useEffect(() => {
@@ -118,7 +169,20 @@ export default function ChatSidebar({
   const createSubchannel = async () => {
     if (!newSubchannelName.trim() || !activeChannelId) return;
     
+    // Validate that token address is provided when token gating is enabled
+    if (isTokenGated && !tokenAddress) {
+      console.log("Token gating enabled but no token selected");
+      return;
+    }
+    
     try {
+      console.log("Creating subchannel with data:", {
+        name: newSubchannelName,
+        type: newSubchannelType,
+        isTokenGated,
+        tokenAddress: isTokenGated ? tokenAddress : null
+      });
+      
       const res = await fetch(`/api/demo/channels/${activeChannelId}/subchannels`, {
         method: 'POST',
         headers: {
@@ -127,7 +191,8 @@ export default function ChatSidebar({
         body: JSON.stringify({
           name: newSubchannelName,
           type: newSubchannelType,
-          isTokenGated
+          isTokenGated,
+          tokenAddress: isTokenGated ? tokenAddress : null
         }),
       });
       
@@ -138,6 +203,7 @@ export default function ChatSidebar({
         setNewSubchannelName("");
         setNewSubchannelType("TEXT");
         setIsTokenGated(false);
+        setTokenAddress("");
       }
     } catch (err) {
       console.error("Failed to create subchannel", err);
@@ -845,7 +911,11 @@ export default function ChatSidebar({
                   </div>
                   
                   <div 
-                    onClick={() => setNewSubchannelType("VOICE")}
+                    onClick={() => {
+                      setNewSubchannelType("VOICE");
+                      // Disable token gating for voice channels
+                      if (isTokenGated) setIsTokenGated(false);
+                    }}
                     className={`cursor-pointer rounded-lg border p-3 transition-all duration-200 ${
                       newSubchannelType === "VOICE" 
                         ? "bg-purple-900/30 border-purple-500/50 shadow-md shadow-purple-900/20" 
@@ -861,7 +931,11 @@ export default function ChatSidebar({
                   </div>
                   
                   <div 
-                    onClick={() => setNewSubchannelType("VIDEO")}
+                    onClick={() => {
+                      setNewSubchannelType("VIDEO");
+                      // Disable token gating for video channels
+                      if (isTokenGated) setIsTokenGated(false);
+                    }}
                     className={`cursor-pointer rounded-lg border p-3 transition-all duration-200 ${
                       newSubchannelType === "VIDEO" 
                         ? "bg-purple-900/30 border-purple-500/50 shadow-md shadow-purple-900/20" 
@@ -878,24 +952,182 @@ export default function ChatSidebar({
                 </div>
               </div>
               
-              <div className="p-4 bg-gradient-to-br from-purple-900/20 to-indigo-900/20 rounded-lg border border-purple-900/30">
+              <div className={`p-4 bg-gradient-to-br rounded-lg border ${
+                newSubchannelType === "TEXT"
+                  ? "from-purple-900/20 to-indigo-900/20 border-purple-900/30" 
+                  : "from-gray-800/30 to-gray-900/30 border-gray-800/50"
+              }`}>
                 <label className="flex items-center">
                   <div className="relative inline-block w-10 mr-3 align-middle">
                     <input 
                       type="checkbox"
                       checked={isTokenGated}
-                      onChange={(e) => setIsTokenGated(e.target.checked)}
+                      onChange={(e) => {
+                        if (newSubchannelType !== "TEXT") return;
+                        setIsTokenGated(e.target.checked);
+                      }}
+                      disabled={newSubchannelType !== "TEXT"}
                       className="peer sr-only"
                     />
-                    <div className="w-10 h-5 bg-gray-800 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-gray-400 after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-purple-600 peer-checked:to-indigo-600 peer-checked:after:bg-white"></div>
+                    <div className={`w-10 h-5 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:border after:rounded-full after:h-4 after:w-4 after:transition-all ${
+                      newSubchannelType === "TEXT"
+                        ? "bg-gray-800 after:bg-gray-400 after:border-gray-300 peer-checked:bg-gradient-to-r peer-checked:from-purple-600 peer-checked:to-indigo-600 peer-checked:after:bg-white cursor-pointer"
+                        : "bg-gray-800/50 after:bg-gray-600 after:border-gray-700 cursor-not-allowed opacity-60"
+                    }`}></div>
                   </div>
                   <div>
-                    <div className="text-sm font-medium text-white">Token Gated</div>
-                    <p className="text-xs text-gray-400 mt-0.5">Requires NFT ownership to access</p>
+                    <div className={`text-sm font-medium ${newSubchannelType === "TEXT" ? "text-white" : "text-gray-400"}`}>
+                      Token Gated
+                      {newSubchannelType !== "TEXT" && <span className="ml-2 px-1.5 py-0.5 bg-gray-800/80 text-gray-400 text-xs rounded-md">Not Available</span>}
+                    </div>
+                    <p className="text-xs text-gray-400 mt-0.5">
+                      {newSubchannelType === "TEXT" 
+                        ? "Requires NFT ownership to access" 
+                        : "Only available for text channels"}
+                    </p>
                   </div>
                 </label>
               </div>
             </div>
+
+            {/* Token Selection Section - Enhanced UI */}
+            {isTokenGated && (
+              <div className="relative px-4 pb-2">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-xs font-semibold text-white flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 mr-1.5 text-purple-400" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M3 12v3c0 1.657 3.134 3 7 3s7-1.343 7-3v-3c0 1.657-3.134 3-7 3s-7-1.343-7-3z" />
+                      <path d="M3 7v3c0 1.657 3.134 3 7 3s7-1.343 7-3V7c0 1.657-3.134 3-7 3S3 8.657 3 7z" />
+                      <path d="M17 5c0 1.657-3.134 3-7 3S3 6.657 3 5s3.134-3 7-3 7 1.343 7 3z" />
+                    </svg>
+                    SELECT TOKEN FOR ACCESS
+                  </h3>
+                  <span className="text-xs text-purple-300 bg-purple-500/20 px-2 py-0.5 rounded-full border border-purple-500/30">
+                    Required
+                  </span>
+                </div>
+
+                {loadingTokens ? (
+                  <div className="flex flex-col items-center justify-center py-6 px-3">
+                    <div className="relative w-10 h-10 mb-2">
+                      <div className="absolute inset-0 rounded-full border-3 border-purple-800/30"></div>
+                      <div className="absolute inset-0 rounded-full border-3 border-purple-500 border-t-transparent animate-spin"></div>
+                      <div className="absolute inset-0 rounded-full border-3 border-transparent border-t-indigo-400 animate-ping opacity-20"></div>
+                    </div>
+                    <span className="text-purple-300 font-medium text-sm">Loading your tokens...</span>
+                    <p className="text-gray-400 text-xs mt-1">This will only take a moment</p>
+                  </div>
+                ) : userTokens.length > 0 ? (
+                  <>
+                    <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto pr-1.5 custom-scrollbar">
+                      {userTokens.map((token) => (
+                        <div 
+                          key={token.mint}
+                          onClick={() => selectToken(token.mint)}
+                          className={`relative rounded-lg border cursor-pointer transition-all duration-300 overflow-hidden ${
+                            tokenAddress === token.mint
+                              ? "bg-gradient-to-br from-purple-900/60 to-indigo-900/60 border-purple-400 shadow-lg shadow-purple-500/20 transform scale-[1.02]"
+                              : "bg-gray-900/70 border-gray-700 hover:border-purple-500/50 hover:bg-gray-800/70 hover:shadow-md hover:shadow-purple-600/10"
+                          }`}
+                        >
+                          {/* Background glow effect for selected token */}
+                          {tokenAddress === token.mint && (
+                            <div className="absolute inset-0 overflow-hidden">
+                              <div className="absolute -inset-[10px] opacity-20">
+                                <div className="absolute top-0 right-1/4 w-16 h-16 bg-purple-500 rounded-full mix-blend-screen blur-[20px] animate-pulse"></div>
+                                <div className="absolute bottom-0 left-1/4 w-16 h-16 bg-indigo-500 rounded-full mix-blend-screen blur-[20px] animate-pulse"></div>
+                              </div>
+                            </div>
+                          )}
+                          
+                          <div className="flex items-center p-2.5 relative z-10">
+                            {/* Token icon with glow */}
+                            <div className={`relative h-10 w-10 rounded-full flex items-center justify-center mr-3 ${
+                              tokenAddress === token.mint
+                                ? "bg-gradient-to-br from-purple-500 to-indigo-600 shadow-lg shadow-purple-600/30"
+                                : "bg-gradient-to-br from-purple-700 to-indigo-800"
+                            }`}>
+                              <span className="text-white font-bold text-base">
+                                {token.symbol?.[0] || token.name?.[0] || "T"}
+                              </span>
+                              {tokenAddress === token.mint && (
+                                <div className="absolute -inset-0.5 rounded-full animate-pulse opacity-70" 
+                                  style={{background: "linear-gradient(45deg, rgba(168, 85, 247, 0.4), rgba(80, 70, 230, 0.4))"}}></div>
+                              )}
+                            </div>
+                            
+                            {/* Token details */}
+                            <div className="flex-grow min-w-0">
+                              <h4 className={`font-medium text-sm truncate ${tokenAddress === token.mint ? "text-purple-200" : "text-white"}`}>
+                                {token.name || "Unnamed Token"}
+                              </h4>
+                              <div className="flex items-center mt-0.5">
+                                <span className={`text-xs truncate ${tokenAddress === token.mint ? "text-purple-300" : "text-gray-400"}`}>
+                                  {token.symbol || "???"}
+                                </span>
+                                <span className="mx-1 text-gray-500">•</span>
+                                <span className={`text-xs truncate ${tokenAddress === token.mint ? "text-purple-300 font-medium" : "text-gray-400"}`}>
+                                  Balance: {parseInt(token.amount).toLocaleString()}
+                                </span>
+                              </div>
+                            </div>
+                            
+                            {/* Selection indicator */}
+                            {tokenAddress === token.mint ? (
+                              <div className="bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full p-1 shadow-lg shadow-purple-600/30 ml-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" viewBox="0 0 20 20" fill="currentColor">
+                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                </svg>
+                              </div>
+                            ) : (
+                              <div className="rounded-full p-1 border-2 border-gray-600 opacity-50 hover:opacity-100 hover:border-purple-500 transition-opacity ml-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm0-2a6 6 0 100-12 6 6 0 000 12z" clipRule="evenodd" />
+                                </svg>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    {/* Warning when no token is selected */}
+                    {!tokenAddress && (
+                      <div className="mt-3 p-2 bg-amber-900/30 border border-amber-700/30 rounded-lg text-amber-300 font-medium flex items-center text-xs">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                        <span>Please select a token to enable token gating</span>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="bg-gradient-to-br from-purple-900/20 to-indigo-900/20 rounded-lg border border-purple-600/30 p-4 text-center">
+                    <div className="w-12 h-12 mx-auto mb-2 relative">
+                      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-full animate-ping opacity-30"></div>
+                      <div className="relative flex items-center justify-center w-full h-full bg-gradient-to-br from-purple-600/30 to-indigo-600/30 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-purple-300" viewBox="0 0 20 20" fill="currentColor">
+                          <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
+                          <path fillRule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    </div>
+                    <h3 className="text-base font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-200 to-indigo-200 mb-1">No Tokens Found</h3>
+                    <p className="text-gray-300 text-xs mb-3 max-w-xs mx-auto">
+                      You'll need to create tokens before you can use them for gating access to your channel.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={redirectToTokenPage}
+                      className="py-1.5 px-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 rounded-lg text-white font-medium shadow-lg shadow-purple-500/20 transition-all duration-200 hover:shadow-xl hover:shadow-purple-500/30 hover:scale-105 text-sm"
+                    >
+                      Create Tokens
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+            
             
             {/* Footer with buttons */}
             <div className="relative p-6 border-t border-purple-900/50 flex justify-end gap-3">
@@ -907,8 +1139,12 @@ export default function ChatSidebar({
               </button>
               <button
                 onClick={createSubchannel}
-                disabled={!newSubchannelName.trim()}
-                className="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-lg text-sm font-medium shadow-lg shadow-purple-900/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  disabled={!newSubchannelName.trim() || (isTokenGated && !tokenAddress)}
+                  className={`px-5 py-2.5 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${
+                    !newSubchannelName.trim() || (isTokenGated && !tokenAddress)
+                      ? "bg-gray-700/70 text-gray-400 cursor-not-allowed shadow-none border border-gray-700"
+                      : "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white shadow-lg shadow-purple-900/20 hover:shadow-purple-900/30"
+                  }`}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />

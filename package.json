@@ -9,7 +9,13 @@
     "start": "next start",
     "lint": "next lint",
     "prisma:seed": "tsx prisma/seed.ts",
-    "supabase:seed": "tsx scripts/seedSupabaseRoles.ts"
+    "prisma:seed-demo": "tsx prisma/seed-demo.ts",
+    "supabase:seed": "tsx scripts/seedSupabaseRoles.ts",
+    "db:reset": "tsx scripts/reset-db.ts",
+    "db:clean": "tsx scripts/clean-db.ts",
+    "db:status": "tsx scripts/db-status.ts",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate deploy"
   },
   "dependencies": {
     "@lightprotocol/compressed-token": "^0.21.0",

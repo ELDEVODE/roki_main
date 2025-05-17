@@ -193,7 +193,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/gabriel/Documents/Code Repos/roki_main/prisma/generated/democlient",
+      "value": "/home/el-praise/codes/branch/roki_main/prisma/generated/democlient",
       "fromEnvVar": null
     },
     "config": {
@@ -211,7 +211,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/gabriel/Documents/Code Repos/roki_main/prisma/demo.schema.prisma",
+    "sourceFilePath": "/home/el-praise/codes/branch/roki_main/prisma/demo.schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -225,11 +225,12 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "postgresql://postgres.aasyghrkcarbugopigui:Reimagine1234X@aws-0-us-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+        "value": null
       }
     }
   },

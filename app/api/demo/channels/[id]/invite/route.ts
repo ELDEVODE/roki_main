@@ -7,11 +7,11 @@ import { randomBytes } from 'crypto';
  */
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId, expiryOption, maxUses } = await req.json();
-    const { id: channelId } = params;
+    const { id: channelId } = await context.params;
     
     console.log(`Invite API - Create request: userId=${userId}, channelId=${channelId}, expiryOption=${expiryOption}`, { maxUses });
     
@@ -92,9 +92,10 @@ export async function POST(
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await context.params;
     const inviteCode = req.nextUrl.searchParams.get('code');
     
     if (!inviteCode) {
