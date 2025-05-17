@@ -2,7 +2,7 @@ import { Rpc, createRpc } from "@lightprotocol/stateless.js";
 import { PublicKey } from "@solana/web3.js";
 
 // Replace with your Helius API key for production
-const RPC_ENDPOINT = "https://devnet.helius-rpc.com?api-key=a12f8318-78b9-422d-b27d-84623d909cf2";
+const RPC_ENDPOINT = `https://devnet.helius-rpc.com?api-key=${process.env.HELIUS_API_KEY}`;
 const COMPRESSION_ENDPOINT = RPC_ENDPOINT;
 const PROVER_ENDPOINT = RPC_ENDPOINT;
 

@@ -14,22 +14,53 @@ model DemoUser {
   id            String           @id @default(cuid())
   walletAddress String           @unique
   name          String?
+  username      String?
+  profileImage  String?
+  description   String?
   memberships   DemoMembership[]
   messages      DemoMessage[]
   createdChannels DemoChannel[]  @relation("DemoChannelCreator")
   createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  online        Boolean          @default(false)
+  lastSeen      DateTime?
+
+  @@index([walletAddress])
 }
 
 model DemoChannel {
   id            String           @id @default(cuid())
   name          String
+  description   String?
+  icon          String?
+  type          String           @default("TEXT")
   creator       DemoUser         @relation("DemoChannelCreator", fields: [creatorId], references: [id])
   creatorId     String
+  members       DemoMembership[]
+  subchannels   DemoSubChannel[] @relation("ChannelSubchannels")
+  defaultSubchannelId String?    // Store ID of default subchannel
+  invites       DemoInvite[]     // Relation to the channel's invites
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@index([creatorId])
+}
+
+model DemoSubChannel {
+  id            String           @id @default(cuid())
+  name          String
+  icon          String?
+  type          String           @default("TEXT")
+  channel       DemoChannel      @relation("ChannelSubchannels", fields: [channelId], references: [id], onDelete: Cascade)
+  channelId     String
   isTokenGated  Boolean          @default(false)
   tokenAddress  String?
-  members       DemoMembership[]
+  isDefault     Boolean          @default(false) // Indicates if this is the default subchannel
   messages      DemoMessage[]
   createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  @@index([channelId])
 }
 
 model DemoMembership {
@@ -40,16 +71,39 @@ model DemoMembership {
   channelId   String
   role        String      @default("MEMBER")
   createdAt   DateTime    @default(now())
+  lastReadAt  DateTime    @default(now()) // Track when the user last read messages
 
   @@unique([userId, channelId])
+  @@index([userId])
+  @@index([channelId])
 }
 
 model DemoMessage {
-  id          String      @id @default(cuid())
-  content     String
-  user        DemoUser    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String
-  channel     DemoChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
-  channelId   String
-  createdAt   DateTime    @default(now())
+  id             String         @id @default(cuid())
+  content        String
+  user           DemoUser       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  subchannel     DemoSubChannel @relation(fields: [subchannelId], references: [id], onDelete: Cascade)
+  subchannelId   String
+  createdAt      DateTime       @default(now())
+  readByUsers    String[]       // Array of user IDs who have read this message
+
+  @@index([userId])
+  @@index([subchannelId])
+  @@index([createdAt])
+}
+
+model DemoInvite {
+  id           String     @id @default(cuid())
+  inviteCode   String     @unique
+  channel      DemoChannel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  channelId    String
+  createdBy    String     // User ID who created the invite
+  expiresAt    DateTime?  // Optional expiration date
+  maxUses      Int?       // Optional maximum number of uses (null = unlimited)
+  useCount     Int        @default(0)
+  createdAt    DateTime   @default(now())
+
+  @@index([inviteCode])
+  @@index([channelId])
 } 

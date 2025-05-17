@@ -24,6 +24,11 @@ export type DemoUser = $Result.DefaultSelection<Prisma.$DemoUserPayload>
  */
 export type DemoChannel = $Result.DefaultSelection<Prisma.$DemoChannelPayload>
 /**
+ * Model DemoSubChannel
+ * 
+ */
+export type DemoSubChannel = $Result.DefaultSelection<Prisma.$DemoSubChannelPayload>
+/**
  * Model DemoMembership
  * 
  */
@@ -33,6 +38,11 @@ export type DemoMembership = $Result.DefaultSelection<Prisma.$DemoMembershipPayl
  * 
  */
 export type DemoMessage = $Result.DefaultSelection<Prisma.$DemoMessagePayload>
+/**
+ * Model DemoInvite
+ * 
+ */
+export type DemoInvite = $Result.DefaultSelection<Prisma.$DemoInvitePayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -180,6 +190,16 @@ export class PrismaClient<
   get demoChannel(): Prisma.DemoChannelDelegate<ExtArgs, ClientOptions>;
 
   /**
+   * `prisma.demoSubChannel`: Exposes CRUD operations for the **DemoSubChannel** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DemoSubChannels
+    * const demoSubChannels = await prisma.demoSubChannel.findMany()
+    * ```
+    */
+  get demoSubChannel(): Prisma.DemoSubChannelDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.demoMembership`: Exposes CRUD operations for the **DemoMembership** model.
     * Example usage:
     * ```ts
@@ -198,6 +218,16 @@ export class PrismaClient<
     * ```
     */
   get demoMessage(): Prisma.DemoMessageDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.demoInvite`: Exposes CRUD operations for the **DemoInvite** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more DemoInvites
+    * const demoInvites = await prisma.demoInvite.findMany()
+    * ```
+    */
+  get demoInvite(): Prisma.DemoInviteDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -640,8 +670,10 @@ export namespace Prisma {
   export const ModelName: {
     DemoUser: 'DemoUser',
     DemoChannel: 'DemoChannel',
+    DemoSubChannel: 'DemoSubChannel',
     DemoMembership: 'DemoMembership',
-    DemoMessage: 'DemoMessage'
+    DemoMessage: 'DemoMessage',
+    DemoInvite: 'DemoInvite'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -660,7 +692,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "demoUser" | "demoChannel" | "demoMembership" | "demoMessage"
+      modelProps: "demoUser" | "demoChannel" | "demoSubChannel" | "demoMembership" | "demoMessage" | "demoInvite"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -812,6 +844,80 @@ export namespace Prisma {
           }
         }
       }
+      DemoSubChannel: {
+        payload: Prisma.$DemoSubChannelPayload<ExtArgs>
+        fields: Prisma.DemoSubChannelFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DemoSubChannelFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoSubChannelPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DemoSubChannelFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoSubChannelPayload>
+          }
+          findFirst: {
+            args: Prisma.DemoSubChannelFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoSubChannelPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DemoSubChannelFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoSubChannelPayload>
+          }
+          findMany: {
+            args: Prisma.DemoSubChannelFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoSubChannelPayload>[]
+          }
+          create: {
+            args: Prisma.DemoSubChannelCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoSubChannelPayload>
+          }
+          createMany: {
+            args: Prisma.DemoSubChannelCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DemoSubChannelCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoSubChannelPayload>[]
+          }
+          delete: {
+            args: Prisma.DemoSubChannelDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoSubChannelPayload>
+          }
+          update: {
+            args: Prisma.DemoSubChannelUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoSubChannelPayload>
+          }
+          deleteMany: {
+            args: Prisma.DemoSubChannelDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DemoSubChannelUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DemoSubChannelUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoSubChannelPayload>[]
+          }
+          upsert: {
+            args: Prisma.DemoSubChannelUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoSubChannelPayload>
+          }
+          aggregate: {
+            args: Prisma.DemoSubChannelAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDemoSubChannel>
+          }
+          groupBy: {
+            args: Prisma.DemoSubChannelGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DemoSubChannelGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DemoSubChannelCountArgs<ExtArgs>
+            result: $Utils.Optional<DemoSubChannelCountAggregateOutputType> | number
+          }
+        }
+      }
       DemoMembership: {
         payload: Prisma.$DemoMembershipPayload<ExtArgs>
         fields: Prisma.DemoMembershipFieldRefs
@@ -960,6 +1066,80 @@ export namespace Prisma {
           }
         }
       }
+      DemoInvite: {
+        payload: Prisma.$DemoInvitePayload<ExtArgs>
+        fields: Prisma.DemoInviteFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DemoInviteFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoInvitePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DemoInviteFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoInvitePayload>
+          }
+          findFirst: {
+            args: Prisma.DemoInviteFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoInvitePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DemoInviteFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoInvitePayload>
+          }
+          findMany: {
+            args: Prisma.DemoInviteFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoInvitePayload>[]
+          }
+          create: {
+            args: Prisma.DemoInviteCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoInvitePayload>
+          }
+          createMany: {
+            args: Prisma.DemoInviteCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DemoInviteCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoInvitePayload>[]
+          }
+          delete: {
+            args: Prisma.DemoInviteDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoInvitePayload>
+          }
+          update: {
+            args: Prisma.DemoInviteUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoInvitePayload>
+          }
+          deleteMany: {
+            args: Prisma.DemoInviteDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DemoInviteUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DemoInviteUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoInvitePayload>[]
+          }
+          upsert: {
+            args: Prisma.DemoInviteUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DemoInvitePayload>
+          }
+          aggregate: {
+            args: Prisma.DemoInviteAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDemoInvite>
+          }
+          groupBy: {
+            args: Prisma.DemoInviteGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DemoInviteGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DemoInviteCountArgs<ExtArgs>
+            result: $Utils.Optional<DemoInviteCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1046,8 +1226,10 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     demoUser?: DemoUserOmit
     demoChannel?: DemoChannelOmit
+    demoSubChannel?: DemoSubChannelOmit
     demoMembership?: DemoMembershipOmit
     demoMessage?: DemoMessageOmit
+    demoInvite?: DemoInviteOmit
   }
 
   /* Types for Logging */
@@ -1192,12 +1374,14 @@ export namespace Prisma {
 
   export type DemoChannelCountOutputType = {
     members: number
-    messages: number
+    subchannels: number
+    invites: number
   }
 
   export type DemoChannelCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     members?: boolean | DemoChannelCountOutputTypeCountMembersArgs
-    messages?: boolean | DemoChannelCountOutputTypeCountMessagesArgs
+    subchannels?: boolean | DemoChannelCountOutputTypeCountSubchannelsArgs
+    invites?: boolean | DemoChannelCountOutputTypeCountInvitesArgs
   }
 
   // Custom InputTypes
@@ -1221,7 +1405,45 @@ export namespace Prisma {
   /**
    * DemoChannelCountOutputType without action
    */
-  export type DemoChannelCountOutputTypeCountMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type DemoChannelCountOutputTypeCountSubchannelsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DemoSubChannelWhereInput
+  }
+
+  /**
+   * DemoChannelCountOutputType without action
+   */
+  export type DemoChannelCountOutputTypeCountInvitesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DemoInviteWhereInput
+  }
+
+
+  /**
+   * Count Type DemoSubChannelCountOutputType
+   */
+
+  export type DemoSubChannelCountOutputType = {
+    messages: number
+  }
+
+  export type DemoSubChannelCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    messages?: boolean | DemoSubChannelCountOutputTypeCountMessagesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * DemoSubChannelCountOutputType without action
+   */
+  export type DemoSubChannelCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoSubChannelCountOutputType
+     */
+    select?: DemoSubChannelCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * DemoSubChannelCountOutputType without action
+   */
+  export type DemoSubChannelCountOutputTypeCountMessagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DemoMessageWhereInput
   }
 
@@ -1244,21 +1466,39 @@ export namespace Prisma {
     id: string | null
     walletAddress: string | null
     name: string | null
+    username: string | null
+    profileImage: string | null
+    description: string | null
     createdAt: Date | null
+    updatedAt: Date | null
+    online: boolean | null
+    lastSeen: Date | null
   }
 
   export type DemoUserMaxAggregateOutputType = {
     id: string | null
     walletAddress: string | null
     name: string | null
+    username: string | null
+    profileImage: string | null
+    description: string | null
     createdAt: Date | null
+    updatedAt: Date | null
+    online: boolean | null
+    lastSeen: Date | null
   }
 
   export type DemoUserCountAggregateOutputType = {
     id: number
     walletAddress: number
     name: number
+    username: number
+    profileImage: number
+    description: number
     createdAt: number
+    updatedAt: number
+    online: number
+    lastSeen: number
     _all: number
   }
 
@@ -1267,21 +1507,39 @@ export namespace Prisma {
     id?: true
     walletAddress?: true
     name?: true
+    username?: true
+    profileImage?: true
+    description?: true
     createdAt?: true
+    updatedAt?: true
+    online?: true
+    lastSeen?: true
   }
 
   export type DemoUserMaxAggregateInputType = {
     id?: true
     walletAddress?: true
     name?: true
+    username?: true
+    profileImage?: true
+    description?: true
     createdAt?: true
+    updatedAt?: true
+    online?: true
+    lastSeen?: true
   }
 
   export type DemoUserCountAggregateInputType = {
     id?: true
     walletAddress?: true
     name?: true
+    username?: true
+    profileImage?: true
+    description?: true
     createdAt?: true
+    updatedAt?: true
+    online?: true
+    lastSeen?: true
     _all?: true
   }
 
@@ -1361,7 +1619,13 @@ export namespace Prisma {
     id: string
     walletAddress: string
     name: string | null
+    username: string | null
+    profileImage: string | null
+    description: string | null
     createdAt: Date
+    updatedAt: Date
+    online: boolean
+    lastSeen: Date | null
     _count: DemoUserCountAggregateOutputType | null
     _min: DemoUserMinAggregateOutputType | null
     _max: DemoUserMaxAggregateOutputType | null
@@ -1385,7 +1649,13 @@ export namespace Prisma {
     id?: boolean
     walletAddress?: boolean
     name?: boolean
+    username?: boolean
+    profileImage?: boolean
+    description?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
+    online?: boolean
+    lastSeen?: boolean
     memberships?: boolean | DemoUser$membershipsArgs<ExtArgs>
     messages?: boolean | DemoUser$messagesArgs<ExtArgs>
     createdChannels?: boolean | DemoUser$createdChannelsArgs<ExtArgs>
@@ -1396,24 +1666,42 @@ export namespace Prisma {
     id?: boolean
     walletAddress?: boolean
     name?: boolean
+    username?: boolean
+    profileImage?: boolean
+    description?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
+    online?: boolean
+    lastSeen?: boolean
   }, ExtArgs["result"]["demoUser"]>
 
   export type DemoUserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     walletAddress?: boolean
     name?: boolean
+    username?: boolean
+    profileImage?: boolean
+    description?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
+    online?: boolean
+    lastSeen?: boolean
   }, ExtArgs["result"]["demoUser"]>
 
   export type DemoUserSelectScalar = {
     id?: boolean
     walletAddress?: boolean
     name?: boolean
+    username?: boolean
+    profileImage?: boolean
+    description?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
+    online?: boolean
+    lastSeen?: boolean
   }
 
-  export type DemoUserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "walletAddress" | "name" | "createdAt", ExtArgs["result"]["demoUser"]>
+  export type DemoUserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "walletAddress" | "name" | "username" | "profileImage" | "description" | "createdAt" | "updatedAt" | "online" | "lastSeen", ExtArgs["result"]["demoUser"]>
   export type DemoUserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     memberships?: boolean | DemoUser$membershipsArgs<ExtArgs>
     messages?: boolean | DemoUser$messagesArgs<ExtArgs>
@@ -1434,7 +1722,13 @@ export namespace Prisma {
       id: string
       walletAddress: string
       name: string | null
+      username: string | null
+      profileImage: string | null
+      description: string | null
       createdAt: Date
+      updatedAt: Date
+      online: boolean
+      lastSeen: Date | null
     }, ExtArgs["result"]["demoUser"]>
     composites: {}
   }
@@ -1864,7 +2158,13 @@ export namespace Prisma {
     readonly id: FieldRef<"DemoUser", 'String'>
     readonly walletAddress: FieldRef<"DemoUser", 'String'>
     readonly name: FieldRef<"DemoUser", 'String'>
+    readonly username: FieldRef<"DemoUser", 'String'>
+    readonly profileImage: FieldRef<"DemoUser", 'String'>
+    readonly description: FieldRef<"DemoUser", 'String'>
     readonly createdAt: FieldRef<"DemoUser", 'DateTime'>
+    readonly updatedAt: FieldRef<"DemoUser", 'DateTime'>
+    readonly online: FieldRef<"DemoUser", 'Boolean'>
+    readonly lastSeen: FieldRef<"DemoUser", 'DateTime'>
   }
     
 
@@ -2356,28 +2656,34 @@ export namespace Prisma {
   export type DemoChannelMinAggregateOutputType = {
     id: string | null
     name: string | null
+    icon: string | null
+    type: string | null
     creatorId: string | null
-    isTokenGated: boolean | null
-    tokenAddress: string | null
+    defaultSubchannelId: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type DemoChannelMaxAggregateOutputType = {
     id: string | null
     name: string | null
+    icon: string | null
+    type: string | null
     creatorId: string | null
-    isTokenGated: boolean | null
-    tokenAddress: string | null
+    defaultSubchannelId: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type DemoChannelCountAggregateOutputType = {
     id: number
     name: number
+    icon: number
+    type: number
     creatorId: number
-    isTokenGated: number
-    tokenAddress: number
+    defaultSubchannelId: number
     createdAt: number
+    updatedAt: number
     _all: number
   }
 
@@ -2385,28 +2691,34 @@ export namespace Prisma {
   export type DemoChannelMinAggregateInputType = {
     id?: true
     name?: true
+    icon?: true
+    type?: true
     creatorId?: true
-    isTokenGated?: true
-    tokenAddress?: true
+    defaultSubchannelId?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type DemoChannelMaxAggregateInputType = {
     id?: true
     name?: true
+    icon?: true
+    type?: true
     creatorId?: true
-    isTokenGated?: true
-    tokenAddress?: true
+    defaultSubchannelId?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type DemoChannelCountAggregateInputType = {
     id?: true
     name?: true
+    icon?: true
+    type?: true
     creatorId?: true
-    isTokenGated?: true
-    tokenAddress?: true
+    defaultSubchannelId?: true
     createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -2485,10 +2797,12 @@ export namespace Prisma {
   export type DemoChannelGroupByOutputType = {
     id: string
     name: string
+    icon: string | null
+    type: string
     creatorId: string
-    isTokenGated: boolean
-    tokenAddress: string | null
+    defaultSubchannelId: string | null
     createdAt: Date
+    updatedAt: Date
     _count: DemoChannelCountAggregateOutputType | null
     _min: DemoChannelMinAggregateOutputType | null
     _max: DemoChannelMaxAggregateOutputType | null
@@ -2511,50 +2825,60 @@ export namespace Prisma {
   export type DemoChannelSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    icon?: boolean
+    type?: boolean
     creatorId?: boolean
-    isTokenGated?: boolean
-    tokenAddress?: boolean
+    defaultSubchannelId?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     creator?: boolean | DemoUserDefaultArgs<ExtArgs>
     members?: boolean | DemoChannel$membersArgs<ExtArgs>
-    messages?: boolean | DemoChannel$messagesArgs<ExtArgs>
+    subchannels?: boolean | DemoChannel$subchannelsArgs<ExtArgs>
+    invites?: boolean | DemoChannel$invitesArgs<ExtArgs>
     _count?: boolean | DemoChannelCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["demoChannel"]>
 
   export type DemoChannelSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    icon?: boolean
+    type?: boolean
     creatorId?: boolean
-    isTokenGated?: boolean
-    tokenAddress?: boolean
+    defaultSubchannelId?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     creator?: boolean | DemoUserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["demoChannel"]>
 
   export type DemoChannelSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
+    icon?: boolean
+    type?: boolean
     creatorId?: boolean
-    isTokenGated?: boolean
-    tokenAddress?: boolean
+    defaultSubchannelId?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
     creator?: boolean | DemoUserDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["demoChannel"]>
 
   export type DemoChannelSelectScalar = {
     id?: boolean
     name?: boolean
+    icon?: boolean
+    type?: boolean
     creatorId?: boolean
-    isTokenGated?: boolean
-    tokenAddress?: boolean
+    defaultSubchannelId?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type DemoChannelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "creatorId" | "isTokenGated" | "tokenAddress" | "createdAt", ExtArgs["result"]["demoChannel"]>
+  export type DemoChannelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "icon" | "type" | "creatorId" | "defaultSubchannelId" | "createdAt" | "updatedAt", ExtArgs["result"]["demoChannel"]>
   export type DemoChannelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     creator?: boolean | DemoUserDefaultArgs<ExtArgs>
     members?: boolean | DemoChannel$membersArgs<ExtArgs>
-    messages?: boolean | DemoChannel$messagesArgs<ExtArgs>
+    subchannels?: boolean | DemoChannel$subchannelsArgs<ExtArgs>
+    invites?: boolean | DemoChannel$invitesArgs<ExtArgs>
     _count?: boolean | DemoChannelCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type DemoChannelIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2569,15 +2893,18 @@ export namespace Prisma {
     objects: {
       creator: Prisma.$DemoUserPayload<ExtArgs>
       members: Prisma.$DemoMembershipPayload<ExtArgs>[]
-      messages: Prisma.$DemoMessagePayload<ExtArgs>[]
+      subchannels: Prisma.$DemoSubChannelPayload<ExtArgs>[]
+      invites: Prisma.$DemoInvitePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
+      icon: string | null
+      type: string
       creatorId: string
-      isTokenGated: boolean
-      tokenAddress: string | null
+      defaultSubchannelId: string | null
       createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["demoChannel"]>
     composites: {}
   }
@@ -2974,7 +3301,8 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     creator<T extends DemoUserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DemoUserDefaultArgs<ExtArgs>>): Prisma__DemoUserClient<$Result.GetResult<Prisma.$DemoUserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     members<T extends DemoChannel$membersArgs<ExtArgs> = {}>(args?: Subset<T, DemoChannel$membersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemoMembershipPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    messages<T extends DemoChannel$messagesArgs<ExtArgs> = {}>(args?: Subset<T, DemoChannel$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemoMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    subchannels<T extends DemoChannel$subchannelsArgs<ExtArgs> = {}>(args?: Subset<T, DemoChannel$subchannelsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemoSubChannelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    invites<T extends DemoChannel$invitesArgs<ExtArgs> = {}>(args?: Subset<T, DemoChannel$invitesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemoInvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3006,10 +3334,12 @@ export namespace Prisma {
   interface DemoChannelFieldRefs {
     readonly id: FieldRef<"DemoChannel", 'String'>
     readonly name: FieldRef<"DemoChannel", 'String'>
+    readonly icon: FieldRef<"DemoChannel", 'String'>
+    readonly type: FieldRef<"DemoChannel", 'String'>
     readonly creatorId: FieldRef<"DemoChannel", 'String'>
-    readonly isTokenGated: FieldRef<"DemoChannel", 'Boolean'>
-    readonly tokenAddress: FieldRef<"DemoChannel", 'String'>
+    readonly defaultSubchannelId: FieldRef<"DemoChannel", 'String'>
     readonly createdAt: FieldRef<"DemoChannel", 'DateTime'>
+    readonly updatedAt: FieldRef<"DemoChannel", 'DateTime'>
   }
     
 
@@ -3430,27 +3760,51 @@ export namespace Prisma {
   }
 
   /**
-   * DemoChannel.messages
+   * DemoChannel.subchannels
    */
-  export type DemoChannel$messagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type DemoChannel$subchannelsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the DemoMessage
+     * Select specific fields to fetch from the DemoSubChannel
      */
-    select?: DemoMessageSelect<ExtArgs> | null
+    select?: DemoSubChannelSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the DemoMessage
+     * Omit specific fields from the DemoSubChannel
      */
-    omit?: DemoMessageOmit<ExtArgs> | null
+    omit?: DemoSubChannelOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: DemoMessageInclude<ExtArgs> | null
-    where?: DemoMessageWhereInput
-    orderBy?: DemoMessageOrderByWithRelationInput | DemoMessageOrderByWithRelationInput[]
-    cursor?: DemoMessageWhereUniqueInput
+    include?: DemoSubChannelInclude<ExtArgs> | null
+    where?: DemoSubChannelWhereInput
+    orderBy?: DemoSubChannelOrderByWithRelationInput | DemoSubChannelOrderByWithRelationInput[]
+    cursor?: DemoSubChannelWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: DemoMessageScalarFieldEnum | DemoMessageScalarFieldEnum[]
+    distinct?: DemoSubChannelScalarFieldEnum | DemoSubChannelScalarFieldEnum[]
+  }
+
+  /**
+   * DemoChannel.invites
+   */
+  export type DemoChannel$invitesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoInvite
+     */
+    select?: DemoInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoInvite
+     */
+    omit?: DemoInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoInviteInclude<ExtArgs> | null
+    where?: DemoInviteWhereInput
+    orderBy?: DemoInviteOrderByWithRelationInput | DemoInviteOrderByWithRelationInput[]
+    cursor?: DemoInviteWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DemoInviteScalarFieldEnum | DemoInviteScalarFieldEnum[]
   }
 
   /**
@@ -3473,6 +3827,1159 @@ export namespace Prisma {
 
 
   /**
+   * Model DemoSubChannel
+   */
+
+  export type AggregateDemoSubChannel = {
+    _count: DemoSubChannelCountAggregateOutputType | null
+    _min: DemoSubChannelMinAggregateOutputType | null
+    _max: DemoSubChannelMaxAggregateOutputType | null
+  }
+
+  export type DemoSubChannelMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    icon: string | null
+    type: string | null
+    channelId: string | null
+    isTokenGated: boolean | null
+    tokenAddress: string | null
+    isDefault: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DemoSubChannelMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    icon: string | null
+    type: string | null
+    channelId: string | null
+    isTokenGated: boolean | null
+    tokenAddress: string | null
+    isDefault: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type DemoSubChannelCountAggregateOutputType = {
+    id: number
+    name: number
+    icon: number
+    type: number
+    channelId: number
+    isTokenGated: number
+    tokenAddress: number
+    isDefault: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type DemoSubChannelMinAggregateInputType = {
+    id?: true
+    name?: true
+    icon?: true
+    type?: true
+    channelId?: true
+    isTokenGated?: true
+    tokenAddress?: true
+    isDefault?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DemoSubChannelMaxAggregateInputType = {
+    id?: true
+    name?: true
+    icon?: true
+    type?: true
+    channelId?: true
+    isTokenGated?: true
+    tokenAddress?: true
+    isDefault?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type DemoSubChannelCountAggregateInputType = {
+    id?: true
+    name?: true
+    icon?: true
+    type?: true
+    channelId?: true
+    isTokenGated?: true
+    tokenAddress?: true
+    isDefault?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type DemoSubChannelAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DemoSubChannel to aggregate.
+     */
+    where?: DemoSubChannelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DemoSubChannels to fetch.
+     */
+    orderBy?: DemoSubChannelOrderByWithRelationInput | DemoSubChannelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DemoSubChannelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DemoSubChannels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DemoSubChannels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DemoSubChannels
+    **/
+    _count?: true | DemoSubChannelCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DemoSubChannelMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DemoSubChannelMaxAggregateInputType
+  }
+
+  export type GetDemoSubChannelAggregateType<T extends DemoSubChannelAggregateArgs> = {
+        [P in keyof T & keyof AggregateDemoSubChannel]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDemoSubChannel[P]>
+      : GetScalarType<T[P], AggregateDemoSubChannel[P]>
+  }
+
+
+
+
+  export type DemoSubChannelGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DemoSubChannelWhereInput
+    orderBy?: DemoSubChannelOrderByWithAggregationInput | DemoSubChannelOrderByWithAggregationInput[]
+    by: DemoSubChannelScalarFieldEnum[] | DemoSubChannelScalarFieldEnum
+    having?: DemoSubChannelScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DemoSubChannelCountAggregateInputType | true
+    _min?: DemoSubChannelMinAggregateInputType
+    _max?: DemoSubChannelMaxAggregateInputType
+  }
+
+  export type DemoSubChannelGroupByOutputType = {
+    id: string
+    name: string
+    icon: string | null
+    type: string
+    channelId: string
+    isTokenGated: boolean
+    tokenAddress: string | null
+    isDefault: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: DemoSubChannelCountAggregateOutputType | null
+    _min: DemoSubChannelMinAggregateOutputType | null
+    _max: DemoSubChannelMaxAggregateOutputType | null
+  }
+
+  type GetDemoSubChannelGroupByPayload<T extends DemoSubChannelGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DemoSubChannelGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DemoSubChannelGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DemoSubChannelGroupByOutputType[P]>
+            : GetScalarType<T[P], DemoSubChannelGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DemoSubChannelSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    icon?: boolean
+    type?: boolean
+    channelId?: boolean
+    isTokenGated?: boolean
+    tokenAddress?: boolean
+    isDefault?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
+    messages?: boolean | DemoSubChannel$messagesArgs<ExtArgs>
+    _count?: boolean | DemoSubChannelCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["demoSubChannel"]>
+
+  export type DemoSubChannelSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    icon?: boolean
+    type?: boolean
+    channelId?: boolean
+    isTokenGated?: boolean
+    tokenAddress?: boolean
+    isDefault?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["demoSubChannel"]>
+
+  export type DemoSubChannelSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    icon?: boolean
+    type?: boolean
+    channelId?: boolean
+    isTokenGated?: boolean
+    tokenAddress?: boolean
+    isDefault?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["demoSubChannel"]>
+
+  export type DemoSubChannelSelectScalar = {
+    id?: boolean
+    name?: boolean
+    icon?: boolean
+    type?: boolean
+    channelId?: boolean
+    isTokenGated?: boolean
+    tokenAddress?: boolean
+    isDefault?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type DemoSubChannelOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "icon" | "type" | "channelId" | "isTokenGated" | "tokenAddress" | "isDefault" | "createdAt" | "updatedAt", ExtArgs["result"]["demoSubChannel"]>
+  export type DemoSubChannelInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
+    messages?: boolean | DemoSubChannel$messagesArgs<ExtArgs>
+    _count?: boolean | DemoSubChannelCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type DemoSubChannelIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
+  }
+  export type DemoSubChannelIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
+  }
+
+  export type $DemoSubChannelPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DemoSubChannel"
+    objects: {
+      channel: Prisma.$DemoChannelPayload<ExtArgs>
+      messages: Prisma.$DemoMessagePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      icon: string | null
+      type: string
+      channelId: string
+      isTokenGated: boolean
+      tokenAddress: string | null
+      isDefault: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["demoSubChannel"]>
+    composites: {}
+  }
+
+  type DemoSubChannelGetPayload<S extends boolean | null | undefined | DemoSubChannelDefaultArgs> = $Result.GetResult<Prisma.$DemoSubChannelPayload, S>
+
+  type DemoSubChannelCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DemoSubChannelFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DemoSubChannelCountAggregateInputType | true
+    }
+
+  export interface DemoSubChannelDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DemoSubChannel'], meta: { name: 'DemoSubChannel' } }
+    /**
+     * Find zero or one DemoSubChannel that matches the filter.
+     * @param {DemoSubChannelFindUniqueArgs} args - Arguments to find a DemoSubChannel
+     * @example
+     * // Get one DemoSubChannel
+     * const demoSubChannel = await prisma.demoSubChannel.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DemoSubChannelFindUniqueArgs>(args: SelectSubset<T, DemoSubChannelFindUniqueArgs<ExtArgs>>): Prisma__DemoSubChannelClient<$Result.GetResult<Prisma.$DemoSubChannelPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DemoSubChannel that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DemoSubChannelFindUniqueOrThrowArgs} args - Arguments to find a DemoSubChannel
+     * @example
+     * // Get one DemoSubChannel
+     * const demoSubChannel = await prisma.demoSubChannel.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DemoSubChannelFindUniqueOrThrowArgs>(args: SelectSubset<T, DemoSubChannelFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DemoSubChannelClient<$Result.GetResult<Prisma.$DemoSubChannelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DemoSubChannel that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemoSubChannelFindFirstArgs} args - Arguments to find a DemoSubChannel
+     * @example
+     * // Get one DemoSubChannel
+     * const demoSubChannel = await prisma.demoSubChannel.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DemoSubChannelFindFirstArgs>(args?: SelectSubset<T, DemoSubChannelFindFirstArgs<ExtArgs>>): Prisma__DemoSubChannelClient<$Result.GetResult<Prisma.$DemoSubChannelPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DemoSubChannel that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemoSubChannelFindFirstOrThrowArgs} args - Arguments to find a DemoSubChannel
+     * @example
+     * // Get one DemoSubChannel
+     * const demoSubChannel = await prisma.demoSubChannel.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DemoSubChannelFindFirstOrThrowArgs>(args?: SelectSubset<T, DemoSubChannelFindFirstOrThrowArgs<ExtArgs>>): Prisma__DemoSubChannelClient<$Result.GetResult<Prisma.$DemoSubChannelPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DemoSubChannels that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemoSubChannelFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DemoSubChannels
+     * const demoSubChannels = await prisma.demoSubChannel.findMany()
+     * 
+     * // Get first 10 DemoSubChannels
+     * const demoSubChannels = await prisma.demoSubChannel.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const demoSubChannelWithIdOnly = await prisma.demoSubChannel.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DemoSubChannelFindManyArgs>(args?: SelectSubset<T, DemoSubChannelFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemoSubChannelPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DemoSubChannel.
+     * @param {DemoSubChannelCreateArgs} args - Arguments to create a DemoSubChannel.
+     * @example
+     * // Create one DemoSubChannel
+     * const DemoSubChannel = await prisma.demoSubChannel.create({
+     *   data: {
+     *     // ... data to create a DemoSubChannel
+     *   }
+     * })
+     * 
+     */
+    create<T extends DemoSubChannelCreateArgs>(args: SelectSubset<T, DemoSubChannelCreateArgs<ExtArgs>>): Prisma__DemoSubChannelClient<$Result.GetResult<Prisma.$DemoSubChannelPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DemoSubChannels.
+     * @param {DemoSubChannelCreateManyArgs} args - Arguments to create many DemoSubChannels.
+     * @example
+     * // Create many DemoSubChannels
+     * const demoSubChannel = await prisma.demoSubChannel.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DemoSubChannelCreateManyArgs>(args?: SelectSubset<T, DemoSubChannelCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DemoSubChannels and returns the data saved in the database.
+     * @param {DemoSubChannelCreateManyAndReturnArgs} args - Arguments to create many DemoSubChannels.
+     * @example
+     * // Create many DemoSubChannels
+     * const demoSubChannel = await prisma.demoSubChannel.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DemoSubChannels and only return the `id`
+     * const demoSubChannelWithIdOnly = await prisma.demoSubChannel.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DemoSubChannelCreateManyAndReturnArgs>(args?: SelectSubset<T, DemoSubChannelCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemoSubChannelPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DemoSubChannel.
+     * @param {DemoSubChannelDeleteArgs} args - Arguments to delete one DemoSubChannel.
+     * @example
+     * // Delete one DemoSubChannel
+     * const DemoSubChannel = await prisma.demoSubChannel.delete({
+     *   where: {
+     *     // ... filter to delete one DemoSubChannel
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DemoSubChannelDeleteArgs>(args: SelectSubset<T, DemoSubChannelDeleteArgs<ExtArgs>>): Prisma__DemoSubChannelClient<$Result.GetResult<Prisma.$DemoSubChannelPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DemoSubChannel.
+     * @param {DemoSubChannelUpdateArgs} args - Arguments to update one DemoSubChannel.
+     * @example
+     * // Update one DemoSubChannel
+     * const demoSubChannel = await prisma.demoSubChannel.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DemoSubChannelUpdateArgs>(args: SelectSubset<T, DemoSubChannelUpdateArgs<ExtArgs>>): Prisma__DemoSubChannelClient<$Result.GetResult<Prisma.$DemoSubChannelPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DemoSubChannels.
+     * @param {DemoSubChannelDeleteManyArgs} args - Arguments to filter DemoSubChannels to delete.
+     * @example
+     * // Delete a few DemoSubChannels
+     * const { count } = await prisma.demoSubChannel.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DemoSubChannelDeleteManyArgs>(args?: SelectSubset<T, DemoSubChannelDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DemoSubChannels.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemoSubChannelUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DemoSubChannels
+     * const demoSubChannel = await prisma.demoSubChannel.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DemoSubChannelUpdateManyArgs>(args: SelectSubset<T, DemoSubChannelUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DemoSubChannels and returns the data updated in the database.
+     * @param {DemoSubChannelUpdateManyAndReturnArgs} args - Arguments to update many DemoSubChannels.
+     * @example
+     * // Update many DemoSubChannels
+     * const demoSubChannel = await prisma.demoSubChannel.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DemoSubChannels and only return the `id`
+     * const demoSubChannelWithIdOnly = await prisma.demoSubChannel.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DemoSubChannelUpdateManyAndReturnArgs>(args: SelectSubset<T, DemoSubChannelUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemoSubChannelPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DemoSubChannel.
+     * @param {DemoSubChannelUpsertArgs} args - Arguments to update or create a DemoSubChannel.
+     * @example
+     * // Update or create a DemoSubChannel
+     * const demoSubChannel = await prisma.demoSubChannel.upsert({
+     *   create: {
+     *     // ... data to create a DemoSubChannel
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DemoSubChannel we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DemoSubChannelUpsertArgs>(args: SelectSubset<T, DemoSubChannelUpsertArgs<ExtArgs>>): Prisma__DemoSubChannelClient<$Result.GetResult<Prisma.$DemoSubChannelPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DemoSubChannels.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemoSubChannelCountArgs} args - Arguments to filter DemoSubChannels to count.
+     * @example
+     * // Count the number of DemoSubChannels
+     * const count = await prisma.demoSubChannel.count({
+     *   where: {
+     *     // ... the filter for the DemoSubChannels we want to count
+     *   }
+     * })
+    **/
+    count<T extends DemoSubChannelCountArgs>(
+      args?: Subset<T, DemoSubChannelCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DemoSubChannelCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DemoSubChannel.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemoSubChannelAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DemoSubChannelAggregateArgs>(args: Subset<T, DemoSubChannelAggregateArgs>): Prisma.PrismaPromise<GetDemoSubChannelAggregateType<T>>
+
+    /**
+     * Group by DemoSubChannel.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemoSubChannelGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DemoSubChannelGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DemoSubChannelGroupByArgs['orderBy'] }
+        : { orderBy?: DemoSubChannelGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DemoSubChannelGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDemoSubChannelGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DemoSubChannel model
+   */
+  readonly fields: DemoSubChannelFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DemoSubChannel.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DemoSubChannelClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    channel<T extends DemoChannelDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DemoChannelDefaultArgs<ExtArgs>>): Prisma__DemoChannelClient<$Result.GetResult<Prisma.$DemoChannelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    messages<T extends DemoSubChannel$messagesArgs<ExtArgs> = {}>(args?: Subset<T, DemoSubChannel$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemoMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DemoSubChannel model
+   */
+  interface DemoSubChannelFieldRefs {
+    readonly id: FieldRef<"DemoSubChannel", 'String'>
+    readonly name: FieldRef<"DemoSubChannel", 'String'>
+    readonly icon: FieldRef<"DemoSubChannel", 'String'>
+    readonly type: FieldRef<"DemoSubChannel", 'String'>
+    readonly channelId: FieldRef<"DemoSubChannel", 'String'>
+    readonly isTokenGated: FieldRef<"DemoSubChannel", 'Boolean'>
+    readonly tokenAddress: FieldRef<"DemoSubChannel", 'String'>
+    readonly isDefault: FieldRef<"DemoSubChannel", 'Boolean'>
+    readonly createdAt: FieldRef<"DemoSubChannel", 'DateTime'>
+    readonly updatedAt: FieldRef<"DemoSubChannel", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DemoSubChannel findUnique
+   */
+  export type DemoSubChannelFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoSubChannel
+     */
+    select?: DemoSubChannelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoSubChannel
+     */
+    omit?: DemoSubChannelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoSubChannelInclude<ExtArgs> | null
+    /**
+     * Filter, which DemoSubChannel to fetch.
+     */
+    where: DemoSubChannelWhereUniqueInput
+  }
+
+  /**
+   * DemoSubChannel findUniqueOrThrow
+   */
+  export type DemoSubChannelFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoSubChannel
+     */
+    select?: DemoSubChannelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoSubChannel
+     */
+    omit?: DemoSubChannelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoSubChannelInclude<ExtArgs> | null
+    /**
+     * Filter, which DemoSubChannel to fetch.
+     */
+    where: DemoSubChannelWhereUniqueInput
+  }
+
+  /**
+   * DemoSubChannel findFirst
+   */
+  export type DemoSubChannelFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoSubChannel
+     */
+    select?: DemoSubChannelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoSubChannel
+     */
+    omit?: DemoSubChannelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoSubChannelInclude<ExtArgs> | null
+    /**
+     * Filter, which DemoSubChannel to fetch.
+     */
+    where?: DemoSubChannelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DemoSubChannels to fetch.
+     */
+    orderBy?: DemoSubChannelOrderByWithRelationInput | DemoSubChannelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DemoSubChannels.
+     */
+    cursor?: DemoSubChannelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DemoSubChannels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DemoSubChannels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DemoSubChannels.
+     */
+    distinct?: DemoSubChannelScalarFieldEnum | DemoSubChannelScalarFieldEnum[]
+  }
+
+  /**
+   * DemoSubChannel findFirstOrThrow
+   */
+  export type DemoSubChannelFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoSubChannel
+     */
+    select?: DemoSubChannelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoSubChannel
+     */
+    omit?: DemoSubChannelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoSubChannelInclude<ExtArgs> | null
+    /**
+     * Filter, which DemoSubChannel to fetch.
+     */
+    where?: DemoSubChannelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DemoSubChannels to fetch.
+     */
+    orderBy?: DemoSubChannelOrderByWithRelationInput | DemoSubChannelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DemoSubChannels.
+     */
+    cursor?: DemoSubChannelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DemoSubChannels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DemoSubChannels.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DemoSubChannels.
+     */
+    distinct?: DemoSubChannelScalarFieldEnum | DemoSubChannelScalarFieldEnum[]
+  }
+
+  /**
+   * DemoSubChannel findMany
+   */
+  export type DemoSubChannelFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoSubChannel
+     */
+    select?: DemoSubChannelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoSubChannel
+     */
+    omit?: DemoSubChannelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoSubChannelInclude<ExtArgs> | null
+    /**
+     * Filter, which DemoSubChannels to fetch.
+     */
+    where?: DemoSubChannelWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DemoSubChannels to fetch.
+     */
+    orderBy?: DemoSubChannelOrderByWithRelationInput | DemoSubChannelOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DemoSubChannels.
+     */
+    cursor?: DemoSubChannelWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DemoSubChannels from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DemoSubChannels.
+     */
+    skip?: number
+    distinct?: DemoSubChannelScalarFieldEnum | DemoSubChannelScalarFieldEnum[]
+  }
+
+  /**
+   * DemoSubChannel create
+   */
+  export type DemoSubChannelCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoSubChannel
+     */
+    select?: DemoSubChannelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoSubChannel
+     */
+    omit?: DemoSubChannelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoSubChannelInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DemoSubChannel.
+     */
+    data: XOR<DemoSubChannelCreateInput, DemoSubChannelUncheckedCreateInput>
+  }
+
+  /**
+   * DemoSubChannel createMany
+   */
+  export type DemoSubChannelCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DemoSubChannels.
+     */
+    data: DemoSubChannelCreateManyInput | DemoSubChannelCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DemoSubChannel createManyAndReturn
+   */
+  export type DemoSubChannelCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoSubChannel
+     */
+    select?: DemoSubChannelSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoSubChannel
+     */
+    omit?: DemoSubChannelOmit<ExtArgs> | null
+    /**
+     * The data used to create many DemoSubChannels.
+     */
+    data: DemoSubChannelCreateManyInput | DemoSubChannelCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoSubChannelIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DemoSubChannel update
+   */
+  export type DemoSubChannelUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoSubChannel
+     */
+    select?: DemoSubChannelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoSubChannel
+     */
+    omit?: DemoSubChannelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoSubChannelInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DemoSubChannel.
+     */
+    data: XOR<DemoSubChannelUpdateInput, DemoSubChannelUncheckedUpdateInput>
+    /**
+     * Choose, which DemoSubChannel to update.
+     */
+    where: DemoSubChannelWhereUniqueInput
+  }
+
+  /**
+   * DemoSubChannel updateMany
+   */
+  export type DemoSubChannelUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DemoSubChannels.
+     */
+    data: XOR<DemoSubChannelUpdateManyMutationInput, DemoSubChannelUncheckedUpdateManyInput>
+    /**
+     * Filter which DemoSubChannels to update
+     */
+    where?: DemoSubChannelWhereInput
+    /**
+     * Limit how many DemoSubChannels to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DemoSubChannel updateManyAndReturn
+   */
+  export type DemoSubChannelUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoSubChannel
+     */
+    select?: DemoSubChannelSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoSubChannel
+     */
+    omit?: DemoSubChannelOmit<ExtArgs> | null
+    /**
+     * The data used to update DemoSubChannels.
+     */
+    data: XOR<DemoSubChannelUpdateManyMutationInput, DemoSubChannelUncheckedUpdateManyInput>
+    /**
+     * Filter which DemoSubChannels to update
+     */
+    where?: DemoSubChannelWhereInput
+    /**
+     * Limit how many DemoSubChannels to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoSubChannelIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DemoSubChannel upsert
+   */
+  export type DemoSubChannelUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoSubChannel
+     */
+    select?: DemoSubChannelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoSubChannel
+     */
+    omit?: DemoSubChannelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoSubChannelInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DemoSubChannel to update in case it exists.
+     */
+    where: DemoSubChannelWhereUniqueInput
+    /**
+     * In case the DemoSubChannel found by the `where` argument doesn't exist, create a new DemoSubChannel with this data.
+     */
+    create: XOR<DemoSubChannelCreateInput, DemoSubChannelUncheckedCreateInput>
+    /**
+     * In case the DemoSubChannel was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DemoSubChannelUpdateInput, DemoSubChannelUncheckedUpdateInput>
+  }
+
+  /**
+   * DemoSubChannel delete
+   */
+  export type DemoSubChannelDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoSubChannel
+     */
+    select?: DemoSubChannelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoSubChannel
+     */
+    omit?: DemoSubChannelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoSubChannelInclude<ExtArgs> | null
+    /**
+     * Filter which DemoSubChannel to delete.
+     */
+    where: DemoSubChannelWhereUniqueInput
+  }
+
+  /**
+   * DemoSubChannel deleteMany
+   */
+  export type DemoSubChannelDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DemoSubChannels to delete
+     */
+    where?: DemoSubChannelWhereInput
+    /**
+     * Limit how many DemoSubChannels to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DemoSubChannel.messages
+   */
+  export type DemoSubChannel$messagesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoMessage
+     */
+    select?: DemoMessageSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoMessage
+     */
+    omit?: DemoMessageOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoMessageInclude<ExtArgs> | null
+    where?: DemoMessageWhereInput
+    orderBy?: DemoMessageOrderByWithRelationInput | DemoMessageOrderByWithRelationInput[]
+    cursor?: DemoMessageWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DemoMessageScalarFieldEnum | DemoMessageScalarFieldEnum[]
+  }
+
+  /**
+   * DemoSubChannel without action
+   */
+  export type DemoSubChannelDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoSubChannel
+     */
+    select?: DemoSubChannelSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoSubChannel
+     */
+    omit?: DemoSubChannelOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoSubChannelInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model DemoMembership
    */
 
@@ -3488,6 +4995,7 @@ export namespace Prisma {
     channelId: string | null
     role: string | null
     createdAt: Date | null
+    lastReadAt: Date | null
   }
 
   export type DemoMembershipMaxAggregateOutputType = {
@@ -3496,6 +5004,7 @@ export namespace Prisma {
     channelId: string | null
     role: string | null
     createdAt: Date | null
+    lastReadAt: Date | null
   }
 
   export type DemoMembershipCountAggregateOutputType = {
@@ -3504,6 +5013,7 @@ export namespace Prisma {
     channelId: number
     role: number
     createdAt: number
+    lastReadAt: number
     _all: number
   }
 
@@ -3514,6 +5024,7 @@ export namespace Prisma {
     channelId?: true
     role?: true
     createdAt?: true
+    lastReadAt?: true
   }
 
   export type DemoMembershipMaxAggregateInputType = {
@@ -3522,6 +5033,7 @@ export namespace Prisma {
     channelId?: true
     role?: true
     createdAt?: true
+    lastReadAt?: true
   }
 
   export type DemoMembershipCountAggregateInputType = {
@@ -3530,6 +5042,7 @@ export namespace Prisma {
     channelId?: true
     role?: true
     createdAt?: true
+    lastReadAt?: true
     _all?: true
   }
 
@@ -3611,6 +5124,7 @@ export namespace Prisma {
     channelId: string
     role: string
     createdAt: Date
+    lastReadAt: Date
     _count: DemoMembershipCountAggregateOutputType | null
     _min: DemoMembershipMinAggregateOutputType | null
     _max: DemoMembershipMaxAggregateOutputType | null
@@ -3636,6 +5150,7 @@ export namespace Prisma {
     channelId?: boolean
     role?: boolean
     createdAt?: boolean
+    lastReadAt?: boolean
     user?: boolean | DemoUserDefaultArgs<ExtArgs>
     channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["demoMembership"]>
@@ -3646,6 +5161,7 @@ export namespace Prisma {
     channelId?: boolean
     role?: boolean
     createdAt?: boolean
+    lastReadAt?: boolean
     user?: boolean | DemoUserDefaultArgs<ExtArgs>
     channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["demoMembership"]>
@@ -3656,6 +5172,7 @@ export namespace Prisma {
     channelId?: boolean
     role?: boolean
     createdAt?: boolean
+    lastReadAt?: boolean
     user?: boolean | DemoUserDefaultArgs<ExtArgs>
     channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["demoMembership"]>
@@ -3666,9 +5183,10 @@ export namespace Prisma {
     channelId?: boolean
     role?: boolean
     createdAt?: boolean
+    lastReadAt?: boolean
   }
 
-  export type DemoMembershipOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "channelId" | "role" | "createdAt", ExtArgs["result"]["demoMembership"]>
+  export type DemoMembershipOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "channelId" | "role" | "createdAt" | "lastReadAt", ExtArgs["result"]["demoMembership"]>
   export type DemoMembershipInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | DemoUserDefaultArgs<ExtArgs>
     channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
@@ -3694,6 +5212,7 @@ export namespace Prisma {
       channelId: string
       role: string
       createdAt: Date
+      lastReadAt: Date
     }, ExtArgs["result"]["demoMembership"]>
     composites: {}
   }
@@ -4124,6 +5643,7 @@ export namespace Prisma {
     readonly channelId: FieldRef<"DemoMembership", 'String'>
     readonly role: FieldRef<"DemoMembership", 'String'>
     readonly createdAt: FieldRef<"DemoMembership", 'DateTime'>
+    readonly lastReadAt: FieldRef<"DemoMembership", 'DateTime'>
   }
     
 
@@ -4552,7 +6072,7 @@ export namespace Prisma {
     id: string | null
     content: string | null
     userId: string | null
-    channelId: string | null
+    subchannelId: string | null
     createdAt: Date | null
   }
 
@@ -4560,7 +6080,7 @@ export namespace Prisma {
     id: string | null
     content: string | null
     userId: string | null
-    channelId: string | null
+    subchannelId: string | null
     createdAt: Date | null
   }
 
@@ -4568,8 +6088,9 @@ export namespace Prisma {
     id: number
     content: number
     userId: number
-    channelId: number
+    subchannelId: number
     createdAt: number
+    readByUsers: number
     _all: number
   }
 
@@ -4578,7 +6099,7 @@ export namespace Prisma {
     id?: true
     content?: true
     userId?: true
-    channelId?: true
+    subchannelId?: true
     createdAt?: true
   }
 
@@ -4586,7 +6107,7 @@ export namespace Prisma {
     id?: true
     content?: true
     userId?: true
-    channelId?: true
+    subchannelId?: true
     createdAt?: true
   }
 
@@ -4594,8 +6115,9 @@ export namespace Prisma {
     id?: true
     content?: true
     userId?: true
-    channelId?: true
+    subchannelId?: true
     createdAt?: true
+    readByUsers?: true
     _all?: true
   }
 
@@ -4675,8 +6197,9 @@ export namespace Prisma {
     id: string
     content: string
     userId: string
-    channelId: string
+    subchannelId: string
     createdAt: Date
+    readByUsers: string[]
     _count: DemoMessageCountAggregateOutputType | null
     _min: DemoMessageMinAggregateOutputType | null
     _max: DemoMessageMaxAggregateOutputType | null
@@ -4700,66 +6223,71 @@ export namespace Prisma {
     id?: boolean
     content?: boolean
     userId?: boolean
-    channelId?: boolean
+    subchannelId?: boolean
     createdAt?: boolean
+    readByUsers?: boolean
     user?: boolean | DemoUserDefaultArgs<ExtArgs>
-    channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
+    subchannel?: boolean | DemoSubChannelDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["demoMessage"]>
 
   export type DemoMessageSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     content?: boolean
     userId?: boolean
-    channelId?: boolean
+    subchannelId?: boolean
     createdAt?: boolean
+    readByUsers?: boolean
     user?: boolean | DemoUserDefaultArgs<ExtArgs>
-    channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
+    subchannel?: boolean | DemoSubChannelDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["demoMessage"]>
 
   export type DemoMessageSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     content?: boolean
     userId?: boolean
-    channelId?: boolean
+    subchannelId?: boolean
     createdAt?: boolean
+    readByUsers?: boolean
     user?: boolean | DemoUserDefaultArgs<ExtArgs>
-    channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
+    subchannel?: boolean | DemoSubChannelDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["demoMessage"]>
 
   export type DemoMessageSelectScalar = {
     id?: boolean
     content?: boolean
     userId?: boolean
-    channelId?: boolean
+    subchannelId?: boolean
     createdAt?: boolean
+    readByUsers?: boolean
   }
 
-  export type DemoMessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "content" | "userId" | "channelId" | "createdAt", ExtArgs["result"]["demoMessage"]>
+  export type DemoMessageOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "content" | "userId" | "subchannelId" | "createdAt" | "readByUsers", ExtArgs["result"]["demoMessage"]>
   export type DemoMessageInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | DemoUserDefaultArgs<ExtArgs>
-    channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
+    subchannel?: boolean | DemoSubChannelDefaultArgs<ExtArgs>
   }
   export type DemoMessageIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | DemoUserDefaultArgs<ExtArgs>
-    channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
+    subchannel?: boolean | DemoSubChannelDefaultArgs<ExtArgs>
   }
   export type DemoMessageIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | DemoUserDefaultArgs<ExtArgs>
-    channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
+    subchannel?: boolean | DemoSubChannelDefaultArgs<ExtArgs>
   }
 
   export type $DemoMessagePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "DemoMessage"
     objects: {
       user: Prisma.$DemoUserPayload<ExtArgs>
-      channel: Prisma.$DemoChannelPayload<ExtArgs>
+      subchannel: Prisma.$DemoSubChannelPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       content: string
       userId: string
-      channelId: string
+      subchannelId: string
       createdAt: Date
+      readByUsers: string[]
     }, ExtArgs["result"]["demoMessage"]>
     composites: {}
   }
@@ -5155,7 +6683,7 @@ export namespace Prisma {
   export interface Prisma__DemoMessageClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends DemoUserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DemoUserDefaultArgs<ExtArgs>>): Prisma__DemoUserClient<$Result.GetResult<Prisma.$DemoUserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    channel<T extends DemoChannelDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DemoChannelDefaultArgs<ExtArgs>>): Prisma__DemoChannelClient<$Result.GetResult<Prisma.$DemoChannelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    subchannel<T extends DemoSubChannelDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DemoSubChannelDefaultArgs<ExtArgs>>): Prisma__DemoSubChannelClient<$Result.GetResult<Prisma.$DemoSubChannelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5188,8 +6716,9 @@ export namespace Prisma {
     readonly id: FieldRef<"DemoMessage", 'String'>
     readonly content: FieldRef<"DemoMessage", 'String'>
     readonly userId: FieldRef<"DemoMessage", 'String'>
-    readonly channelId: FieldRef<"DemoMessage", 'String'>
+    readonly subchannelId: FieldRef<"DemoMessage", 'String'>
     readonly createdAt: FieldRef<"DemoMessage", 'DateTime'>
+    readonly readByUsers: FieldRef<"DemoMessage", 'String[]'>
   }
     
 
@@ -5605,6 +7134,1141 @@ export namespace Prisma {
 
 
   /**
+   * Model DemoInvite
+   */
+
+  export type AggregateDemoInvite = {
+    _count: DemoInviteCountAggregateOutputType | null
+    _avg: DemoInviteAvgAggregateOutputType | null
+    _sum: DemoInviteSumAggregateOutputType | null
+    _min: DemoInviteMinAggregateOutputType | null
+    _max: DemoInviteMaxAggregateOutputType | null
+  }
+
+  export type DemoInviteAvgAggregateOutputType = {
+    maxUses: number | null
+    useCount: number | null
+  }
+
+  export type DemoInviteSumAggregateOutputType = {
+    maxUses: number | null
+    useCount: number | null
+  }
+
+  export type DemoInviteMinAggregateOutputType = {
+    id: string | null
+    inviteCode: string | null
+    channelId: string | null
+    createdBy: string | null
+    expiresAt: Date | null
+    maxUses: number | null
+    useCount: number | null
+    createdAt: Date | null
+  }
+
+  export type DemoInviteMaxAggregateOutputType = {
+    id: string | null
+    inviteCode: string | null
+    channelId: string | null
+    createdBy: string | null
+    expiresAt: Date | null
+    maxUses: number | null
+    useCount: number | null
+    createdAt: Date | null
+  }
+
+  export type DemoInviteCountAggregateOutputType = {
+    id: number
+    inviteCode: number
+    channelId: number
+    createdBy: number
+    expiresAt: number
+    maxUses: number
+    useCount: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type DemoInviteAvgAggregateInputType = {
+    maxUses?: true
+    useCount?: true
+  }
+
+  export type DemoInviteSumAggregateInputType = {
+    maxUses?: true
+    useCount?: true
+  }
+
+  export type DemoInviteMinAggregateInputType = {
+    id?: true
+    inviteCode?: true
+    channelId?: true
+    createdBy?: true
+    expiresAt?: true
+    maxUses?: true
+    useCount?: true
+    createdAt?: true
+  }
+
+  export type DemoInviteMaxAggregateInputType = {
+    id?: true
+    inviteCode?: true
+    channelId?: true
+    createdBy?: true
+    expiresAt?: true
+    maxUses?: true
+    useCount?: true
+    createdAt?: true
+  }
+
+  export type DemoInviteCountAggregateInputType = {
+    id?: true
+    inviteCode?: true
+    channelId?: true
+    createdBy?: true
+    expiresAt?: true
+    maxUses?: true
+    useCount?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type DemoInviteAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DemoInvite to aggregate.
+     */
+    where?: DemoInviteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DemoInvites to fetch.
+     */
+    orderBy?: DemoInviteOrderByWithRelationInput | DemoInviteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DemoInviteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DemoInvites from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DemoInvites.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned DemoInvites
+    **/
+    _count?: true | DemoInviteCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DemoInviteAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DemoInviteSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DemoInviteMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DemoInviteMaxAggregateInputType
+  }
+
+  export type GetDemoInviteAggregateType<T extends DemoInviteAggregateArgs> = {
+        [P in keyof T & keyof AggregateDemoInvite]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDemoInvite[P]>
+      : GetScalarType<T[P], AggregateDemoInvite[P]>
+  }
+
+
+
+
+  export type DemoInviteGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DemoInviteWhereInput
+    orderBy?: DemoInviteOrderByWithAggregationInput | DemoInviteOrderByWithAggregationInput[]
+    by: DemoInviteScalarFieldEnum[] | DemoInviteScalarFieldEnum
+    having?: DemoInviteScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DemoInviteCountAggregateInputType | true
+    _avg?: DemoInviteAvgAggregateInputType
+    _sum?: DemoInviteSumAggregateInputType
+    _min?: DemoInviteMinAggregateInputType
+    _max?: DemoInviteMaxAggregateInputType
+  }
+
+  export type DemoInviteGroupByOutputType = {
+    id: string
+    inviteCode: string
+    channelId: string
+    createdBy: string
+    expiresAt: Date | null
+    maxUses: number | null
+    useCount: number
+    createdAt: Date
+    _count: DemoInviteCountAggregateOutputType | null
+    _avg: DemoInviteAvgAggregateOutputType | null
+    _sum: DemoInviteSumAggregateOutputType | null
+    _min: DemoInviteMinAggregateOutputType | null
+    _max: DemoInviteMaxAggregateOutputType | null
+  }
+
+  type GetDemoInviteGroupByPayload<T extends DemoInviteGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DemoInviteGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DemoInviteGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DemoInviteGroupByOutputType[P]>
+            : GetScalarType<T[P], DemoInviteGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DemoInviteSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    inviteCode?: boolean
+    channelId?: boolean
+    createdBy?: boolean
+    expiresAt?: boolean
+    maxUses?: boolean
+    useCount?: boolean
+    createdAt?: boolean
+    channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["demoInvite"]>
+
+  export type DemoInviteSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    inviteCode?: boolean
+    channelId?: boolean
+    createdBy?: boolean
+    expiresAt?: boolean
+    maxUses?: boolean
+    useCount?: boolean
+    createdAt?: boolean
+    channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["demoInvite"]>
+
+  export type DemoInviteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    inviteCode?: boolean
+    channelId?: boolean
+    createdBy?: boolean
+    expiresAt?: boolean
+    maxUses?: boolean
+    useCount?: boolean
+    createdAt?: boolean
+    channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["demoInvite"]>
+
+  export type DemoInviteSelectScalar = {
+    id?: boolean
+    inviteCode?: boolean
+    channelId?: boolean
+    createdBy?: boolean
+    expiresAt?: boolean
+    maxUses?: boolean
+    useCount?: boolean
+    createdAt?: boolean
+  }
+
+  export type DemoInviteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "inviteCode" | "channelId" | "createdBy" | "expiresAt" | "maxUses" | "useCount" | "createdAt", ExtArgs["result"]["demoInvite"]>
+  export type DemoInviteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
+  }
+  export type DemoInviteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
+  }
+  export type DemoInviteIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    channel?: boolean | DemoChannelDefaultArgs<ExtArgs>
+  }
+
+  export type $DemoInvitePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "DemoInvite"
+    objects: {
+      channel: Prisma.$DemoChannelPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      inviteCode: string
+      channelId: string
+      createdBy: string
+      expiresAt: Date | null
+      maxUses: number | null
+      useCount: number
+      createdAt: Date
+    }, ExtArgs["result"]["demoInvite"]>
+    composites: {}
+  }
+
+  type DemoInviteGetPayload<S extends boolean | null | undefined | DemoInviteDefaultArgs> = $Result.GetResult<Prisma.$DemoInvitePayload, S>
+
+  type DemoInviteCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DemoInviteFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DemoInviteCountAggregateInputType | true
+    }
+
+  export interface DemoInviteDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['DemoInvite'], meta: { name: 'DemoInvite' } }
+    /**
+     * Find zero or one DemoInvite that matches the filter.
+     * @param {DemoInviteFindUniqueArgs} args - Arguments to find a DemoInvite
+     * @example
+     * // Get one DemoInvite
+     * const demoInvite = await prisma.demoInvite.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DemoInviteFindUniqueArgs>(args: SelectSubset<T, DemoInviteFindUniqueArgs<ExtArgs>>): Prisma__DemoInviteClient<$Result.GetResult<Prisma.$DemoInvitePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one DemoInvite that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DemoInviteFindUniqueOrThrowArgs} args - Arguments to find a DemoInvite
+     * @example
+     * // Get one DemoInvite
+     * const demoInvite = await prisma.demoInvite.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DemoInviteFindUniqueOrThrowArgs>(args: SelectSubset<T, DemoInviteFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DemoInviteClient<$Result.GetResult<Prisma.$DemoInvitePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DemoInvite that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemoInviteFindFirstArgs} args - Arguments to find a DemoInvite
+     * @example
+     * // Get one DemoInvite
+     * const demoInvite = await prisma.demoInvite.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DemoInviteFindFirstArgs>(args?: SelectSubset<T, DemoInviteFindFirstArgs<ExtArgs>>): Prisma__DemoInviteClient<$Result.GetResult<Prisma.$DemoInvitePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first DemoInvite that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemoInviteFindFirstOrThrowArgs} args - Arguments to find a DemoInvite
+     * @example
+     * // Get one DemoInvite
+     * const demoInvite = await prisma.demoInvite.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DemoInviteFindFirstOrThrowArgs>(args?: SelectSubset<T, DemoInviteFindFirstOrThrowArgs<ExtArgs>>): Prisma__DemoInviteClient<$Result.GetResult<Prisma.$DemoInvitePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more DemoInvites that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemoInviteFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all DemoInvites
+     * const demoInvites = await prisma.demoInvite.findMany()
+     * 
+     * // Get first 10 DemoInvites
+     * const demoInvites = await prisma.demoInvite.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const demoInviteWithIdOnly = await prisma.demoInvite.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DemoInviteFindManyArgs>(args?: SelectSubset<T, DemoInviteFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemoInvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a DemoInvite.
+     * @param {DemoInviteCreateArgs} args - Arguments to create a DemoInvite.
+     * @example
+     * // Create one DemoInvite
+     * const DemoInvite = await prisma.demoInvite.create({
+     *   data: {
+     *     // ... data to create a DemoInvite
+     *   }
+     * })
+     * 
+     */
+    create<T extends DemoInviteCreateArgs>(args: SelectSubset<T, DemoInviteCreateArgs<ExtArgs>>): Prisma__DemoInviteClient<$Result.GetResult<Prisma.$DemoInvitePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many DemoInvites.
+     * @param {DemoInviteCreateManyArgs} args - Arguments to create many DemoInvites.
+     * @example
+     * // Create many DemoInvites
+     * const demoInvite = await prisma.demoInvite.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DemoInviteCreateManyArgs>(args?: SelectSubset<T, DemoInviteCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many DemoInvites and returns the data saved in the database.
+     * @param {DemoInviteCreateManyAndReturnArgs} args - Arguments to create many DemoInvites.
+     * @example
+     * // Create many DemoInvites
+     * const demoInvite = await prisma.demoInvite.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many DemoInvites and only return the `id`
+     * const demoInviteWithIdOnly = await prisma.demoInvite.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DemoInviteCreateManyAndReturnArgs>(args?: SelectSubset<T, DemoInviteCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemoInvitePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a DemoInvite.
+     * @param {DemoInviteDeleteArgs} args - Arguments to delete one DemoInvite.
+     * @example
+     * // Delete one DemoInvite
+     * const DemoInvite = await prisma.demoInvite.delete({
+     *   where: {
+     *     // ... filter to delete one DemoInvite
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DemoInviteDeleteArgs>(args: SelectSubset<T, DemoInviteDeleteArgs<ExtArgs>>): Prisma__DemoInviteClient<$Result.GetResult<Prisma.$DemoInvitePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one DemoInvite.
+     * @param {DemoInviteUpdateArgs} args - Arguments to update one DemoInvite.
+     * @example
+     * // Update one DemoInvite
+     * const demoInvite = await prisma.demoInvite.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DemoInviteUpdateArgs>(args: SelectSubset<T, DemoInviteUpdateArgs<ExtArgs>>): Prisma__DemoInviteClient<$Result.GetResult<Prisma.$DemoInvitePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more DemoInvites.
+     * @param {DemoInviteDeleteManyArgs} args - Arguments to filter DemoInvites to delete.
+     * @example
+     * // Delete a few DemoInvites
+     * const { count } = await prisma.demoInvite.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DemoInviteDeleteManyArgs>(args?: SelectSubset<T, DemoInviteDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DemoInvites.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemoInviteUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many DemoInvites
+     * const demoInvite = await prisma.demoInvite.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DemoInviteUpdateManyArgs>(args: SelectSubset<T, DemoInviteUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more DemoInvites and returns the data updated in the database.
+     * @param {DemoInviteUpdateManyAndReturnArgs} args - Arguments to update many DemoInvites.
+     * @example
+     * // Update many DemoInvites
+     * const demoInvite = await prisma.demoInvite.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more DemoInvites and only return the `id`
+     * const demoInviteWithIdOnly = await prisma.demoInvite.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DemoInviteUpdateManyAndReturnArgs>(args: SelectSubset<T, DemoInviteUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DemoInvitePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one DemoInvite.
+     * @param {DemoInviteUpsertArgs} args - Arguments to update or create a DemoInvite.
+     * @example
+     * // Update or create a DemoInvite
+     * const demoInvite = await prisma.demoInvite.upsert({
+     *   create: {
+     *     // ... data to create a DemoInvite
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the DemoInvite we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DemoInviteUpsertArgs>(args: SelectSubset<T, DemoInviteUpsertArgs<ExtArgs>>): Prisma__DemoInviteClient<$Result.GetResult<Prisma.$DemoInvitePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of DemoInvites.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemoInviteCountArgs} args - Arguments to filter DemoInvites to count.
+     * @example
+     * // Count the number of DemoInvites
+     * const count = await prisma.demoInvite.count({
+     *   where: {
+     *     // ... the filter for the DemoInvites we want to count
+     *   }
+     * })
+    **/
+    count<T extends DemoInviteCountArgs>(
+      args?: Subset<T, DemoInviteCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DemoInviteCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a DemoInvite.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemoInviteAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DemoInviteAggregateArgs>(args: Subset<T, DemoInviteAggregateArgs>): Prisma.PrismaPromise<GetDemoInviteAggregateType<T>>
+
+    /**
+     * Group by DemoInvite.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DemoInviteGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DemoInviteGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DemoInviteGroupByArgs['orderBy'] }
+        : { orderBy?: DemoInviteGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DemoInviteGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDemoInviteGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the DemoInvite model
+   */
+  readonly fields: DemoInviteFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for DemoInvite.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DemoInviteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    channel<T extends DemoChannelDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DemoChannelDefaultArgs<ExtArgs>>): Prisma__DemoChannelClient<$Result.GetResult<Prisma.$DemoChannelPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the DemoInvite model
+   */
+  interface DemoInviteFieldRefs {
+    readonly id: FieldRef<"DemoInvite", 'String'>
+    readonly inviteCode: FieldRef<"DemoInvite", 'String'>
+    readonly channelId: FieldRef<"DemoInvite", 'String'>
+    readonly createdBy: FieldRef<"DemoInvite", 'String'>
+    readonly expiresAt: FieldRef<"DemoInvite", 'DateTime'>
+    readonly maxUses: FieldRef<"DemoInvite", 'Int'>
+    readonly useCount: FieldRef<"DemoInvite", 'Int'>
+    readonly createdAt: FieldRef<"DemoInvite", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * DemoInvite findUnique
+   */
+  export type DemoInviteFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoInvite
+     */
+    select?: DemoInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoInvite
+     */
+    omit?: DemoInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoInviteInclude<ExtArgs> | null
+    /**
+     * Filter, which DemoInvite to fetch.
+     */
+    where: DemoInviteWhereUniqueInput
+  }
+
+  /**
+   * DemoInvite findUniqueOrThrow
+   */
+  export type DemoInviteFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoInvite
+     */
+    select?: DemoInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoInvite
+     */
+    omit?: DemoInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoInviteInclude<ExtArgs> | null
+    /**
+     * Filter, which DemoInvite to fetch.
+     */
+    where: DemoInviteWhereUniqueInput
+  }
+
+  /**
+   * DemoInvite findFirst
+   */
+  export type DemoInviteFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoInvite
+     */
+    select?: DemoInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoInvite
+     */
+    omit?: DemoInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoInviteInclude<ExtArgs> | null
+    /**
+     * Filter, which DemoInvite to fetch.
+     */
+    where?: DemoInviteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DemoInvites to fetch.
+     */
+    orderBy?: DemoInviteOrderByWithRelationInput | DemoInviteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DemoInvites.
+     */
+    cursor?: DemoInviteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DemoInvites from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DemoInvites.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DemoInvites.
+     */
+    distinct?: DemoInviteScalarFieldEnum | DemoInviteScalarFieldEnum[]
+  }
+
+  /**
+   * DemoInvite findFirstOrThrow
+   */
+  export type DemoInviteFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoInvite
+     */
+    select?: DemoInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoInvite
+     */
+    omit?: DemoInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoInviteInclude<ExtArgs> | null
+    /**
+     * Filter, which DemoInvite to fetch.
+     */
+    where?: DemoInviteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DemoInvites to fetch.
+     */
+    orderBy?: DemoInviteOrderByWithRelationInput | DemoInviteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for DemoInvites.
+     */
+    cursor?: DemoInviteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DemoInvites from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DemoInvites.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of DemoInvites.
+     */
+    distinct?: DemoInviteScalarFieldEnum | DemoInviteScalarFieldEnum[]
+  }
+
+  /**
+   * DemoInvite findMany
+   */
+  export type DemoInviteFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoInvite
+     */
+    select?: DemoInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoInvite
+     */
+    omit?: DemoInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoInviteInclude<ExtArgs> | null
+    /**
+     * Filter, which DemoInvites to fetch.
+     */
+    where?: DemoInviteWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of DemoInvites to fetch.
+     */
+    orderBy?: DemoInviteOrderByWithRelationInput | DemoInviteOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing DemoInvites.
+     */
+    cursor?: DemoInviteWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` DemoInvites from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` DemoInvites.
+     */
+    skip?: number
+    distinct?: DemoInviteScalarFieldEnum | DemoInviteScalarFieldEnum[]
+  }
+
+  /**
+   * DemoInvite create
+   */
+  export type DemoInviteCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoInvite
+     */
+    select?: DemoInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoInvite
+     */
+    omit?: DemoInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoInviteInclude<ExtArgs> | null
+    /**
+     * The data needed to create a DemoInvite.
+     */
+    data: XOR<DemoInviteCreateInput, DemoInviteUncheckedCreateInput>
+  }
+
+  /**
+   * DemoInvite createMany
+   */
+  export type DemoInviteCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many DemoInvites.
+     */
+    data: DemoInviteCreateManyInput | DemoInviteCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * DemoInvite createManyAndReturn
+   */
+  export type DemoInviteCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoInvite
+     */
+    select?: DemoInviteSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoInvite
+     */
+    omit?: DemoInviteOmit<ExtArgs> | null
+    /**
+     * The data used to create many DemoInvites.
+     */
+    data: DemoInviteCreateManyInput | DemoInviteCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoInviteIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DemoInvite update
+   */
+  export type DemoInviteUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoInvite
+     */
+    select?: DemoInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoInvite
+     */
+    omit?: DemoInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoInviteInclude<ExtArgs> | null
+    /**
+     * The data needed to update a DemoInvite.
+     */
+    data: XOR<DemoInviteUpdateInput, DemoInviteUncheckedUpdateInput>
+    /**
+     * Choose, which DemoInvite to update.
+     */
+    where: DemoInviteWhereUniqueInput
+  }
+
+  /**
+   * DemoInvite updateMany
+   */
+  export type DemoInviteUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update DemoInvites.
+     */
+    data: XOR<DemoInviteUpdateManyMutationInput, DemoInviteUncheckedUpdateManyInput>
+    /**
+     * Filter which DemoInvites to update
+     */
+    where?: DemoInviteWhereInput
+    /**
+     * Limit how many DemoInvites to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * DemoInvite updateManyAndReturn
+   */
+  export type DemoInviteUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoInvite
+     */
+    select?: DemoInviteSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoInvite
+     */
+    omit?: DemoInviteOmit<ExtArgs> | null
+    /**
+     * The data used to update DemoInvites.
+     */
+    data: XOR<DemoInviteUpdateManyMutationInput, DemoInviteUncheckedUpdateManyInput>
+    /**
+     * Filter which DemoInvites to update
+     */
+    where?: DemoInviteWhereInput
+    /**
+     * Limit how many DemoInvites to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoInviteIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * DemoInvite upsert
+   */
+  export type DemoInviteUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoInvite
+     */
+    select?: DemoInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoInvite
+     */
+    omit?: DemoInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoInviteInclude<ExtArgs> | null
+    /**
+     * The filter to search for the DemoInvite to update in case it exists.
+     */
+    where: DemoInviteWhereUniqueInput
+    /**
+     * In case the DemoInvite found by the `where` argument doesn't exist, create a new DemoInvite with this data.
+     */
+    create: XOR<DemoInviteCreateInput, DemoInviteUncheckedCreateInput>
+    /**
+     * In case the DemoInvite was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DemoInviteUpdateInput, DemoInviteUncheckedUpdateInput>
+  }
+
+  /**
+   * DemoInvite delete
+   */
+  export type DemoInviteDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoInvite
+     */
+    select?: DemoInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoInvite
+     */
+    omit?: DemoInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoInviteInclude<ExtArgs> | null
+    /**
+     * Filter which DemoInvite to delete.
+     */
+    where: DemoInviteWhereUniqueInput
+  }
+
+  /**
+   * DemoInvite deleteMany
+   */
+  export type DemoInviteDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which DemoInvites to delete
+     */
+    where?: DemoInviteWhereInput
+    /**
+     * Limit how many DemoInvites to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * DemoInvite without action
+   */
+  export type DemoInviteDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the DemoInvite
+     */
+    select?: DemoInviteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the DemoInvite
+     */
+    omit?: DemoInviteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DemoInviteInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -5622,7 +8286,13 @@ export namespace Prisma {
     id: 'id',
     walletAddress: 'walletAddress',
     name: 'name',
-    createdAt: 'createdAt'
+    username: 'username',
+    profileImage: 'profileImage',
+    description: 'description',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    online: 'online',
+    lastSeen: 'lastSeen'
   };
 
   export type DemoUserScalarFieldEnum = (typeof DemoUserScalarFieldEnum)[keyof typeof DemoUserScalarFieldEnum]
@@ -5631,13 +8301,31 @@ export namespace Prisma {
   export const DemoChannelScalarFieldEnum: {
     id: 'id',
     name: 'name',
+    icon: 'icon',
+    type: 'type',
     creatorId: 'creatorId',
-    isTokenGated: 'isTokenGated',
-    tokenAddress: 'tokenAddress',
-    createdAt: 'createdAt'
+    defaultSubchannelId: 'defaultSubchannelId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type DemoChannelScalarFieldEnum = (typeof DemoChannelScalarFieldEnum)[keyof typeof DemoChannelScalarFieldEnum]
+
+
+  export const DemoSubChannelScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    icon: 'icon',
+    type: 'type',
+    channelId: 'channelId',
+    isTokenGated: 'isTokenGated',
+    tokenAddress: 'tokenAddress',
+    isDefault: 'isDefault',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type DemoSubChannelScalarFieldEnum = (typeof DemoSubChannelScalarFieldEnum)[keyof typeof DemoSubChannelScalarFieldEnum]
 
 
   export const DemoMembershipScalarFieldEnum: {
@@ -5645,7 +8333,8 @@ export namespace Prisma {
     userId: 'userId',
     channelId: 'channelId',
     role: 'role',
-    createdAt: 'createdAt'
+    createdAt: 'createdAt',
+    lastReadAt: 'lastReadAt'
   };
 
   export type DemoMembershipScalarFieldEnum = (typeof DemoMembershipScalarFieldEnum)[keyof typeof DemoMembershipScalarFieldEnum]
@@ -5655,11 +8344,26 @@ export namespace Prisma {
     id: 'id',
     content: 'content',
     userId: 'userId',
-    channelId: 'channelId',
-    createdAt: 'createdAt'
+    subchannelId: 'subchannelId',
+    createdAt: 'createdAt',
+    readByUsers: 'readByUsers'
   };
 
   export type DemoMessageScalarFieldEnum = (typeof DemoMessageScalarFieldEnum)[keyof typeof DemoMessageScalarFieldEnum]
+
+
+  export const DemoInviteScalarFieldEnum: {
+    id: 'id',
+    inviteCode: 'inviteCode',
+    channelId: 'channelId',
+    createdBy: 'createdBy',
+    expiresAt: 'expiresAt',
+    maxUses: 'maxUses',
+    useCount: 'useCount',
+    createdAt: 'createdAt'
+  };
+
+  export type DemoInviteScalarFieldEnum = (typeof DemoInviteScalarFieldEnum)[keyof typeof DemoInviteScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -5738,6 +8442,20 @@ export namespace Prisma {
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
     
+
+
+  /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
   /**
    * Deep Input Types
    */
@@ -5750,7 +8468,13 @@ export namespace Prisma {
     id?: StringFilter<"DemoUser"> | string
     walletAddress?: StringFilter<"DemoUser"> | string
     name?: StringNullableFilter<"DemoUser"> | string | null
+    username?: StringNullableFilter<"DemoUser"> | string | null
+    profileImage?: StringNullableFilter<"DemoUser"> | string | null
+    description?: StringNullableFilter<"DemoUser"> | string | null
     createdAt?: DateTimeFilter<"DemoUser"> | Date | string
+    updatedAt?: DateTimeFilter<"DemoUser"> | Date | string
+    online?: BoolFilter<"DemoUser"> | boolean
+    lastSeen?: DateTimeNullableFilter<"DemoUser"> | Date | string | null
     memberships?: DemoMembershipListRelationFilter
     messages?: DemoMessageListRelationFilter
     createdChannels?: DemoChannelListRelationFilter
@@ -5760,7 +8484,13 @@ export namespace Prisma {
     id?: SortOrder
     walletAddress?: SortOrder
     name?: SortOrderInput | SortOrder
+    username?: SortOrderInput | SortOrder
+    profileImage?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
+    online?: SortOrder
+    lastSeen?: SortOrderInput | SortOrder
     memberships?: DemoMembershipOrderByRelationAggregateInput
     messages?: DemoMessageOrderByRelationAggregateInput
     createdChannels?: DemoChannelOrderByRelationAggregateInput
@@ -5773,7 +8503,13 @@ export namespace Prisma {
     OR?: DemoUserWhereInput[]
     NOT?: DemoUserWhereInput | DemoUserWhereInput[]
     name?: StringNullableFilter<"DemoUser"> | string | null
+    username?: StringNullableFilter<"DemoUser"> | string | null
+    profileImage?: StringNullableFilter<"DemoUser"> | string | null
+    description?: StringNullableFilter<"DemoUser"> | string | null
     createdAt?: DateTimeFilter<"DemoUser"> | Date | string
+    updatedAt?: DateTimeFilter<"DemoUser"> | Date | string
+    online?: BoolFilter<"DemoUser"> | boolean
+    lastSeen?: DateTimeNullableFilter<"DemoUser"> | Date | string | null
     memberships?: DemoMembershipListRelationFilter
     messages?: DemoMessageListRelationFilter
     createdChannels?: DemoChannelListRelationFilter
@@ -5783,7 +8519,13 @@ export namespace Prisma {
     id?: SortOrder
     walletAddress?: SortOrder
     name?: SortOrderInput | SortOrder
+    username?: SortOrderInput | SortOrder
+    profileImage?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
+    online?: SortOrder
+    lastSeen?: SortOrderInput | SortOrder
     _count?: DemoUserCountOrderByAggregateInput
     _max?: DemoUserMaxOrderByAggregateInput
     _min?: DemoUserMinOrderByAggregateInput
@@ -5796,7 +8538,13 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"DemoUser"> | string
     walletAddress?: StringWithAggregatesFilter<"DemoUser"> | string
     name?: StringNullableWithAggregatesFilter<"DemoUser"> | string | null
+    username?: StringNullableWithAggregatesFilter<"DemoUser"> | string | null
+    profileImage?: StringNullableWithAggregatesFilter<"DemoUser"> | string | null
+    description?: StringNullableWithAggregatesFilter<"DemoUser"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"DemoUser"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DemoUser"> | Date | string
+    online?: BoolWithAggregatesFilter<"DemoUser"> | boolean
+    lastSeen?: DateTimeNullableWithAggregatesFilter<"DemoUser"> | Date | string | null
   }
 
   export type DemoChannelWhereInput = {
@@ -5805,25 +8553,31 @@ export namespace Prisma {
     NOT?: DemoChannelWhereInput | DemoChannelWhereInput[]
     id?: StringFilter<"DemoChannel"> | string
     name?: StringFilter<"DemoChannel"> | string
+    icon?: StringNullableFilter<"DemoChannel"> | string | null
+    type?: StringFilter<"DemoChannel"> | string
     creatorId?: StringFilter<"DemoChannel"> | string
-    isTokenGated?: BoolFilter<"DemoChannel"> | boolean
-    tokenAddress?: StringNullableFilter<"DemoChannel"> | string | null
+    defaultSubchannelId?: StringNullableFilter<"DemoChannel"> | string | null
     createdAt?: DateTimeFilter<"DemoChannel"> | Date | string
+    updatedAt?: DateTimeFilter<"DemoChannel"> | Date | string
     creator?: XOR<DemoUserScalarRelationFilter, DemoUserWhereInput>
     members?: DemoMembershipListRelationFilter
-    messages?: DemoMessageListRelationFilter
+    subchannels?: DemoSubChannelListRelationFilter
+    invites?: DemoInviteListRelationFilter
   }
 
   export type DemoChannelOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
+    icon?: SortOrderInput | SortOrder
+    type?: SortOrder
     creatorId?: SortOrder
-    isTokenGated?: SortOrder
-    tokenAddress?: SortOrderInput | SortOrder
+    defaultSubchannelId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     creator?: DemoUserOrderByWithRelationInput
     members?: DemoMembershipOrderByRelationAggregateInput
-    messages?: DemoMessageOrderByRelationAggregateInput
+    subchannels?: DemoSubChannelOrderByRelationAggregateInput
+    invites?: DemoInviteOrderByRelationAggregateInput
   }
 
   export type DemoChannelWhereUniqueInput = Prisma.AtLeast<{
@@ -5832,22 +8586,27 @@ export namespace Prisma {
     OR?: DemoChannelWhereInput[]
     NOT?: DemoChannelWhereInput | DemoChannelWhereInput[]
     name?: StringFilter<"DemoChannel"> | string
+    icon?: StringNullableFilter<"DemoChannel"> | string | null
+    type?: StringFilter<"DemoChannel"> | string
     creatorId?: StringFilter<"DemoChannel"> | string
-    isTokenGated?: BoolFilter<"DemoChannel"> | boolean
-    tokenAddress?: StringNullableFilter<"DemoChannel"> | string | null
+    defaultSubchannelId?: StringNullableFilter<"DemoChannel"> | string | null
     createdAt?: DateTimeFilter<"DemoChannel"> | Date | string
+    updatedAt?: DateTimeFilter<"DemoChannel"> | Date | string
     creator?: XOR<DemoUserScalarRelationFilter, DemoUserWhereInput>
     members?: DemoMembershipListRelationFilter
-    messages?: DemoMessageListRelationFilter
+    subchannels?: DemoSubChannelListRelationFilter
+    invites?: DemoInviteListRelationFilter
   }, "id">
 
   export type DemoChannelOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
+    icon?: SortOrderInput | SortOrder
+    type?: SortOrder
     creatorId?: SortOrder
-    isTokenGated?: SortOrder
-    tokenAddress?: SortOrderInput | SortOrder
+    defaultSubchannelId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: DemoChannelCountOrderByAggregateInput
     _max?: DemoChannelMaxOrderByAggregateInput
     _min?: DemoChannelMinOrderByAggregateInput
@@ -5859,10 +8618,95 @@ export namespace Prisma {
     NOT?: DemoChannelScalarWhereWithAggregatesInput | DemoChannelScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"DemoChannel"> | string
     name?: StringWithAggregatesFilter<"DemoChannel"> | string
+    icon?: StringNullableWithAggregatesFilter<"DemoChannel"> | string | null
+    type?: StringWithAggregatesFilter<"DemoChannel"> | string
     creatorId?: StringWithAggregatesFilter<"DemoChannel"> | string
-    isTokenGated?: BoolWithAggregatesFilter<"DemoChannel"> | boolean
-    tokenAddress?: StringNullableWithAggregatesFilter<"DemoChannel"> | string | null
+    defaultSubchannelId?: StringNullableWithAggregatesFilter<"DemoChannel"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"DemoChannel"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DemoChannel"> | Date | string
+  }
+
+  export type DemoSubChannelWhereInput = {
+    AND?: DemoSubChannelWhereInput | DemoSubChannelWhereInput[]
+    OR?: DemoSubChannelWhereInput[]
+    NOT?: DemoSubChannelWhereInput | DemoSubChannelWhereInput[]
+    id?: StringFilter<"DemoSubChannel"> | string
+    name?: StringFilter<"DemoSubChannel"> | string
+    icon?: StringNullableFilter<"DemoSubChannel"> | string | null
+    type?: StringFilter<"DemoSubChannel"> | string
+    channelId?: StringFilter<"DemoSubChannel"> | string
+    isTokenGated?: BoolFilter<"DemoSubChannel"> | boolean
+    tokenAddress?: StringNullableFilter<"DemoSubChannel"> | string | null
+    isDefault?: BoolFilter<"DemoSubChannel"> | boolean
+    createdAt?: DateTimeFilter<"DemoSubChannel"> | Date | string
+    updatedAt?: DateTimeFilter<"DemoSubChannel"> | Date | string
+    channel?: XOR<DemoChannelScalarRelationFilter, DemoChannelWhereInput>
+    messages?: DemoMessageListRelationFilter
+  }
+
+  export type DemoSubChannelOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    icon?: SortOrderInput | SortOrder
+    type?: SortOrder
+    channelId?: SortOrder
+    isTokenGated?: SortOrder
+    tokenAddress?: SortOrderInput | SortOrder
+    isDefault?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    channel?: DemoChannelOrderByWithRelationInput
+    messages?: DemoMessageOrderByRelationAggregateInput
+  }
+
+  export type DemoSubChannelWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: DemoSubChannelWhereInput | DemoSubChannelWhereInput[]
+    OR?: DemoSubChannelWhereInput[]
+    NOT?: DemoSubChannelWhereInput | DemoSubChannelWhereInput[]
+    name?: StringFilter<"DemoSubChannel"> | string
+    icon?: StringNullableFilter<"DemoSubChannel"> | string | null
+    type?: StringFilter<"DemoSubChannel"> | string
+    channelId?: StringFilter<"DemoSubChannel"> | string
+    isTokenGated?: BoolFilter<"DemoSubChannel"> | boolean
+    tokenAddress?: StringNullableFilter<"DemoSubChannel"> | string | null
+    isDefault?: BoolFilter<"DemoSubChannel"> | boolean
+    createdAt?: DateTimeFilter<"DemoSubChannel"> | Date | string
+    updatedAt?: DateTimeFilter<"DemoSubChannel"> | Date | string
+    channel?: XOR<DemoChannelScalarRelationFilter, DemoChannelWhereInput>
+    messages?: DemoMessageListRelationFilter
+  }, "id">
+
+  export type DemoSubChannelOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    icon?: SortOrderInput | SortOrder
+    type?: SortOrder
+    channelId?: SortOrder
+    isTokenGated?: SortOrder
+    tokenAddress?: SortOrderInput | SortOrder
+    isDefault?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: DemoSubChannelCountOrderByAggregateInput
+    _max?: DemoSubChannelMaxOrderByAggregateInput
+    _min?: DemoSubChannelMinOrderByAggregateInput
+  }
+
+  export type DemoSubChannelScalarWhereWithAggregatesInput = {
+    AND?: DemoSubChannelScalarWhereWithAggregatesInput | DemoSubChannelScalarWhereWithAggregatesInput[]
+    OR?: DemoSubChannelScalarWhereWithAggregatesInput[]
+    NOT?: DemoSubChannelScalarWhereWithAggregatesInput | DemoSubChannelScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DemoSubChannel"> | string
+    name?: StringWithAggregatesFilter<"DemoSubChannel"> | string
+    icon?: StringNullableWithAggregatesFilter<"DemoSubChannel"> | string | null
+    type?: StringWithAggregatesFilter<"DemoSubChannel"> | string
+    channelId?: StringWithAggregatesFilter<"DemoSubChannel"> | string
+    isTokenGated?: BoolWithAggregatesFilter<"DemoSubChannel"> | boolean
+    tokenAddress?: StringNullableWithAggregatesFilter<"DemoSubChannel"> | string | null
+    isDefault?: BoolWithAggregatesFilter<"DemoSubChannel"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"DemoSubChannel"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"DemoSubChannel"> | Date | string
   }
 
   export type DemoMembershipWhereInput = {
@@ -5874,6 +8718,7 @@ export namespace Prisma {
     channelId?: StringFilter<"DemoMembership"> | string
     role?: StringFilter<"DemoMembership"> | string
     createdAt?: DateTimeFilter<"DemoMembership"> | Date | string
+    lastReadAt?: DateTimeFilter<"DemoMembership"> | Date | string
     user?: XOR<DemoUserScalarRelationFilter, DemoUserWhereInput>
     channel?: XOR<DemoChannelScalarRelationFilter, DemoChannelWhereInput>
   }
@@ -5884,6 +8729,7 @@ export namespace Prisma {
     channelId?: SortOrder
     role?: SortOrder
     createdAt?: SortOrder
+    lastReadAt?: SortOrder
     user?: DemoUserOrderByWithRelationInput
     channel?: DemoChannelOrderByWithRelationInput
   }
@@ -5898,6 +8744,7 @@ export namespace Prisma {
     channelId?: StringFilter<"DemoMembership"> | string
     role?: StringFilter<"DemoMembership"> | string
     createdAt?: DateTimeFilter<"DemoMembership"> | Date | string
+    lastReadAt?: DateTimeFilter<"DemoMembership"> | Date | string
     user?: XOR<DemoUserScalarRelationFilter, DemoUserWhereInput>
     channel?: XOR<DemoChannelScalarRelationFilter, DemoChannelWhereInput>
   }, "id" | "userId_channelId">
@@ -5908,6 +8755,7 @@ export namespace Prisma {
     channelId?: SortOrder
     role?: SortOrder
     createdAt?: SortOrder
+    lastReadAt?: SortOrder
     _count?: DemoMembershipCountOrderByAggregateInput
     _max?: DemoMembershipMaxOrderByAggregateInput
     _min?: DemoMembershipMinOrderByAggregateInput
@@ -5922,6 +8770,7 @@ export namespace Prisma {
     channelId?: StringWithAggregatesFilter<"DemoMembership"> | string
     role?: StringWithAggregatesFilter<"DemoMembership"> | string
     createdAt?: DateTimeWithAggregatesFilter<"DemoMembership"> | Date | string
+    lastReadAt?: DateTimeWithAggregatesFilter<"DemoMembership"> | Date | string
   }
 
   export type DemoMessageWhereInput = {
@@ -5931,20 +8780,22 @@ export namespace Prisma {
     id?: StringFilter<"DemoMessage"> | string
     content?: StringFilter<"DemoMessage"> | string
     userId?: StringFilter<"DemoMessage"> | string
-    channelId?: StringFilter<"DemoMessage"> | string
+    subchannelId?: StringFilter<"DemoMessage"> | string
     createdAt?: DateTimeFilter<"DemoMessage"> | Date | string
+    readByUsers?: StringNullableListFilter<"DemoMessage">
     user?: XOR<DemoUserScalarRelationFilter, DemoUserWhereInput>
-    channel?: XOR<DemoChannelScalarRelationFilter, DemoChannelWhereInput>
+    subchannel?: XOR<DemoSubChannelScalarRelationFilter, DemoSubChannelWhereInput>
   }
 
   export type DemoMessageOrderByWithRelationInput = {
     id?: SortOrder
     content?: SortOrder
     userId?: SortOrder
-    channelId?: SortOrder
+    subchannelId?: SortOrder
     createdAt?: SortOrder
+    readByUsers?: SortOrder
     user?: DemoUserOrderByWithRelationInput
-    channel?: DemoChannelOrderByWithRelationInput
+    subchannel?: DemoSubChannelOrderByWithRelationInput
   }
 
   export type DemoMessageWhereUniqueInput = Prisma.AtLeast<{
@@ -5954,18 +8805,20 @@ export namespace Prisma {
     NOT?: DemoMessageWhereInput | DemoMessageWhereInput[]
     content?: StringFilter<"DemoMessage"> | string
     userId?: StringFilter<"DemoMessage"> | string
-    channelId?: StringFilter<"DemoMessage"> | string
+    subchannelId?: StringFilter<"DemoMessage"> | string
     createdAt?: DateTimeFilter<"DemoMessage"> | Date | string
+    readByUsers?: StringNullableListFilter<"DemoMessage">
     user?: XOR<DemoUserScalarRelationFilter, DemoUserWhereInput>
-    channel?: XOR<DemoChannelScalarRelationFilter, DemoChannelWhereInput>
+    subchannel?: XOR<DemoSubChannelScalarRelationFilter, DemoSubChannelWhereInput>
   }, "id">
 
   export type DemoMessageOrderByWithAggregationInput = {
     id?: SortOrder
     content?: SortOrder
     userId?: SortOrder
-    channelId?: SortOrder
+    subchannelId?: SortOrder
     createdAt?: SortOrder
+    readByUsers?: SortOrder
     _count?: DemoMessageCountOrderByAggregateInput
     _max?: DemoMessageMaxOrderByAggregateInput
     _min?: DemoMessageMinOrderByAggregateInput
@@ -5978,15 +8831,94 @@ export namespace Prisma {
     id?: StringWithAggregatesFilter<"DemoMessage"> | string
     content?: StringWithAggregatesFilter<"DemoMessage"> | string
     userId?: StringWithAggregatesFilter<"DemoMessage"> | string
-    channelId?: StringWithAggregatesFilter<"DemoMessage"> | string
+    subchannelId?: StringWithAggregatesFilter<"DemoMessage"> | string
     createdAt?: DateTimeWithAggregatesFilter<"DemoMessage"> | Date | string
+    readByUsers?: StringNullableListFilter<"DemoMessage">
+  }
+
+  export type DemoInviteWhereInput = {
+    AND?: DemoInviteWhereInput | DemoInviteWhereInput[]
+    OR?: DemoInviteWhereInput[]
+    NOT?: DemoInviteWhereInput | DemoInviteWhereInput[]
+    id?: StringFilter<"DemoInvite"> | string
+    inviteCode?: StringFilter<"DemoInvite"> | string
+    channelId?: StringFilter<"DemoInvite"> | string
+    createdBy?: StringFilter<"DemoInvite"> | string
+    expiresAt?: DateTimeNullableFilter<"DemoInvite"> | Date | string | null
+    maxUses?: IntNullableFilter<"DemoInvite"> | number | null
+    useCount?: IntFilter<"DemoInvite"> | number
+    createdAt?: DateTimeFilter<"DemoInvite"> | Date | string
+    channel?: XOR<DemoChannelScalarRelationFilter, DemoChannelWhereInput>
+  }
+
+  export type DemoInviteOrderByWithRelationInput = {
+    id?: SortOrder
+    inviteCode?: SortOrder
+    channelId?: SortOrder
+    createdBy?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    maxUses?: SortOrderInput | SortOrder
+    useCount?: SortOrder
+    createdAt?: SortOrder
+    channel?: DemoChannelOrderByWithRelationInput
+  }
+
+  export type DemoInviteWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    inviteCode?: string
+    AND?: DemoInviteWhereInput | DemoInviteWhereInput[]
+    OR?: DemoInviteWhereInput[]
+    NOT?: DemoInviteWhereInput | DemoInviteWhereInput[]
+    channelId?: StringFilter<"DemoInvite"> | string
+    createdBy?: StringFilter<"DemoInvite"> | string
+    expiresAt?: DateTimeNullableFilter<"DemoInvite"> | Date | string | null
+    maxUses?: IntNullableFilter<"DemoInvite"> | number | null
+    useCount?: IntFilter<"DemoInvite"> | number
+    createdAt?: DateTimeFilter<"DemoInvite"> | Date | string
+    channel?: XOR<DemoChannelScalarRelationFilter, DemoChannelWhereInput>
+  }, "id" | "inviteCode">
+
+  export type DemoInviteOrderByWithAggregationInput = {
+    id?: SortOrder
+    inviteCode?: SortOrder
+    channelId?: SortOrder
+    createdBy?: SortOrder
+    expiresAt?: SortOrderInput | SortOrder
+    maxUses?: SortOrderInput | SortOrder
+    useCount?: SortOrder
+    createdAt?: SortOrder
+    _count?: DemoInviteCountOrderByAggregateInput
+    _avg?: DemoInviteAvgOrderByAggregateInput
+    _max?: DemoInviteMaxOrderByAggregateInput
+    _min?: DemoInviteMinOrderByAggregateInput
+    _sum?: DemoInviteSumOrderByAggregateInput
+  }
+
+  export type DemoInviteScalarWhereWithAggregatesInput = {
+    AND?: DemoInviteScalarWhereWithAggregatesInput | DemoInviteScalarWhereWithAggregatesInput[]
+    OR?: DemoInviteScalarWhereWithAggregatesInput[]
+    NOT?: DemoInviteScalarWhereWithAggregatesInput | DemoInviteScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"DemoInvite"> | string
+    inviteCode?: StringWithAggregatesFilter<"DemoInvite"> | string
+    channelId?: StringWithAggregatesFilter<"DemoInvite"> | string
+    createdBy?: StringWithAggregatesFilter<"DemoInvite"> | string
+    expiresAt?: DateTimeNullableWithAggregatesFilter<"DemoInvite"> | Date | string | null
+    maxUses?: IntNullableWithAggregatesFilter<"DemoInvite"> | number | null
+    useCount?: IntWithAggregatesFilter<"DemoInvite"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"DemoInvite"> | Date | string
   }
 
   export type DemoUserCreateInput = {
     id?: string
     walletAddress: string
     name?: string | null
+    username?: string | null
+    profileImage?: string | null
+    description?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
+    online?: boolean
+    lastSeen?: Date | string | null
     memberships?: DemoMembershipCreateNestedManyWithoutUserInput
     messages?: DemoMessageCreateNestedManyWithoutUserInput
     createdChannels?: DemoChannelCreateNestedManyWithoutCreatorInput
@@ -5996,7 +8928,13 @@ export namespace Prisma {
     id?: string
     walletAddress: string
     name?: string | null
+    username?: string | null
+    profileImage?: string | null
+    description?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
+    online?: boolean
+    lastSeen?: Date | string | null
     memberships?: DemoMembershipUncheckedCreateNestedManyWithoutUserInput
     messages?: DemoMessageUncheckedCreateNestedManyWithoutUserInput
     createdChannels?: DemoChannelUncheckedCreateNestedManyWithoutCreatorInput
@@ -6006,7 +8944,13 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     walletAddress?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    online?: BoolFieldUpdateOperationsInput | boolean
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     memberships?: DemoMembershipUpdateManyWithoutUserNestedInput
     messages?: DemoMessageUpdateManyWithoutUserNestedInput
     createdChannels?: DemoChannelUpdateManyWithoutCreatorNestedInput
@@ -6016,7 +8960,13 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     walletAddress?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    online?: BoolFieldUpdateOperationsInput | boolean
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     memberships?: DemoMembershipUncheckedUpdateManyWithoutUserNestedInput
     messages?: DemoMessageUncheckedUpdateManyWithoutUserNestedInput
     createdChannels?: DemoChannelUncheckedUpdateManyWithoutCreatorNestedInput
@@ -6026,97 +8976,228 @@ export namespace Prisma {
     id?: string
     walletAddress: string
     name?: string | null
+    username?: string | null
+    profileImage?: string | null
+    description?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
+    online?: boolean
+    lastSeen?: Date | string | null
   }
 
   export type DemoUserUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     walletAddress?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    online?: BoolFieldUpdateOperationsInput | boolean
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type DemoUserUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     walletAddress?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    online?: BoolFieldUpdateOperationsInput | boolean
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type DemoChannelCreateInput = {
     id?: string
     name: string
-    isTokenGated?: boolean
-    tokenAddress?: string | null
+    icon?: string | null
+    type?: string
+    defaultSubchannelId?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
     creator: DemoUserCreateNestedOneWithoutCreatedChannelsInput
     members?: DemoMembershipCreateNestedManyWithoutChannelInput
-    messages?: DemoMessageCreateNestedManyWithoutChannelInput
+    subchannels?: DemoSubChannelCreateNestedManyWithoutChannelInput
+    invites?: DemoInviteCreateNestedManyWithoutChannelInput
   }
 
   export type DemoChannelUncheckedCreateInput = {
     id?: string
     name: string
+    icon?: string | null
+    type?: string
     creatorId: string
-    isTokenGated?: boolean
-    tokenAddress?: string | null
+    defaultSubchannelId?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
     members?: DemoMembershipUncheckedCreateNestedManyWithoutChannelInput
-    messages?: DemoMessageUncheckedCreateNestedManyWithoutChannelInput
+    subchannels?: DemoSubChannelUncheckedCreateNestedManyWithoutChannelInput
+    invites?: DemoInviteUncheckedCreateNestedManyWithoutChannelInput
   }
 
   export type DemoChannelUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    isTokenGated?: BoolFieldUpdateOperationsInput | boolean
-    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    defaultSubchannelId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: DemoUserUpdateOneRequiredWithoutCreatedChannelsNestedInput
     members?: DemoMembershipUpdateManyWithoutChannelNestedInput
-    messages?: DemoMessageUpdateManyWithoutChannelNestedInput
+    subchannels?: DemoSubChannelUpdateManyWithoutChannelNestedInput
+    invites?: DemoInviteUpdateManyWithoutChannelNestedInput
   }
 
   export type DemoChannelUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
     creatorId?: StringFieldUpdateOperationsInput | string
-    isTokenGated?: BoolFieldUpdateOperationsInput | boolean
-    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultSubchannelId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: DemoMembershipUncheckedUpdateManyWithoutChannelNestedInput
-    messages?: DemoMessageUncheckedUpdateManyWithoutChannelNestedInput
+    subchannels?: DemoSubChannelUncheckedUpdateManyWithoutChannelNestedInput
+    invites?: DemoInviteUncheckedUpdateManyWithoutChannelNestedInput
   }
 
   export type DemoChannelCreateManyInput = {
     id?: string
     name: string
+    icon?: string | null
+    type?: string
     creatorId: string
-    isTokenGated?: boolean
-    tokenAddress?: string | null
+    defaultSubchannelId?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type DemoChannelUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    isTokenGated?: BoolFieldUpdateOperationsInput | boolean
-    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    defaultSubchannelId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DemoChannelUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
     creatorId?: StringFieldUpdateOperationsInput | string
+    defaultSubchannelId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DemoSubChannelCreateInput = {
+    id?: string
+    name: string
+    icon?: string | null
+    type?: string
+    isTokenGated?: boolean
+    tokenAddress?: string | null
+    isDefault?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    channel: DemoChannelCreateNestedOneWithoutSubchannelsInput
+    messages?: DemoMessageCreateNestedManyWithoutSubchannelInput
+  }
+
+  export type DemoSubChannelUncheckedCreateInput = {
+    id?: string
+    name: string
+    icon?: string | null
+    type?: string
+    channelId: string
+    isTokenGated?: boolean
+    tokenAddress?: string | null
+    isDefault?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messages?: DemoMessageUncheckedCreateNestedManyWithoutSubchannelInput
+  }
+
+  export type DemoSubChannelUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
     isTokenGated?: BoolFieldUpdateOperationsInput | boolean
     tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    channel?: DemoChannelUpdateOneRequiredWithoutSubchannelsNestedInput
+    messages?: DemoMessageUpdateManyWithoutSubchannelNestedInput
+  }
+
+  export type DemoSubChannelUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    channelId?: StringFieldUpdateOperationsInput | string
+    isTokenGated?: BoolFieldUpdateOperationsInput | boolean
+    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: DemoMessageUncheckedUpdateManyWithoutSubchannelNestedInput
+  }
+
+  export type DemoSubChannelCreateManyInput = {
+    id?: string
+    name: string
+    icon?: string | null
+    type?: string
+    channelId: string
+    isTokenGated?: boolean
+    tokenAddress?: string | null
+    isDefault?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DemoSubChannelUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    isTokenGated?: BoolFieldUpdateOperationsInput | boolean
+    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DemoSubChannelUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    channelId?: StringFieldUpdateOperationsInput | string
+    isTokenGated?: BoolFieldUpdateOperationsInput | boolean
+    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DemoMembershipCreateInput = {
     id?: string
     role?: string
     createdAt?: Date | string
+    lastReadAt?: Date | string
     user: DemoUserCreateNestedOneWithoutMembershipsInput
     channel: DemoChannelCreateNestedOneWithoutMembersInput
   }
@@ -6127,12 +9208,14 @@ export namespace Prisma {
     channelId: string
     role?: string
     createdAt?: Date | string
+    lastReadAt?: Date | string
   }
 
   export type DemoMembershipUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastReadAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: DemoUserUpdateOneRequiredWithoutMembershipsNestedInput
     channel?: DemoChannelUpdateOneRequiredWithoutMembersNestedInput
   }
@@ -6143,6 +9226,7 @@ export namespace Prisma {
     channelId?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastReadAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DemoMembershipCreateManyInput = {
@@ -6151,12 +9235,14 @@ export namespace Prisma {
     channelId: string
     role?: string
     createdAt?: Date | string
+    lastReadAt?: Date | string
   }
 
   export type DemoMembershipUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastReadAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DemoMembershipUncheckedUpdateManyInput = {
@@ -6165,59 +9251,143 @@ export namespace Prisma {
     channelId?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastReadAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DemoMessageCreateInput = {
     id?: string
     content: string
     createdAt?: Date | string
+    readByUsers?: DemoMessageCreatereadByUsersInput | string[]
     user: DemoUserCreateNestedOneWithoutMessagesInput
-    channel: DemoChannelCreateNestedOneWithoutMessagesInput
+    subchannel: DemoSubChannelCreateNestedOneWithoutMessagesInput
   }
 
   export type DemoMessageUncheckedCreateInput = {
     id?: string
     content: string
     userId: string
-    channelId: string
+    subchannelId: string
     createdAt?: Date | string
+    readByUsers?: DemoMessageCreatereadByUsersInput | string[]
   }
 
   export type DemoMessageUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUsers?: DemoMessageUpdatereadByUsersInput | string[]
     user?: DemoUserUpdateOneRequiredWithoutMessagesNestedInput
-    channel?: DemoChannelUpdateOneRequiredWithoutMessagesNestedInput
+    subchannel?: DemoSubChannelUpdateOneRequiredWithoutMessagesNestedInput
   }
 
   export type DemoMessageUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
-    channelId?: StringFieldUpdateOperationsInput | string
+    subchannelId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUsers?: DemoMessageUpdatereadByUsersInput | string[]
   }
 
   export type DemoMessageCreateManyInput = {
     id?: string
     content: string
     userId: string
-    channelId: string
+    subchannelId: string
     createdAt?: Date | string
+    readByUsers?: DemoMessageCreatereadByUsersInput | string[]
   }
 
   export type DemoMessageUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUsers?: DemoMessageUpdatereadByUsersInput | string[]
   }
 
   export type DemoMessageUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
+    subchannelId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUsers?: DemoMessageUpdatereadByUsersInput | string[]
+  }
+
+  export type DemoInviteCreateInput = {
+    id?: string
+    inviteCode: string
+    createdBy: string
+    expiresAt?: Date | string | null
+    maxUses?: number | null
+    useCount?: number
+    createdAt?: Date | string
+    channel: DemoChannelCreateNestedOneWithoutInvitesInput
+  }
+
+  export type DemoInviteUncheckedCreateInput = {
+    id?: string
+    inviteCode: string
+    channelId: string
+    createdBy: string
+    expiresAt?: Date | string | null
+    maxUses?: number | null
+    useCount?: number
+    createdAt?: Date | string
+  }
+
+  export type DemoInviteUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    inviteCode?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    maxUses?: NullableIntFieldUpdateOperationsInput | number | null
+    useCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    channel?: DemoChannelUpdateOneRequiredWithoutInvitesNestedInput
+  }
+
+  export type DemoInviteUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    inviteCode?: StringFieldUpdateOperationsInput | string
     channelId?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    maxUses?: NullableIntFieldUpdateOperationsInput | number | null
+    useCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DemoInviteCreateManyInput = {
+    id?: string
+    inviteCode: string
+    channelId: string
+    createdBy: string
+    expiresAt?: Date | string | null
+    maxUses?: number | null
+    useCount?: number
+    createdAt?: Date | string
+  }
+
+  export type DemoInviteUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    inviteCode?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    maxUses?: NullableIntFieldUpdateOperationsInput | number | null
+    useCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DemoInviteUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    inviteCode?: StringFieldUpdateOperationsInput | string
+    channelId?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    maxUses?: NullableIntFieldUpdateOperationsInput | number | null
+    useCount?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -6262,6 +9432,22 @@ export namespace Prisma {
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type DemoMembershipListRelationFilter = {
     every?: DemoMembershipWhereInput
     some?: DemoMembershipWhereInput
@@ -6301,21 +9487,39 @@ export namespace Prisma {
     id?: SortOrder
     walletAddress?: SortOrder
     name?: SortOrder
+    username?: SortOrder
+    profileImage?: SortOrder
+    description?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
+    online?: SortOrder
+    lastSeen?: SortOrder
   }
 
   export type DemoUserMaxOrderByAggregateInput = {
     id?: SortOrder
     walletAddress?: SortOrder
     name?: SortOrder
+    username?: SortOrder
+    profileImage?: SortOrder
+    description?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
+    online?: SortOrder
+    lastSeen?: SortOrder
   }
 
   export type DemoUserMinOrderByAggregateInput = {
     id?: SortOrder
     walletAddress?: SortOrder
     name?: SortOrder
+    username?: SortOrder
+    profileImage?: SortOrder
+    description?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
+    online?: SortOrder
+    lastSeen?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -6368,43 +9572,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
-  export type DemoUserScalarRelationFilter = {
-    is?: DemoUserWhereInput
-    isNot?: DemoUserWhereInput
-  }
-
-  export type DemoChannelCountOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    creatorId?: SortOrder
-    isTokenGated?: SortOrder
-    tokenAddress?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type DemoChannelMaxOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    creatorId?: SortOrder
-    isTokenGated?: SortOrder
-    tokenAddress?: SortOrder
-    createdAt?: SortOrder
-  }
-
-  export type DemoChannelMinOrderByAggregateInput = {
-    id?: SortOrder
-    name?: SortOrder
-    creatorId?: SortOrder
-    isTokenGated?: SortOrder
-    tokenAddress?: SortOrder
-    createdAt?: SortOrder
-  }
-
   export type BoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
@@ -6413,9 +9580,120 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type DemoUserScalarRelationFilter = {
+    is?: DemoUserWhereInput
+    isNot?: DemoUserWhereInput
+  }
+
+  export type DemoSubChannelListRelationFilter = {
+    every?: DemoSubChannelWhereInput
+    some?: DemoSubChannelWhereInput
+    none?: DemoSubChannelWhereInput
+  }
+
+  export type DemoInviteListRelationFilter = {
+    every?: DemoInviteWhereInput
+    some?: DemoInviteWhereInput
+    none?: DemoInviteWhereInput
+  }
+
+  export type DemoSubChannelOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DemoInviteOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DemoChannelCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    icon?: SortOrder
+    type?: SortOrder
+    creatorId?: SortOrder
+    defaultSubchannelId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DemoChannelMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    icon?: SortOrder
+    type?: SortOrder
+    creatorId?: SortOrder
+    defaultSubchannelId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DemoChannelMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    icon?: SortOrder
+    type?: SortOrder
+    creatorId?: SortOrder
+    defaultSubchannelId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
   export type DemoChannelScalarRelationFilter = {
     is?: DemoChannelWhereInput
     isNot?: DemoChannelWhereInput
+  }
+
+  export type DemoSubChannelCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    icon?: SortOrder
+    type?: SortOrder
+    channelId?: SortOrder
+    isTokenGated?: SortOrder
+    tokenAddress?: SortOrder
+    isDefault?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DemoSubChannelMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    icon?: SortOrder
+    type?: SortOrder
+    channelId?: SortOrder
+    isTokenGated?: SortOrder
+    tokenAddress?: SortOrder
+    isDefault?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type DemoSubChannelMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    icon?: SortOrder
+    type?: SortOrder
+    channelId?: SortOrder
+    isTokenGated?: SortOrder
+    tokenAddress?: SortOrder
+    isDefault?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type DemoMembershipUserIdChannelIdCompoundUniqueInput = {
@@ -6429,6 +9707,7 @@ export namespace Prisma {
     channelId?: SortOrder
     role?: SortOrder
     createdAt?: SortOrder
+    lastReadAt?: SortOrder
   }
 
   export type DemoMembershipMaxOrderByAggregateInput = {
@@ -6437,6 +9716,7 @@ export namespace Prisma {
     channelId?: SortOrder
     role?: SortOrder
     createdAt?: SortOrder
+    lastReadAt?: SortOrder
   }
 
   export type DemoMembershipMinOrderByAggregateInput = {
@@ -6445,21 +9725,36 @@ export namespace Prisma {
     channelId?: SortOrder
     role?: SortOrder
     createdAt?: SortOrder
+    lastReadAt?: SortOrder
+  }
+
+  export type StringNullableListFilter<$PrismaModel = never> = {
+    equals?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    has?: string | StringFieldRefInput<$PrismaModel> | null
+    hasEvery?: string[] | ListStringFieldRefInput<$PrismaModel>
+    hasSome?: string[] | ListStringFieldRefInput<$PrismaModel>
+    isEmpty?: boolean
+  }
+
+  export type DemoSubChannelScalarRelationFilter = {
+    is?: DemoSubChannelWhereInput
+    isNot?: DemoSubChannelWhereInput
   }
 
   export type DemoMessageCountOrderByAggregateInput = {
     id?: SortOrder
     content?: SortOrder
     userId?: SortOrder
-    channelId?: SortOrder
+    subchannelId?: SortOrder
     createdAt?: SortOrder
+    readByUsers?: SortOrder
   }
 
   export type DemoMessageMaxOrderByAggregateInput = {
     id?: SortOrder
     content?: SortOrder
     userId?: SortOrder
-    channelId?: SortOrder
+    subchannelId?: SortOrder
     createdAt?: SortOrder
   }
 
@@ -6467,8 +9762,105 @@ export namespace Prisma {
     id?: SortOrder
     content?: SortOrder
     userId?: SortOrder
-    channelId?: SortOrder
+    subchannelId?: SortOrder
     createdAt?: SortOrder
+  }
+
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type IntFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntFilter<$PrismaModel> | number
+  }
+
+  export type DemoInviteCountOrderByAggregateInput = {
+    id?: SortOrder
+    inviteCode?: SortOrder
+    channelId?: SortOrder
+    createdBy?: SortOrder
+    expiresAt?: SortOrder
+    maxUses?: SortOrder
+    useCount?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type DemoInviteAvgOrderByAggregateInput = {
+    maxUses?: SortOrder
+    useCount?: SortOrder
+  }
+
+  export type DemoInviteMaxOrderByAggregateInput = {
+    id?: SortOrder
+    inviteCode?: SortOrder
+    channelId?: SortOrder
+    createdBy?: SortOrder
+    expiresAt?: SortOrder
+    maxUses?: SortOrder
+    useCount?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type DemoInviteMinOrderByAggregateInput = {
+    id?: SortOrder
+    inviteCode?: SortOrder
+    channelId?: SortOrder
+    createdBy?: SortOrder
+    expiresAt?: SortOrder
+    maxUses?: SortOrder
+    useCount?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type DemoInviteSumOrderByAggregateInput = {
+    maxUses?: SortOrder
+    useCount?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type IntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
   }
 
   export type DemoMembershipCreateNestedManyWithoutUserInput = {
@@ -6523,6 +9915,14 @@ export namespace Prisma {
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type DemoMembershipUpdateManyWithoutUserNestedInput = {
@@ -6622,11 +10022,18 @@ export namespace Prisma {
     connect?: DemoMembershipWhereUniqueInput | DemoMembershipWhereUniqueInput[]
   }
 
-  export type DemoMessageCreateNestedManyWithoutChannelInput = {
-    create?: XOR<DemoMessageCreateWithoutChannelInput, DemoMessageUncheckedCreateWithoutChannelInput> | DemoMessageCreateWithoutChannelInput[] | DemoMessageUncheckedCreateWithoutChannelInput[]
-    connectOrCreate?: DemoMessageCreateOrConnectWithoutChannelInput | DemoMessageCreateOrConnectWithoutChannelInput[]
-    createMany?: DemoMessageCreateManyChannelInputEnvelope
-    connect?: DemoMessageWhereUniqueInput | DemoMessageWhereUniqueInput[]
+  export type DemoSubChannelCreateNestedManyWithoutChannelInput = {
+    create?: XOR<DemoSubChannelCreateWithoutChannelInput, DemoSubChannelUncheckedCreateWithoutChannelInput> | DemoSubChannelCreateWithoutChannelInput[] | DemoSubChannelUncheckedCreateWithoutChannelInput[]
+    connectOrCreate?: DemoSubChannelCreateOrConnectWithoutChannelInput | DemoSubChannelCreateOrConnectWithoutChannelInput[]
+    createMany?: DemoSubChannelCreateManyChannelInputEnvelope
+    connect?: DemoSubChannelWhereUniqueInput | DemoSubChannelWhereUniqueInput[]
+  }
+
+  export type DemoInviteCreateNestedManyWithoutChannelInput = {
+    create?: XOR<DemoInviteCreateWithoutChannelInput, DemoInviteUncheckedCreateWithoutChannelInput> | DemoInviteCreateWithoutChannelInput[] | DemoInviteUncheckedCreateWithoutChannelInput[]
+    connectOrCreate?: DemoInviteCreateOrConnectWithoutChannelInput | DemoInviteCreateOrConnectWithoutChannelInput[]
+    createMany?: DemoInviteCreateManyChannelInputEnvelope
+    connect?: DemoInviteWhereUniqueInput | DemoInviteWhereUniqueInput[]
   }
 
   export type DemoMembershipUncheckedCreateNestedManyWithoutChannelInput = {
@@ -6636,15 +10043,18 @@ export namespace Prisma {
     connect?: DemoMembershipWhereUniqueInput | DemoMembershipWhereUniqueInput[]
   }
 
-  export type DemoMessageUncheckedCreateNestedManyWithoutChannelInput = {
-    create?: XOR<DemoMessageCreateWithoutChannelInput, DemoMessageUncheckedCreateWithoutChannelInput> | DemoMessageCreateWithoutChannelInput[] | DemoMessageUncheckedCreateWithoutChannelInput[]
-    connectOrCreate?: DemoMessageCreateOrConnectWithoutChannelInput | DemoMessageCreateOrConnectWithoutChannelInput[]
-    createMany?: DemoMessageCreateManyChannelInputEnvelope
-    connect?: DemoMessageWhereUniqueInput | DemoMessageWhereUniqueInput[]
+  export type DemoSubChannelUncheckedCreateNestedManyWithoutChannelInput = {
+    create?: XOR<DemoSubChannelCreateWithoutChannelInput, DemoSubChannelUncheckedCreateWithoutChannelInput> | DemoSubChannelCreateWithoutChannelInput[] | DemoSubChannelUncheckedCreateWithoutChannelInput[]
+    connectOrCreate?: DemoSubChannelCreateOrConnectWithoutChannelInput | DemoSubChannelCreateOrConnectWithoutChannelInput[]
+    createMany?: DemoSubChannelCreateManyChannelInputEnvelope
+    connect?: DemoSubChannelWhereUniqueInput | DemoSubChannelWhereUniqueInput[]
   }
 
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
+  export type DemoInviteUncheckedCreateNestedManyWithoutChannelInput = {
+    create?: XOR<DemoInviteCreateWithoutChannelInput, DemoInviteUncheckedCreateWithoutChannelInput> | DemoInviteCreateWithoutChannelInput[] | DemoInviteUncheckedCreateWithoutChannelInput[]
+    connectOrCreate?: DemoInviteCreateOrConnectWithoutChannelInput | DemoInviteCreateOrConnectWithoutChannelInput[]
+    createMany?: DemoInviteCreateManyChannelInputEnvelope
+    connect?: DemoInviteWhereUniqueInput | DemoInviteWhereUniqueInput[]
   }
 
   export type DemoUserUpdateOneRequiredWithoutCreatedChannelsNestedInput = {
@@ -6669,18 +10079,32 @@ export namespace Prisma {
     deleteMany?: DemoMembershipScalarWhereInput | DemoMembershipScalarWhereInput[]
   }
 
-  export type DemoMessageUpdateManyWithoutChannelNestedInput = {
-    create?: XOR<DemoMessageCreateWithoutChannelInput, DemoMessageUncheckedCreateWithoutChannelInput> | DemoMessageCreateWithoutChannelInput[] | DemoMessageUncheckedCreateWithoutChannelInput[]
-    connectOrCreate?: DemoMessageCreateOrConnectWithoutChannelInput | DemoMessageCreateOrConnectWithoutChannelInput[]
-    upsert?: DemoMessageUpsertWithWhereUniqueWithoutChannelInput | DemoMessageUpsertWithWhereUniqueWithoutChannelInput[]
-    createMany?: DemoMessageCreateManyChannelInputEnvelope
-    set?: DemoMessageWhereUniqueInput | DemoMessageWhereUniqueInput[]
-    disconnect?: DemoMessageWhereUniqueInput | DemoMessageWhereUniqueInput[]
-    delete?: DemoMessageWhereUniqueInput | DemoMessageWhereUniqueInput[]
-    connect?: DemoMessageWhereUniqueInput | DemoMessageWhereUniqueInput[]
-    update?: DemoMessageUpdateWithWhereUniqueWithoutChannelInput | DemoMessageUpdateWithWhereUniqueWithoutChannelInput[]
-    updateMany?: DemoMessageUpdateManyWithWhereWithoutChannelInput | DemoMessageUpdateManyWithWhereWithoutChannelInput[]
-    deleteMany?: DemoMessageScalarWhereInput | DemoMessageScalarWhereInput[]
+  export type DemoSubChannelUpdateManyWithoutChannelNestedInput = {
+    create?: XOR<DemoSubChannelCreateWithoutChannelInput, DemoSubChannelUncheckedCreateWithoutChannelInput> | DemoSubChannelCreateWithoutChannelInput[] | DemoSubChannelUncheckedCreateWithoutChannelInput[]
+    connectOrCreate?: DemoSubChannelCreateOrConnectWithoutChannelInput | DemoSubChannelCreateOrConnectWithoutChannelInput[]
+    upsert?: DemoSubChannelUpsertWithWhereUniqueWithoutChannelInput | DemoSubChannelUpsertWithWhereUniqueWithoutChannelInput[]
+    createMany?: DemoSubChannelCreateManyChannelInputEnvelope
+    set?: DemoSubChannelWhereUniqueInput | DemoSubChannelWhereUniqueInput[]
+    disconnect?: DemoSubChannelWhereUniqueInput | DemoSubChannelWhereUniqueInput[]
+    delete?: DemoSubChannelWhereUniqueInput | DemoSubChannelWhereUniqueInput[]
+    connect?: DemoSubChannelWhereUniqueInput | DemoSubChannelWhereUniqueInput[]
+    update?: DemoSubChannelUpdateWithWhereUniqueWithoutChannelInput | DemoSubChannelUpdateWithWhereUniqueWithoutChannelInput[]
+    updateMany?: DemoSubChannelUpdateManyWithWhereWithoutChannelInput | DemoSubChannelUpdateManyWithWhereWithoutChannelInput[]
+    deleteMany?: DemoSubChannelScalarWhereInput | DemoSubChannelScalarWhereInput[]
+  }
+
+  export type DemoInviteUpdateManyWithoutChannelNestedInput = {
+    create?: XOR<DemoInviteCreateWithoutChannelInput, DemoInviteUncheckedCreateWithoutChannelInput> | DemoInviteCreateWithoutChannelInput[] | DemoInviteUncheckedCreateWithoutChannelInput[]
+    connectOrCreate?: DemoInviteCreateOrConnectWithoutChannelInput | DemoInviteCreateOrConnectWithoutChannelInput[]
+    upsert?: DemoInviteUpsertWithWhereUniqueWithoutChannelInput | DemoInviteUpsertWithWhereUniqueWithoutChannelInput[]
+    createMany?: DemoInviteCreateManyChannelInputEnvelope
+    set?: DemoInviteWhereUniqueInput | DemoInviteWhereUniqueInput[]
+    disconnect?: DemoInviteWhereUniqueInput | DemoInviteWhereUniqueInput[]
+    delete?: DemoInviteWhereUniqueInput | DemoInviteWhereUniqueInput[]
+    connect?: DemoInviteWhereUniqueInput | DemoInviteWhereUniqueInput[]
+    update?: DemoInviteUpdateWithWhereUniqueWithoutChannelInput | DemoInviteUpdateWithWhereUniqueWithoutChannelInput[]
+    updateMany?: DemoInviteUpdateManyWithWhereWithoutChannelInput | DemoInviteUpdateManyWithWhereWithoutChannelInput[]
+    deleteMany?: DemoInviteScalarWhereInput | DemoInviteScalarWhereInput[]
   }
 
   export type DemoMembershipUncheckedUpdateManyWithoutChannelNestedInput = {
@@ -6697,17 +10121,87 @@ export namespace Prisma {
     deleteMany?: DemoMembershipScalarWhereInput | DemoMembershipScalarWhereInput[]
   }
 
-  export type DemoMessageUncheckedUpdateManyWithoutChannelNestedInput = {
-    create?: XOR<DemoMessageCreateWithoutChannelInput, DemoMessageUncheckedCreateWithoutChannelInput> | DemoMessageCreateWithoutChannelInput[] | DemoMessageUncheckedCreateWithoutChannelInput[]
-    connectOrCreate?: DemoMessageCreateOrConnectWithoutChannelInput | DemoMessageCreateOrConnectWithoutChannelInput[]
-    upsert?: DemoMessageUpsertWithWhereUniqueWithoutChannelInput | DemoMessageUpsertWithWhereUniqueWithoutChannelInput[]
-    createMany?: DemoMessageCreateManyChannelInputEnvelope
+  export type DemoSubChannelUncheckedUpdateManyWithoutChannelNestedInput = {
+    create?: XOR<DemoSubChannelCreateWithoutChannelInput, DemoSubChannelUncheckedCreateWithoutChannelInput> | DemoSubChannelCreateWithoutChannelInput[] | DemoSubChannelUncheckedCreateWithoutChannelInput[]
+    connectOrCreate?: DemoSubChannelCreateOrConnectWithoutChannelInput | DemoSubChannelCreateOrConnectWithoutChannelInput[]
+    upsert?: DemoSubChannelUpsertWithWhereUniqueWithoutChannelInput | DemoSubChannelUpsertWithWhereUniqueWithoutChannelInput[]
+    createMany?: DemoSubChannelCreateManyChannelInputEnvelope
+    set?: DemoSubChannelWhereUniqueInput | DemoSubChannelWhereUniqueInput[]
+    disconnect?: DemoSubChannelWhereUniqueInput | DemoSubChannelWhereUniqueInput[]
+    delete?: DemoSubChannelWhereUniqueInput | DemoSubChannelWhereUniqueInput[]
+    connect?: DemoSubChannelWhereUniqueInput | DemoSubChannelWhereUniqueInput[]
+    update?: DemoSubChannelUpdateWithWhereUniqueWithoutChannelInput | DemoSubChannelUpdateWithWhereUniqueWithoutChannelInput[]
+    updateMany?: DemoSubChannelUpdateManyWithWhereWithoutChannelInput | DemoSubChannelUpdateManyWithWhereWithoutChannelInput[]
+    deleteMany?: DemoSubChannelScalarWhereInput | DemoSubChannelScalarWhereInput[]
+  }
+
+  export type DemoInviteUncheckedUpdateManyWithoutChannelNestedInput = {
+    create?: XOR<DemoInviteCreateWithoutChannelInput, DemoInviteUncheckedCreateWithoutChannelInput> | DemoInviteCreateWithoutChannelInput[] | DemoInviteUncheckedCreateWithoutChannelInput[]
+    connectOrCreate?: DemoInviteCreateOrConnectWithoutChannelInput | DemoInviteCreateOrConnectWithoutChannelInput[]
+    upsert?: DemoInviteUpsertWithWhereUniqueWithoutChannelInput | DemoInviteUpsertWithWhereUniqueWithoutChannelInput[]
+    createMany?: DemoInviteCreateManyChannelInputEnvelope
+    set?: DemoInviteWhereUniqueInput | DemoInviteWhereUniqueInput[]
+    disconnect?: DemoInviteWhereUniqueInput | DemoInviteWhereUniqueInput[]
+    delete?: DemoInviteWhereUniqueInput | DemoInviteWhereUniqueInput[]
+    connect?: DemoInviteWhereUniqueInput | DemoInviteWhereUniqueInput[]
+    update?: DemoInviteUpdateWithWhereUniqueWithoutChannelInput | DemoInviteUpdateWithWhereUniqueWithoutChannelInput[]
+    updateMany?: DemoInviteUpdateManyWithWhereWithoutChannelInput | DemoInviteUpdateManyWithWhereWithoutChannelInput[]
+    deleteMany?: DemoInviteScalarWhereInput | DemoInviteScalarWhereInput[]
+  }
+
+  export type DemoChannelCreateNestedOneWithoutSubchannelsInput = {
+    create?: XOR<DemoChannelCreateWithoutSubchannelsInput, DemoChannelUncheckedCreateWithoutSubchannelsInput>
+    connectOrCreate?: DemoChannelCreateOrConnectWithoutSubchannelsInput
+    connect?: DemoChannelWhereUniqueInput
+  }
+
+  export type DemoMessageCreateNestedManyWithoutSubchannelInput = {
+    create?: XOR<DemoMessageCreateWithoutSubchannelInput, DemoMessageUncheckedCreateWithoutSubchannelInput> | DemoMessageCreateWithoutSubchannelInput[] | DemoMessageUncheckedCreateWithoutSubchannelInput[]
+    connectOrCreate?: DemoMessageCreateOrConnectWithoutSubchannelInput | DemoMessageCreateOrConnectWithoutSubchannelInput[]
+    createMany?: DemoMessageCreateManySubchannelInputEnvelope
+    connect?: DemoMessageWhereUniqueInput | DemoMessageWhereUniqueInput[]
+  }
+
+  export type DemoMessageUncheckedCreateNestedManyWithoutSubchannelInput = {
+    create?: XOR<DemoMessageCreateWithoutSubchannelInput, DemoMessageUncheckedCreateWithoutSubchannelInput> | DemoMessageCreateWithoutSubchannelInput[] | DemoMessageUncheckedCreateWithoutSubchannelInput[]
+    connectOrCreate?: DemoMessageCreateOrConnectWithoutSubchannelInput | DemoMessageCreateOrConnectWithoutSubchannelInput[]
+    createMany?: DemoMessageCreateManySubchannelInputEnvelope
+    connect?: DemoMessageWhereUniqueInput | DemoMessageWhereUniqueInput[]
+  }
+
+  export type DemoChannelUpdateOneRequiredWithoutSubchannelsNestedInput = {
+    create?: XOR<DemoChannelCreateWithoutSubchannelsInput, DemoChannelUncheckedCreateWithoutSubchannelsInput>
+    connectOrCreate?: DemoChannelCreateOrConnectWithoutSubchannelsInput
+    upsert?: DemoChannelUpsertWithoutSubchannelsInput
+    connect?: DemoChannelWhereUniqueInput
+    update?: XOR<XOR<DemoChannelUpdateToOneWithWhereWithoutSubchannelsInput, DemoChannelUpdateWithoutSubchannelsInput>, DemoChannelUncheckedUpdateWithoutSubchannelsInput>
+  }
+
+  export type DemoMessageUpdateManyWithoutSubchannelNestedInput = {
+    create?: XOR<DemoMessageCreateWithoutSubchannelInput, DemoMessageUncheckedCreateWithoutSubchannelInput> | DemoMessageCreateWithoutSubchannelInput[] | DemoMessageUncheckedCreateWithoutSubchannelInput[]
+    connectOrCreate?: DemoMessageCreateOrConnectWithoutSubchannelInput | DemoMessageCreateOrConnectWithoutSubchannelInput[]
+    upsert?: DemoMessageUpsertWithWhereUniqueWithoutSubchannelInput | DemoMessageUpsertWithWhereUniqueWithoutSubchannelInput[]
+    createMany?: DemoMessageCreateManySubchannelInputEnvelope
     set?: DemoMessageWhereUniqueInput | DemoMessageWhereUniqueInput[]
     disconnect?: DemoMessageWhereUniqueInput | DemoMessageWhereUniqueInput[]
     delete?: DemoMessageWhereUniqueInput | DemoMessageWhereUniqueInput[]
     connect?: DemoMessageWhereUniqueInput | DemoMessageWhereUniqueInput[]
-    update?: DemoMessageUpdateWithWhereUniqueWithoutChannelInput | DemoMessageUpdateWithWhereUniqueWithoutChannelInput[]
-    updateMany?: DemoMessageUpdateManyWithWhereWithoutChannelInput | DemoMessageUpdateManyWithWhereWithoutChannelInput[]
+    update?: DemoMessageUpdateWithWhereUniqueWithoutSubchannelInput | DemoMessageUpdateWithWhereUniqueWithoutSubchannelInput[]
+    updateMany?: DemoMessageUpdateManyWithWhereWithoutSubchannelInput | DemoMessageUpdateManyWithWhereWithoutSubchannelInput[]
+    deleteMany?: DemoMessageScalarWhereInput | DemoMessageScalarWhereInput[]
+  }
+
+  export type DemoMessageUncheckedUpdateManyWithoutSubchannelNestedInput = {
+    create?: XOR<DemoMessageCreateWithoutSubchannelInput, DemoMessageUncheckedCreateWithoutSubchannelInput> | DemoMessageCreateWithoutSubchannelInput[] | DemoMessageUncheckedCreateWithoutSubchannelInput[]
+    connectOrCreate?: DemoMessageCreateOrConnectWithoutSubchannelInput | DemoMessageCreateOrConnectWithoutSubchannelInput[]
+    upsert?: DemoMessageUpsertWithWhereUniqueWithoutSubchannelInput | DemoMessageUpsertWithWhereUniqueWithoutSubchannelInput[]
+    createMany?: DemoMessageCreateManySubchannelInputEnvelope
+    set?: DemoMessageWhereUniqueInput | DemoMessageWhereUniqueInput[]
+    disconnect?: DemoMessageWhereUniqueInput | DemoMessageWhereUniqueInput[]
+    delete?: DemoMessageWhereUniqueInput | DemoMessageWhereUniqueInput[]
+    connect?: DemoMessageWhereUniqueInput | DemoMessageWhereUniqueInput[]
+    update?: DemoMessageUpdateWithWhereUniqueWithoutSubchannelInput | DemoMessageUpdateWithWhereUniqueWithoutSubchannelInput[]
+    updateMany?: DemoMessageUpdateManyWithWhereWithoutSubchannelInput | DemoMessageUpdateManyWithWhereWithoutSubchannelInput[]
     deleteMany?: DemoMessageScalarWhereInput | DemoMessageScalarWhereInput[]
   }
 
@@ -6739,16 +10233,25 @@ export namespace Prisma {
     update?: XOR<XOR<DemoChannelUpdateToOneWithWhereWithoutMembersInput, DemoChannelUpdateWithoutMembersInput>, DemoChannelUncheckedUpdateWithoutMembersInput>
   }
 
+  export type DemoMessageCreatereadByUsersInput = {
+    set: string[]
+  }
+
   export type DemoUserCreateNestedOneWithoutMessagesInput = {
     create?: XOR<DemoUserCreateWithoutMessagesInput, DemoUserUncheckedCreateWithoutMessagesInput>
     connectOrCreate?: DemoUserCreateOrConnectWithoutMessagesInput
     connect?: DemoUserWhereUniqueInput
   }
 
-  export type DemoChannelCreateNestedOneWithoutMessagesInput = {
-    create?: XOR<DemoChannelCreateWithoutMessagesInput, DemoChannelUncheckedCreateWithoutMessagesInput>
-    connectOrCreate?: DemoChannelCreateOrConnectWithoutMessagesInput
-    connect?: DemoChannelWhereUniqueInput
+  export type DemoSubChannelCreateNestedOneWithoutMessagesInput = {
+    create?: XOR<DemoSubChannelCreateWithoutMessagesInput, DemoSubChannelUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: DemoSubChannelCreateOrConnectWithoutMessagesInput
+    connect?: DemoSubChannelWhereUniqueInput
+  }
+
+  export type DemoMessageUpdatereadByUsersInput = {
+    set?: string[]
+    push?: string | string[]
   }
 
   export type DemoUserUpdateOneRequiredWithoutMessagesNestedInput = {
@@ -6759,12 +10262,42 @@ export namespace Prisma {
     update?: XOR<XOR<DemoUserUpdateToOneWithWhereWithoutMessagesInput, DemoUserUpdateWithoutMessagesInput>, DemoUserUncheckedUpdateWithoutMessagesInput>
   }
 
-  export type DemoChannelUpdateOneRequiredWithoutMessagesNestedInput = {
-    create?: XOR<DemoChannelCreateWithoutMessagesInput, DemoChannelUncheckedCreateWithoutMessagesInput>
-    connectOrCreate?: DemoChannelCreateOrConnectWithoutMessagesInput
-    upsert?: DemoChannelUpsertWithoutMessagesInput
+  export type DemoSubChannelUpdateOneRequiredWithoutMessagesNestedInput = {
+    create?: XOR<DemoSubChannelCreateWithoutMessagesInput, DemoSubChannelUncheckedCreateWithoutMessagesInput>
+    connectOrCreate?: DemoSubChannelCreateOrConnectWithoutMessagesInput
+    upsert?: DemoSubChannelUpsertWithoutMessagesInput
+    connect?: DemoSubChannelWhereUniqueInput
+    update?: XOR<XOR<DemoSubChannelUpdateToOneWithWhereWithoutMessagesInput, DemoSubChannelUpdateWithoutMessagesInput>, DemoSubChannelUncheckedUpdateWithoutMessagesInput>
+  }
+
+  export type DemoChannelCreateNestedOneWithoutInvitesInput = {
+    create?: XOR<DemoChannelCreateWithoutInvitesInput, DemoChannelUncheckedCreateWithoutInvitesInput>
+    connectOrCreate?: DemoChannelCreateOrConnectWithoutInvitesInput
     connect?: DemoChannelWhereUniqueInput
-    update?: XOR<XOR<DemoChannelUpdateToOneWithWhereWithoutMessagesInput, DemoChannelUpdateWithoutMessagesInput>, DemoChannelUncheckedUpdateWithoutMessagesInput>
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type DemoChannelUpdateOneRequiredWithoutInvitesNestedInput = {
+    create?: XOR<DemoChannelCreateWithoutInvitesInput, DemoChannelUncheckedCreateWithoutInvitesInput>
+    connectOrCreate?: DemoChannelCreateOrConnectWithoutInvitesInput
+    upsert?: DemoChannelUpsertWithoutInvitesInput
+    connect?: DemoChannelWhereUniqueInput
+    update?: XOR<XOR<DemoChannelUpdateToOneWithWhereWithoutInvitesInput, DemoChannelUpdateWithoutInvitesInput>, DemoChannelUncheckedUpdateWithoutInvitesInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -6804,6 +10337,22 @@ export namespace Prisma {
     gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -6876,11 +10425,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
@@ -6889,10 +10433,79 @@ export namespace Prisma {
     _max?: NestedBoolFilter<$PrismaModel>
   }
 
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel>
+    in?: number[] | ListIntFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel>
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedIntFilter<$PrismaModel>
+    _min?: NestedIntFilter<$PrismaModel>
+    _max?: NestedIntFilter<$PrismaModel>
+  }
+
+  export type NestedFloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
   export type DemoMembershipCreateWithoutUserInput = {
     id?: string
     role?: string
     createdAt?: Date | string
+    lastReadAt?: Date | string
     channel: DemoChannelCreateNestedOneWithoutMembersInput
   }
 
@@ -6901,6 +10514,7 @@ export namespace Prisma {
     channelId: string
     role?: string
     createdAt?: Date | string
+    lastReadAt?: Date | string
   }
 
   export type DemoMembershipCreateOrConnectWithoutUserInput = {
@@ -6917,14 +10531,16 @@ export namespace Prisma {
     id?: string
     content: string
     createdAt?: Date | string
-    channel: DemoChannelCreateNestedOneWithoutMessagesInput
+    readByUsers?: DemoMessageCreatereadByUsersInput | string[]
+    subchannel: DemoSubChannelCreateNestedOneWithoutMessagesInput
   }
 
   export type DemoMessageUncheckedCreateWithoutUserInput = {
     id?: string
     content: string
-    channelId: string
+    subchannelId: string
     createdAt?: Date | string
+    readByUsers?: DemoMessageCreatereadByUsersInput | string[]
   }
 
   export type DemoMessageCreateOrConnectWithoutUserInput = {
@@ -6940,21 +10556,27 @@ export namespace Prisma {
   export type DemoChannelCreateWithoutCreatorInput = {
     id?: string
     name: string
-    isTokenGated?: boolean
-    tokenAddress?: string | null
+    icon?: string | null
+    type?: string
+    defaultSubchannelId?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
     members?: DemoMembershipCreateNestedManyWithoutChannelInput
-    messages?: DemoMessageCreateNestedManyWithoutChannelInput
+    subchannels?: DemoSubChannelCreateNestedManyWithoutChannelInput
+    invites?: DemoInviteCreateNestedManyWithoutChannelInput
   }
 
   export type DemoChannelUncheckedCreateWithoutCreatorInput = {
     id?: string
     name: string
-    isTokenGated?: boolean
-    tokenAddress?: string | null
+    icon?: string | null
+    type?: string
+    defaultSubchannelId?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
     members?: DemoMembershipUncheckedCreateNestedManyWithoutChannelInput
-    messages?: DemoMessageUncheckedCreateNestedManyWithoutChannelInput
+    subchannels?: DemoSubChannelUncheckedCreateNestedManyWithoutChannelInput
+    invites?: DemoInviteUncheckedCreateNestedManyWithoutChannelInput
   }
 
   export type DemoChannelCreateOrConnectWithoutCreatorInput = {
@@ -6992,6 +10614,7 @@ export namespace Prisma {
     channelId?: StringFilter<"DemoMembership"> | string
     role?: StringFilter<"DemoMembership"> | string
     createdAt?: DateTimeFilter<"DemoMembership"> | Date | string
+    lastReadAt?: DateTimeFilter<"DemoMembership"> | Date | string
   }
 
   export type DemoMessageUpsertWithWhereUniqueWithoutUserInput = {
@@ -7017,8 +10640,9 @@ export namespace Prisma {
     id?: StringFilter<"DemoMessage"> | string
     content?: StringFilter<"DemoMessage"> | string
     userId?: StringFilter<"DemoMessage"> | string
-    channelId?: StringFilter<"DemoMessage"> | string
+    subchannelId?: StringFilter<"DemoMessage"> | string
     createdAt?: DateTimeFilter<"DemoMessage"> | Date | string
+    readByUsers?: StringNullableListFilter<"DemoMessage">
   }
 
   export type DemoChannelUpsertWithWhereUniqueWithoutCreatorInput = {
@@ -7043,17 +10667,25 @@ export namespace Prisma {
     NOT?: DemoChannelScalarWhereInput | DemoChannelScalarWhereInput[]
     id?: StringFilter<"DemoChannel"> | string
     name?: StringFilter<"DemoChannel"> | string
+    icon?: StringNullableFilter<"DemoChannel"> | string | null
+    type?: StringFilter<"DemoChannel"> | string
     creatorId?: StringFilter<"DemoChannel"> | string
-    isTokenGated?: BoolFilter<"DemoChannel"> | boolean
-    tokenAddress?: StringNullableFilter<"DemoChannel"> | string | null
+    defaultSubchannelId?: StringNullableFilter<"DemoChannel"> | string | null
     createdAt?: DateTimeFilter<"DemoChannel"> | Date | string
+    updatedAt?: DateTimeFilter<"DemoChannel"> | Date | string
   }
 
   export type DemoUserCreateWithoutCreatedChannelsInput = {
     id?: string
     walletAddress: string
     name?: string | null
+    username?: string | null
+    profileImage?: string | null
+    description?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
+    online?: boolean
+    lastSeen?: Date | string | null
     memberships?: DemoMembershipCreateNestedManyWithoutUserInput
     messages?: DemoMessageCreateNestedManyWithoutUserInput
   }
@@ -7062,7 +10694,13 @@ export namespace Prisma {
     id?: string
     walletAddress: string
     name?: string | null
+    username?: string | null
+    profileImage?: string | null
+    description?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
+    online?: boolean
+    lastSeen?: Date | string | null
     memberships?: DemoMembershipUncheckedCreateNestedManyWithoutUserInput
     messages?: DemoMessageUncheckedCreateNestedManyWithoutUserInput
   }
@@ -7076,6 +10714,7 @@ export namespace Prisma {
     id?: string
     role?: string
     createdAt?: Date | string
+    lastReadAt?: Date | string
     user: DemoUserCreateNestedOneWithoutMembershipsInput
   }
 
@@ -7084,6 +10723,7 @@ export namespace Prisma {
     userId: string
     role?: string
     createdAt?: Date | string
+    lastReadAt?: Date | string
   }
 
   export type DemoMembershipCreateOrConnectWithoutChannelInput = {
@@ -7096,27 +10736,69 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type DemoMessageCreateWithoutChannelInput = {
+  export type DemoSubChannelCreateWithoutChannelInput = {
     id?: string
-    content: string
+    name: string
+    icon?: string | null
+    type?: string
+    isTokenGated?: boolean
+    tokenAddress?: string | null
+    isDefault?: boolean
     createdAt?: Date | string
-    user: DemoUserCreateNestedOneWithoutMessagesInput
+    updatedAt?: Date | string
+    messages?: DemoMessageCreateNestedManyWithoutSubchannelInput
   }
 
-  export type DemoMessageUncheckedCreateWithoutChannelInput = {
+  export type DemoSubChannelUncheckedCreateWithoutChannelInput = {
     id?: string
-    content: string
-    userId: string
+    name: string
+    icon?: string | null
+    type?: string
+    isTokenGated?: boolean
+    tokenAddress?: string | null
+    isDefault?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    messages?: DemoMessageUncheckedCreateNestedManyWithoutSubchannelInput
+  }
+
+  export type DemoSubChannelCreateOrConnectWithoutChannelInput = {
+    where: DemoSubChannelWhereUniqueInput
+    create: XOR<DemoSubChannelCreateWithoutChannelInput, DemoSubChannelUncheckedCreateWithoutChannelInput>
+  }
+
+  export type DemoSubChannelCreateManyChannelInputEnvelope = {
+    data: DemoSubChannelCreateManyChannelInput | DemoSubChannelCreateManyChannelInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DemoInviteCreateWithoutChannelInput = {
+    id?: string
+    inviteCode: string
+    createdBy: string
+    expiresAt?: Date | string | null
+    maxUses?: number | null
+    useCount?: number
     createdAt?: Date | string
   }
 
-  export type DemoMessageCreateOrConnectWithoutChannelInput = {
-    where: DemoMessageWhereUniqueInput
-    create: XOR<DemoMessageCreateWithoutChannelInput, DemoMessageUncheckedCreateWithoutChannelInput>
+  export type DemoInviteUncheckedCreateWithoutChannelInput = {
+    id?: string
+    inviteCode: string
+    createdBy: string
+    expiresAt?: Date | string | null
+    maxUses?: number | null
+    useCount?: number
+    createdAt?: Date | string
   }
 
-  export type DemoMessageCreateManyChannelInputEnvelope = {
-    data: DemoMessageCreateManyChannelInput | DemoMessageCreateManyChannelInput[]
+  export type DemoInviteCreateOrConnectWithoutChannelInput = {
+    where: DemoInviteWhereUniqueInput
+    create: XOR<DemoInviteCreateWithoutChannelInput, DemoInviteUncheckedCreateWithoutChannelInput>
+  }
+
+  export type DemoInviteCreateManyChannelInputEnvelope = {
+    data: DemoInviteCreateManyChannelInput | DemoInviteCreateManyChannelInput[]
     skipDuplicates?: boolean
   }
 
@@ -7135,7 +10817,13 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     walletAddress?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    online?: BoolFieldUpdateOperationsInput | boolean
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     memberships?: DemoMembershipUpdateManyWithoutUserNestedInput
     messages?: DemoMessageUpdateManyWithoutUserNestedInput
   }
@@ -7144,7 +10832,13 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     walletAddress?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    online?: BoolFieldUpdateOperationsInput | boolean
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     memberships?: DemoMembershipUncheckedUpdateManyWithoutUserNestedInput
     messages?: DemoMessageUncheckedUpdateManyWithoutUserNestedInput
   }
@@ -7165,27 +10859,189 @@ export namespace Prisma {
     data: XOR<DemoMembershipUpdateManyMutationInput, DemoMembershipUncheckedUpdateManyWithoutChannelInput>
   }
 
-  export type DemoMessageUpsertWithWhereUniqueWithoutChannelInput = {
-    where: DemoMessageWhereUniqueInput
-    update: XOR<DemoMessageUpdateWithoutChannelInput, DemoMessageUncheckedUpdateWithoutChannelInput>
-    create: XOR<DemoMessageCreateWithoutChannelInput, DemoMessageUncheckedCreateWithoutChannelInput>
+  export type DemoSubChannelUpsertWithWhereUniqueWithoutChannelInput = {
+    where: DemoSubChannelWhereUniqueInput
+    update: XOR<DemoSubChannelUpdateWithoutChannelInput, DemoSubChannelUncheckedUpdateWithoutChannelInput>
+    create: XOR<DemoSubChannelCreateWithoutChannelInput, DemoSubChannelUncheckedCreateWithoutChannelInput>
   }
 
-  export type DemoMessageUpdateWithWhereUniqueWithoutChannelInput = {
-    where: DemoMessageWhereUniqueInput
-    data: XOR<DemoMessageUpdateWithoutChannelInput, DemoMessageUncheckedUpdateWithoutChannelInput>
+  export type DemoSubChannelUpdateWithWhereUniqueWithoutChannelInput = {
+    where: DemoSubChannelWhereUniqueInput
+    data: XOR<DemoSubChannelUpdateWithoutChannelInput, DemoSubChannelUncheckedUpdateWithoutChannelInput>
   }
 
-  export type DemoMessageUpdateManyWithWhereWithoutChannelInput = {
+  export type DemoSubChannelUpdateManyWithWhereWithoutChannelInput = {
+    where: DemoSubChannelScalarWhereInput
+    data: XOR<DemoSubChannelUpdateManyMutationInput, DemoSubChannelUncheckedUpdateManyWithoutChannelInput>
+  }
+
+  export type DemoSubChannelScalarWhereInput = {
+    AND?: DemoSubChannelScalarWhereInput | DemoSubChannelScalarWhereInput[]
+    OR?: DemoSubChannelScalarWhereInput[]
+    NOT?: DemoSubChannelScalarWhereInput | DemoSubChannelScalarWhereInput[]
+    id?: StringFilter<"DemoSubChannel"> | string
+    name?: StringFilter<"DemoSubChannel"> | string
+    icon?: StringNullableFilter<"DemoSubChannel"> | string | null
+    type?: StringFilter<"DemoSubChannel"> | string
+    channelId?: StringFilter<"DemoSubChannel"> | string
+    isTokenGated?: BoolFilter<"DemoSubChannel"> | boolean
+    tokenAddress?: StringNullableFilter<"DemoSubChannel"> | string | null
+    isDefault?: BoolFilter<"DemoSubChannel"> | boolean
+    createdAt?: DateTimeFilter<"DemoSubChannel"> | Date | string
+    updatedAt?: DateTimeFilter<"DemoSubChannel"> | Date | string
+  }
+
+  export type DemoInviteUpsertWithWhereUniqueWithoutChannelInput = {
+    where: DemoInviteWhereUniqueInput
+    update: XOR<DemoInviteUpdateWithoutChannelInput, DemoInviteUncheckedUpdateWithoutChannelInput>
+    create: XOR<DemoInviteCreateWithoutChannelInput, DemoInviteUncheckedCreateWithoutChannelInput>
+  }
+
+  export type DemoInviteUpdateWithWhereUniqueWithoutChannelInput = {
+    where: DemoInviteWhereUniqueInput
+    data: XOR<DemoInviteUpdateWithoutChannelInput, DemoInviteUncheckedUpdateWithoutChannelInput>
+  }
+
+  export type DemoInviteUpdateManyWithWhereWithoutChannelInput = {
+    where: DemoInviteScalarWhereInput
+    data: XOR<DemoInviteUpdateManyMutationInput, DemoInviteUncheckedUpdateManyWithoutChannelInput>
+  }
+
+  export type DemoInviteScalarWhereInput = {
+    AND?: DemoInviteScalarWhereInput | DemoInviteScalarWhereInput[]
+    OR?: DemoInviteScalarWhereInput[]
+    NOT?: DemoInviteScalarWhereInput | DemoInviteScalarWhereInput[]
+    id?: StringFilter<"DemoInvite"> | string
+    inviteCode?: StringFilter<"DemoInvite"> | string
+    channelId?: StringFilter<"DemoInvite"> | string
+    createdBy?: StringFilter<"DemoInvite"> | string
+    expiresAt?: DateTimeNullableFilter<"DemoInvite"> | Date | string | null
+    maxUses?: IntNullableFilter<"DemoInvite"> | number | null
+    useCount?: IntFilter<"DemoInvite"> | number
+    createdAt?: DateTimeFilter<"DemoInvite"> | Date | string
+  }
+
+  export type DemoChannelCreateWithoutSubchannelsInput = {
+    id?: string
+    name: string
+    icon?: string | null
+    type?: string
+    defaultSubchannelId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator: DemoUserCreateNestedOneWithoutCreatedChannelsInput
+    members?: DemoMembershipCreateNestedManyWithoutChannelInput
+    invites?: DemoInviteCreateNestedManyWithoutChannelInput
+  }
+
+  export type DemoChannelUncheckedCreateWithoutSubchannelsInput = {
+    id?: string
+    name: string
+    icon?: string | null
+    type?: string
+    creatorId: string
+    defaultSubchannelId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: DemoMembershipUncheckedCreateNestedManyWithoutChannelInput
+    invites?: DemoInviteUncheckedCreateNestedManyWithoutChannelInput
+  }
+
+  export type DemoChannelCreateOrConnectWithoutSubchannelsInput = {
+    where: DemoChannelWhereUniqueInput
+    create: XOR<DemoChannelCreateWithoutSubchannelsInput, DemoChannelUncheckedCreateWithoutSubchannelsInput>
+  }
+
+  export type DemoMessageCreateWithoutSubchannelInput = {
+    id?: string
+    content: string
+    createdAt?: Date | string
+    readByUsers?: DemoMessageCreatereadByUsersInput | string[]
+    user: DemoUserCreateNestedOneWithoutMessagesInput
+  }
+
+  export type DemoMessageUncheckedCreateWithoutSubchannelInput = {
+    id?: string
+    content: string
+    userId: string
+    createdAt?: Date | string
+    readByUsers?: DemoMessageCreatereadByUsersInput | string[]
+  }
+
+  export type DemoMessageCreateOrConnectWithoutSubchannelInput = {
+    where: DemoMessageWhereUniqueInput
+    create: XOR<DemoMessageCreateWithoutSubchannelInput, DemoMessageUncheckedCreateWithoutSubchannelInput>
+  }
+
+  export type DemoMessageCreateManySubchannelInputEnvelope = {
+    data: DemoMessageCreateManySubchannelInput | DemoMessageCreateManySubchannelInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DemoChannelUpsertWithoutSubchannelsInput = {
+    update: XOR<DemoChannelUpdateWithoutSubchannelsInput, DemoChannelUncheckedUpdateWithoutSubchannelsInput>
+    create: XOR<DemoChannelCreateWithoutSubchannelsInput, DemoChannelUncheckedCreateWithoutSubchannelsInput>
+    where?: DemoChannelWhereInput
+  }
+
+  export type DemoChannelUpdateToOneWithWhereWithoutSubchannelsInput = {
+    where?: DemoChannelWhereInput
+    data: XOR<DemoChannelUpdateWithoutSubchannelsInput, DemoChannelUncheckedUpdateWithoutSubchannelsInput>
+  }
+
+  export type DemoChannelUpdateWithoutSubchannelsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    defaultSubchannelId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    creator?: DemoUserUpdateOneRequiredWithoutCreatedChannelsNestedInput
+    members?: DemoMembershipUpdateManyWithoutChannelNestedInput
+    invites?: DemoInviteUpdateManyWithoutChannelNestedInput
+  }
+
+  export type DemoChannelUncheckedUpdateWithoutSubchannelsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    creatorId?: StringFieldUpdateOperationsInput | string
+    defaultSubchannelId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: DemoMembershipUncheckedUpdateManyWithoutChannelNestedInput
+    invites?: DemoInviteUncheckedUpdateManyWithoutChannelNestedInput
+  }
+
+  export type DemoMessageUpsertWithWhereUniqueWithoutSubchannelInput = {
+    where: DemoMessageWhereUniqueInput
+    update: XOR<DemoMessageUpdateWithoutSubchannelInput, DemoMessageUncheckedUpdateWithoutSubchannelInput>
+    create: XOR<DemoMessageCreateWithoutSubchannelInput, DemoMessageUncheckedCreateWithoutSubchannelInput>
+  }
+
+  export type DemoMessageUpdateWithWhereUniqueWithoutSubchannelInput = {
+    where: DemoMessageWhereUniqueInput
+    data: XOR<DemoMessageUpdateWithoutSubchannelInput, DemoMessageUncheckedUpdateWithoutSubchannelInput>
+  }
+
+  export type DemoMessageUpdateManyWithWhereWithoutSubchannelInput = {
     where: DemoMessageScalarWhereInput
-    data: XOR<DemoMessageUpdateManyMutationInput, DemoMessageUncheckedUpdateManyWithoutChannelInput>
+    data: XOR<DemoMessageUpdateManyMutationInput, DemoMessageUncheckedUpdateManyWithoutSubchannelInput>
   }
 
   export type DemoUserCreateWithoutMembershipsInput = {
     id?: string
     walletAddress: string
     name?: string | null
+    username?: string | null
+    profileImage?: string | null
+    description?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
+    online?: boolean
+    lastSeen?: Date | string | null
     messages?: DemoMessageCreateNestedManyWithoutUserInput
     createdChannels?: DemoChannelCreateNestedManyWithoutCreatorInput
   }
@@ -7194,7 +11050,13 @@ export namespace Prisma {
     id?: string
     walletAddress: string
     name?: string | null
+    username?: string | null
+    profileImage?: string | null
+    description?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
+    online?: boolean
+    lastSeen?: Date | string | null
     messages?: DemoMessageUncheckedCreateNestedManyWithoutUserInput
     createdChannels?: DemoChannelUncheckedCreateNestedManyWithoutCreatorInput
   }
@@ -7207,21 +11069,27 @@ export namespace Prisma {
   export type DemoChannelCreateWithoutMembersInput = {
     id?: string
     name: string
-    isTokenGated?: boolean
-    tokenAddress?: string | null
+    icon?: string | null
+    type?: string
+    defaultSubchannelId?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
     creator: DemoUserCreateNestedOneWithoutCreatedChannelsInput
-    messages?: DemoMessageCreateNestedManyWithoutChannelInput
+    subchannels?: DemoSubChannelCreateNestedManyWithoutChannelInput
+    invites?: DemoInviteCreateNestedManyWithoutChannelInput
   }
 
   export type DemoChannelUncheckedCreateWithoutMembersInput = {
     id?: string
     name: string
+    icon?: string | null
+    type?: string
     creatorId: string
-    isTokenGated?: boolean
-    tokenAddress?: string | null
+    defaultSubchannelId?: string | null
     createdAt?: Date | string
-    messages?: DemoMessageUncheckedCreateNestedManyWithoutChannelInput
+    updatedAt?: Date | string
+    subchannels?: DemoSubChannelUncheckedCreateNestedManyWithoutChannelInput
+    invites?: DemoInviteUncheckedCreateNestedManyWithoutChannelInput
   }
 
   export type DemoChannelCreateOrConnectWithoutMembersInput = {
@@ -7244,7 +11112,13 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     walletAddress?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    online?: BoolFieldUpdateOperationsInput | boolean
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     messages?: DemoMessageUpdateManyWithoutUserNestedInput
     createdChannels?: DemoChannelUpdateManyWithoutCreatorNestedInput
   }
@@ -7253,7 +11127,13 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     walletAddress?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    online?: BoolFieldUpdateOperationsInput | boolean
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     messages?: DemoMessageUncheckedUpdateManyWithoutUserNestedInput
     createdChannels?: DemoChannelUncheckedUpdateManyWithoutCreatorNestedInput
   }
@@ -7272,28 +11152,40 @@ export namespace Prisma {
   export type DemoChannelUpdateWithoutMembersInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    isTokenGated?: BoolFieldUpdateOperationsInput | boolean
-    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    defaultSubchannelId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: DemoUserUpdateOneRequiredWithoutCreatedChannelsNestedInput
-    messages?: DemoMessageUpdateManyWithoutChannelNestedInput
+    subchannels?: DemoSubChannelUpdateManyWithoutChannelNestedInput
+    invites?: DemoInviteUpdateManyWithoutChannelNestedInput
   }
 
   export type DemoChannelUncheckedUpdateWithoutMembersInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
     creatorId?: StringFieldUpdateOperationsInput | string
-    isTokenGated?: BoolFieldUpdateOperationsInput | boolean
-    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultSubchannelId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    messages?: DemoMessageUncheckedUpdateManyWithoutChannelNestedInput
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    subchannels?: DemoSubChannelUncheckedUpdateManyWithoutChannelNestedInput
+    invites?: DemoInviteUncheckedUpdateManyWithoutChannelNestedInput
   }
 
   export type DemoUserCreateWithoutMessagesInput = {
     id?: string
     walletAddress: string
     name?: string | null
+    username?: string | null
+    profileImage?: string | null
+    description?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
+    online?: boolean
+    lastSeen?: Date | string | null
     memberships?: DemoMembershipCreateNestedManyWithoutUserInput
     createdChannels?: DemoChannelCreateNestedManyWithoutCreatorInput
   }
@@ -7302,7 +11194,13 @@ export namespace Prisma {
     id?: string
     walletAddress: string
     name?: string | null
+    username?: string | null
+    profileImage?: string | null
+    description?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
+    online?: boolean
+    lastSeen?: Date | string | null
     memberships?: DemoMembershipUncheckedCreateNestedManyWithoutUserInput
     createdChannels?: DemoChannelUncheckedCreateNestedManyWithoutCreatorInput
   }
@@ -7312,29 +11210,35 @@ export namespace Prisma {
     create: XOR<DemoUserCreateWithoutMessagesInput, DemoUserUncheckedCreateWithoutMessagesInput>
   }
 
-  export type DemoChannelCreateWithoutMessagesInput = {
+  export type DemoSubChannelCreateWithoutMessagesInput = {
     id?: string
     name: string
+    icon?: string | null
+    type?: string
     isTokenGated?: boolean
     tokenAddress?: string | null
+    isDefault?: boolean
     createdAt?: Date | string
-    creator: DemoUserCreateNestedOneWithoutCreatedChannelsInput
-    members?: DemoMembershipCreateNestedManyWithoutChannelInput
+    updatedAt?: Date | string
+    channel: DemoChannelCreateNestedOneWithoutSubchannelsInput
   }
 
-  export type DemoChannelUncheckedCreateWithoutMessagesInput = {
+  export type DemoSubChannelUncheckedCreateWithoutMessagesInput = {
     id?: string
     name: string
-    creatorId: string
+    icon?: string | null
+    type?: string
+    channelId: string
     isTokenGated?: boolean
     tokenAddress?: string | null
+    isDefault?: boolean
     createdAt?: Date | string
-    members?: DemoMembershipUncheckedCreateNestedManyWithoutChannelInput
+    updatedAt?: Date | string
   }
 
-  export type DemoChannelCreateOrConnectWithoutMessagesInput = {
-    where: DemoChannelWhereUniqueInput
-    create: XOR<DemoChannelCreateWithoutMessagesInput, DemoChannelUncheckedCreateWithoutMessagesInput>
+  export type DemoSubChannelCreateOrConnectWithoutMessagesInput = {
+    where: DemoSubChannelWhereUniqueInput
+    create: XOR<DemoSubChannelCreateWithoutMessagesInput, DemoSubChannelUncheckedCreateWithoutMessagesInput>
   }
 
   export type DemoUserUpsertWithoutMessagesInput = {
@@ -7352,7 +11256,13 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     walletAddress?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    online?: BoolFieldUpdateOperationsInput | boolean
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     memberships?: DemoMembershipUpdateManyWithoutUserNestedInput
     createdChannels?: DemoChannelUpdateManyWithoutCreatorNestedInput
   }
@@ -7361,40 +11271,120 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     walletAddress?: StringFieldUpdateOperationsInput | string
     name?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    profileImage?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    online?: BoolFieldUpdateOperationsInput | boolean
+    lastSeen?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     memberships?: DemoMembershipUncheckedUpdateManyWithoutUserNestedInput
     createdChannels?: DemoChannelUncheckedUpdateManyWithoutCreatorNestedInput
   }
 
-  export type DemoChannelUpsertWithoutMessagesInput = {
-    update: XOR<DemoChannelUpdateWithoutMessagesInput, DemoChannelUncheckedUpdateWithoutMessagesInput>
-    create: XOR<DemoChannelCreateWithoutMessagesInput, DemoChannelUncheckedCreateWithoutMessagesInput>
-    where?: DemoChannelWhereInput
+  export type DemoSubChannelUpsertWithoutMessagesInput = {
+    update: XOR<DemoSubChannelUpdateWithoutMessagesInput, DemoSubChannelUncheckedUpdateWithoutMessagesInput>
+    create: XOR<DemoSubChannelCreateWithoutMessagesInput, DemoSubChannelUncheckedCreateWithoutMessagesInput>
+    where?: DemoSubChannelWhereInput
   }
 
-  export type DemoChannelUpdateToOneWithWhereWithoutMessagesInput = {
-    where?: DemoChannelWhereInput
-    data: XOR<DemoChannelUpdateWithoutMessagesInput, DemoChannelUncheckedUpdateWithoutMessagesInput>
+  export type DemoSubChannelUpdateToOneWithWhereWithoutMessagesInput = {
+    where?: DemoSubChannelWhereInput
+    data: XOR<DemoSubChannelUpdateWithoutMessagesInput, DemoSubChannelUncheckedUpdateWithoutMessagesInput>
   }
 
-  export type DemoChannelUpdateWithoutMessagesInput = {
+  export type DemoSubChannelUpdateWithoutMessagesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
     isTokenGated?: BoolFieldUpdateOperationsInput | boolean
     tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    channel?: DemoChannelUpdateOneRequiredWithoutSubchannelsNestedInput
+  }
+
+  export type DemoSubChannelUncheckedUpdateWithoutMessagesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    channelId?: StringFieldUpdateOperationsInput | string
+    isTokenGated?: BoolFieldUpdateOperationsInput | boolean
+    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DemoChannelCreateWithoutInvitesInput = {
+    id?: string
+    name: string
+    icon?: string | null
+    type?: string
+    defaultSubchannelId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    creator: DemoUserCreateNestedOneWithoutCreatedChannelsInput
+    members?: DemoMembershipCreateNestedManyWithoutChannelInput
+    subchannels?: DemoSubChannelCreateNestedManyWithoutChannelInput
+  }
+
+  export type DemoChannelUncheckedCreateWithoutInvitesInput = {
+    id?: string
+    name: string
+    icon?: string | null
+    type?: string
+    creatorId: string
+    defaultSubchannelId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: DemoMembershipUncheckedCreateNestedManyWithoutChannelInput
+    subchannels?: DemoSubChannelUncheckedCreateNestedManyWithoutChannelInput
+  }
+
+  export type DemoChannelCreateOrConnectWithoutInvitesInput = {
+    where: DemoChannelWhereUniqueInput
+    create: XOR<DemoChannelCreateWithoutInvitesInput, DemoChannelUncheckedCreateWithoutInvitesInput>
+  }
+
+  export type DemoChannelUpsertWithoutInvitesInput = {
+    update: XOR<DemoChannelUpdateWithoutInvitesInput, DemoChannelUncheckedUpdateWithoutInvitesInput>
+    create: XOR<DemoChannelCreateWithoutInvitesInput, DemoChannelUncheckedCreateWithoutInvitesInput>
+    where?: DemoChannelWhereInput
+  }
+
+  export type DemoChannelUpdateToOneWithWhereWithoutInvitesInput = {
+    where?: DemoChannelWhereInput
+    data: XOR<DemoChannelUpdateWithoutInvitesInput, DemoChannelUncheckedUpdateWithoutInvitesInput>
+  }
+
+  export type DemoChannelUpdateWithoutInvitesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    defaultSubchannelId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     creator?: DemoUserUpdateOneRequiredWithoutCreatedChannelsNestedInput
     members?: DemoMembershipUpdateManyWithoutChannelNestedInput
+    subchannels?: DemoSubChannelUpdateManyWithoutChannelNestedInput
   }
 
-  export type DemoChannelUncheckedUpdateWithoutMessagesInput = {
+  export type DemoChannelUncheckedUpdateWithoutInvitesInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
     creatorId?: StringFieldUpdateOperationsInput | string
-    isTokenGated?: BoolFieldUpdateOperationsInput | boolean
-    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    defaultSubchannelId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: DemoMembershipUncheckedUpdateManyWithoutChannelNestedInput
+    subchannels?: DemoSubChannelUncheckedUpdateManyWithoutChannelNestedInput
   }
 
   export type DemoMembershipCreateManyUserInput = {
@@ -7402,27 +11392,32 @@ export namespace Prisma {
     channelId: string
     role?: string
     createdAt?: Date | string
+    lastReadAt?: Date | string
   }
 
   export type DemoMessageCreateManyUserInput = {
     id?: string
     content: string
-    channelId: string
+    subchannelId: string
     createdAt?: Date | string
+    readByUsers?: DemoMessageCreatereadByUsersInput | string[]
   }
 
   export type DemoChannelCreateManyCreatorInput = {
     id?: string
     name: string
-    isTokenGated?: boolean
-    tokenAddress?: string | null
+    icon?: string | null
+    type?: string
+    defaultSubchannelId?: string | null
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type DemoMembershipUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastReadAt?: DateTimeFieldUpdateOperationsInput | Date | string
     channel?: DemoChannelUpdateOneRequiredWithoutMembersNestedInput
   }
 
@@ -7431,6 +11426,7 @@ export namespace Prisma {
     channelId?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastReadAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DemoMembershipUncheckedUpdateManyWithoutUserInput = {
@@ -7438,55 +11434,67 @@ export namespace Prisma {
     channelId?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastReadAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DemoMessageUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    channel?: DemoChannelUpdateOneRequiredWithoutMessagesNestedInput
+    readByUsers?: DemoMessageUpdatereadByUsersInput | string[]
+    subchannel?: DemoSubChannelUpdateOneRequiredWithoutMessagesNestedInput
   }
 
   export type DemoMessageUncheckedUpdateWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    channelId?: StringFieldUpdateOperationsInput | string
+    subchannelId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUsers?: DemoMessageUpdatereadByUsersInput | string[]
   }
 
   export type DemoMessageUncheckedUpdateManyWithoutUserInput = {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
-    channelId?: StringFieldUpdateOperationsInput | string
+    subchannelId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUsers?: DemoMessageUpdatereadByUsersInput | string[]
   }
 
   export type DemoChannelUpdateWithoutCreatorInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    isTokenGated?: BoolFieldUpdateOperationsInput | boolean
-    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    defaultSubchannelId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: DemoMembershipUpdateManyWithoutChannelNestedInput
-    messages?: DemoMessageUpdateManyWithoutChannelNestedInput
+    subchannels?: DemoSubChannelUpdateManyWithoutChannelNestedInput
+    invites?: DemoInviteUpdateManyWithoutChannelNestedInput
   }
 
   export type DemoChannelUncheckedUpdateWithoutCreatorInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    isTokenGated?: BoolFieldUpdateOperationsInput | boolean
-    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    defaultSubchannelId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     members?: DemoMembershipUncheckedUpdateManyWithoutChannelNestedInput
-    messages?: DemoMessageUncheckedUpdateManyWithoutChannelNestedInput
+    subchannels?: DemoSubChannelUncheckedUpdateManyWithoutChannelNestedInput
+    invites?: DemoInviteUncheckedUpdateManyWithoutChannelNestedInput
   }
 
   export type DemoChannelUncheckedUpdateManyWithoutCreatorInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    isTokenGated?: BoolFieldUpdateOperationsInput | boolean
-    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    defaultSubchannelId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DemoMembershipCreateManyChannelInput = {
@@ -7494,12 +11502,28 @@ export namespace Prisma {
     userId: string
     role?: string
     createdAt?: Date | string
+    lastReadAt?: Date | string
   }
 
-  export type DemoMessageCreateManyChannelInput = {
+  export type DemoSubChannelCreateManyChannelInput = {
     id?: string
-    content: string
-    userId: string
+    name: string
+    icon?: string | null
+    type?: string
+    isTokenGated?: boolean
+    tokenAddress?: string | null
+    isDefault?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type DemoInviteCreateManyChannelInput = {
+    id?: string
+    inviteCode: string
+    createdBy: string
+    expiresAt?: Date | string | null
+    maxUses?: number | null
+    useCount?: number
     createdAt?: Date | string
   }
 
@@ -7507,6 +11531,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastReadAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: DemoUserUpdateOneRequiredWithoutMembershipsNestedInput
   }
 
@@ -7515,6 +11540,7 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastReadAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DemoMembershipUncheckedUpdateManyWithoutChannelInput = {
@@ -7522,27 +11548,107 @@ export namespace Prisma {
     userId?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastReadAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type DemoMessageUpdateWithoutChannelInput = {
+  export type DemoSubChannelUpdateWithoutChannelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    isTokenGated?: BoolFieldUpdateOperationsInput | boolean
+    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: DemoMessageUpdateManyWithoutSubchannelNestedInput
+  }
+
+  export type DemoSubChannelUncheckedUpdateWithoutChannelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    isTokenGated?: BoolFieldUpdateOperationsInput | boolean
+    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    messages?: DemoMessageUncheckedUpdateManyWithoutSubchannelNestedInput
+  }
+
+  export type DemoSubChannelUncheckedUpdateManyWithoutChannelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    icon?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: StringFieldUpdateOperationsInput | string
+    isTokenGated?: BoolFieldUpdateOperationsInput | boolean
+    tokenAddress?: NullableStringFieldUpdateOperationsInput | string | null
+    isDefault?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DemoInviteUpdateWithoutChannelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    inviteCode?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    maxUses?: NullableIntFieldUpdateOperationsInput | number | null
+    useCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DemoInviteUncheckedUpdateWithoutChannelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    inviteCode?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    maxUses?: NullableIntFieldUpdateOperationsInput | number | null
+    useCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DemoInviteUncheckedUpdateManyWithoutChannelInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    inviteCode?: StringFieldUpdateOperationsInput | string
+    createdBy?: StringFieldUpdateOperationsInput | string
+    expiresAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    maxUses?: NullableIntFieldUpdateOperationsInput | number | null
+    useCount?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DemoMessageCreateManySubchannelInput = {
+    id?: string
+    content: string
+    userId: string
+    createdAt?: Date | string
+    readByUsers?: DemoMessageCreatereadByUsersInput | string[]
+  }
+
+  export type DemoMessageUpdateWithoutSubchannelInput = {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUsers?: DemoMessageUpdatereadByUsersInput | string[]
     user?: DemoUserUpdateOneRequiredWithoutMessagesNestedInput
   }
 
-  export type DemoMessageUncheckedUpdateWithoutChannelInput = {
+  export type DemoMessageUncheckedUpdateWithoutSubchannelInput = {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUsers?: DemoMessageUpdatereadByUsersInput | string[]
   }
 
-  export type DemoMessageUncheckedUpdateManyWithoutChannelInput = {
+  export type DemoMessageUncheckedUpdateManyWithoutSubchannelInput = {
     id?: StringFieldUpdateOperationsInput | string
     content?: StringFieldUpdateOperationsInput | string
     userId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    readByUsers?: DemoMessageUpdatereadByUsersInput | string[]
   }
 
 

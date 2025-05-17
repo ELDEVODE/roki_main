@@ -1,6 +1,7 @@
 "use client";
 
 import { PrivyProvider } from "@privy-io/react-auth";
+import { ToastProvider } from "./context/ToastContext";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -17,7 +18,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         // Set the cookie domain to your app's domain
       }}
     >
-      {children}
+      <ToastProvider>
+        {children}
+      </ToastProvider>
     </PrivyProvider>
   );
 }
